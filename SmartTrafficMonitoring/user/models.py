@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -8,67 +9,36 @@ class RoleID(models.Model):
     def __str__(self):
         return f"{self.name} "
 
-    def creat_role(name):
+    def creat_role(self):
         pass
-    def view_role(name):
+    def view_role(self):
         pass
-    def update_role(name):
+    def update_role(self):
         pass
-    def delete_role(name):
+    def delete_role(self):
         pass
 
-class Drone(models.Model):
-    name = models.CharField()
-    location = models.CharField()
-    status = models.CharField()
-    note = models.CharField()
-    battery = models.IntegerField()
-    schedule = models.DateTimeField()
-    height = models.FloatField()
 
-
-    def __str__(self):
-        return f"{self.name} {self.location} {self.status} {self.note} {self.battery} {self.schedule} {self.height}"
-        
-    def creat_task(name):
-        pass
-    def view_task(name):
-        pass
-    def update_task(name):
-        pass
-    def delete_task(name):
-        pass
-    def notification():
-        pass
-    def check_weather():
-        pass
+class UserInfo(models.Model):
+    user_id = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="user_id")
+    role_id = models.ForeignKey(
+        RoleID, on_delete=models.CASCADE, related_name="role")
+    phone_number = models.CharField(max_length=10)
     
-class Video(models.Model):
-    name = models.CharField()
-    time = models.FloatField()
-    dir = models.CharField()
 
     def __str__(self):
-        return f"{self.name} {self.time} {self.dir}"
-
-    def creat_video(name):
+        return f'{ self.user_id.username } { self.role_id }'
+    
+    def creat_user(self):
         pass
-    def view_video(name):
+    def view_user(self):
         pass
-    def update_video(name):
+    def update_user(self):
         pass
-    def delete_video(name):
+    def delete_user(self):
         pass
-
-class Weather(models.Model):
-    location = models.CharField()
-    temp = models.FloatField()
-    humidity = models.IntegerField()
-    wind_speed = models.FloatField()
-    weather_report = models.CharField()
-
-    def __str__(self):
-        return f"{self.location} {self.temp} {self.humidity} {self.wind_speed} {self.weather_report}"
-
-    def check_weather():
+    def login(self):
+        pass
+    def logout(self):
         pass
