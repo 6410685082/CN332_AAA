@@ -12,8 +12,14 @@
 SmartTrafficMonitoring is a project that apply AI for traffic monitoring
 
 ### Built With
+<!-- 
 * [![Django][djangoproject.com]][Django-url]
 * [![Bootstrap][Bootstrap.com]][Bootstrap-url]
+!-->
+* [Django][Django-url]
+* [Bootstrap][Bootstrap-url]
+* [User Figma](https://www.figma.com/file/cAhjyeLYtVFkWdzGIe6PkM/CN332?node-id=0%3A1&t=YmoKge7GTPm9BFE9-1)
+* [Admin Figma](https://www.figma.com/file/5R9fVudKvJqmA3SHo2mcH2/CN332-(Admin)?node-id=0%3A1&t=lfRcQMmVKT3t6JuA-0)
 
 ## Getting Started
 ### Prerequisites
@@ -35,6 +41,22 @@ You have to install software before using the project.
     ```sh
     code .
     ```
+
+## Usage
+1. Open git bash terminal in Visual Studio Code
+2. Activate virtual environment
+    ```sh
+    source .venv/bin/activate
+    ```
+3. Install requirements for the project
+    ```sh
+    python -m pip install -r requirements.txt
+    ```
+4. Run server
+    ```sh
+    python manage.py runserver
+    ```
+5. Open link [click](http://127.0.0.1:8000/)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 [djangoproject.com]: https://img.shields.io/badge/Djang0-35495E?style=for-the-badge&logo=django&logoColor=4FC08D
