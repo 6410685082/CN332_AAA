@@ -1,0 +1,17 @@
+{% block body %}
+
+  
+<div class="main">
+<p class="sign" >Login</p>
+{% if message %}
+    <div  style="color:red">{{ message }}</div>
+{% endif %}
+<form class="form1" action="{% url 'user:login' %}" method="post">
+    {% csrf_token %}
+    <input class="username"  type="text" name="username" placeholder="Username">
+    <input class="password"  type="password" name="password" placeholder="Password">
+    <input class="submit"  type="submit" value="Login">
+</form>
+
+
+{% endblock %}
