@@ -1,9 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
-from django.db import models
-
 class Scheduler(models.Model):
     title = models.CharField(max_length=200)
     start_time = models.DateTimeField()
