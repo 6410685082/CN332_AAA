@@ -1,0 +1,15 @@
+function updateTaskProgress(taskId) {
+    $.getJSON('/task_progress/' + taskId + '/', function(data) {
+        var progress = data.progress;
+        $('.progress-bar').css('width', progress + '%').attr('aria-valuenow', progress);
+        if (progress < 100) {
+            setTimeout(function() {
+                updateTaskProgress(taskId);
+            }, 1000);
+        }
+    });
+}
+
+$(document).ready(function() {
+    updateTaskProgress(1);  // Replace 1 with the ID of your task
+});

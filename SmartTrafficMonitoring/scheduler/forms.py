@@ -1,7 +1,8 @@
 from django import forms
-from .models import Scheduler
+from .models import ScheduledTask
 
-class SchedulerForm(forms.ModelForm):
+class ScheduledTaskForm(forms.ModelForm):
     class Meta:
-        model = Scheduler
-        fields = ['title', 'start_time', 'end_time']
+        model = ScheduledTask
+        fields = ['task_id', 'status', 'result']
+        

@@ -1,11 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Scheduler</h1>
-  <a href="{% url 'scheduler_create' %}">Create new appointment</a>
-  <ul>
-    {% for scheduler in schedulers %}
-      <li>{{ scheduler.title }} ({{ scheduler.start_time }} - {{ scheduler.end_time }}) <a href="{% url 'scheduler_edit' scheduler.pk %}">edit</a> <a href="{% url 'scheduler_delete' scheduler.pk %}">delete</a></li>
-    {% endfor %}
-  </ul>
+    <h1>Scheduler</h1>
+
+    <h2>Create Task</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create</button>
+    </form>
+
+    <h2>Tasks</h2>
+    <ul>
+        {% for task in tasks %}
+            <li>{{ task.task_id }} - {{ task.status }} - {{ task.result }}</li>
+        {% empty %}
+            <li>No tasks</li>
+        {% endfor %}
+        {% for show in shows %}
+            <li>{{ show.name }}</li>
+        {% endfor %}
+    </ul>
 {% endblock %}
