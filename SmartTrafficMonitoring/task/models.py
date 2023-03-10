@@ -8,20 +8,18 @@ class Status(models.Model):
     def __str__(self):
         return f"{self.name}"
     
-class Video(models.Model):
-    name = models.CharField(max_length=255)
-    path = models.URLField(max_length=255)
+# class Video(models.Model):
+#     name = models.CharField(max_length=255)
+#     path = models.FileField(upload_to='videos/', null=True, verbose_name="")
 
-    def __str__(self):
-        return f"{self.name}: {self.path}"
+#     def __str__(self):
+#         return f"{self.name}: {self.path}"
 
 class Task(models.Model):
     name = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
-    input_vdo_id = models.ForeignKey(
-        Video, on_delete=models.CASCADE, related_name="input_vdo_id")
-    res_vdo_id = models.ForeignKey(
-        Video, on_delete=models.CASCADE, related_name="res_vdo_id", null=True)
+    input_vdo = models.FileField(upload_to='input')
+    output_vdo = models.FileField(upload_to='output', null=True)
     status_id = models.ForeignKey(
         Status, on_delete=models.CASCADE, related_name="status_id")
     note = models.CharField(max_length=255)

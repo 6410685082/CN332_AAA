@@ -1,0 +1,11 @@
+{% block body %}
+
+<form action="{% url 'task:create_task' %}" method="post">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+    <input type="submit" value="SUBMIT"/>
+
+</form>
+
+{% endblock %}
