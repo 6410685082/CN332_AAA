@@ -7,3 +7,10 @@ class Scheduler(models.Model):
 
     def __str__(self):
         return self.title
+
+from .models import Scheduler
+
+def process_scheduler(scheduler):
+    # Perform the desired task based on the scheduler data
+    print(f"Processing scheduler: {scheduler.title}")
+    # For example, you could trigger an email or a message to be sent at the scheduled time
