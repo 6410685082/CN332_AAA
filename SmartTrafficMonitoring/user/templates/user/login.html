@@ -1,17 +1,32 @@
-{% block body %}
-
-  
-<div class="main">
-<p class="sign" >Login</p>
-{% if message %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../static/login/style.css">
+    <title>Login</title>
+</head>
+<body>
+<div class="wrapper">
+    <h2>LOGIN</h2>
+    {% if message %}
     <div  style="color:red">{{ message }}</div>
-{% endif %}
-<form class="form1" action="{% url 'user:login' %}" method="post">
-    {% csrf_token %}
-    <input class="username"  type="text" name="username" placeholder="Username">
-    <input class="password"  type="password" name="password" placeholder="Password">
-    <input class="submit"  type="submit" value="Login">
-</form>
-
-
-{% endblock %}
+    {% endif %}
+    <form class="form1" action="{% url 'user:login' %}" method="post">
+        {% csrf_token %}
+        <div class="username-area username">
+            <div class="input-box username">
+                <input class="username" name="username" type="text" placeholder="Username">
+            </div>
+        </div>
+        <div class="password-area password">
+            <div class="input-box password">
+                <input class="password" name="password" type="password" placeholder="Password">
+            </div>
+        </div>
+        <button class="submit" name="submit" type="submit">Login</button>
+    </form>
+</div>
+</body>
+</html>
