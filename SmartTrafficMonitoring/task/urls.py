@@ -11,6 +11,5 @@ urlpatterns = [
     path('view-task/<int:reserve_id>', views.view_task, name='view_task'),
     path('update-task/', views.update_task, name='update_task'),
     path('delete-task/<int:reserve_id>', views.delete_task, name='delete_task'),
-
 ] 
 # + static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
