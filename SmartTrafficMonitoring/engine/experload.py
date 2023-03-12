@@ -3,8 +3,8 @@ import random
 import torch
 import torch.nn as nn
 
-from models.common import Conv, DWConv
-from utils.google_utils import attempt_download
+from .common import Conv, DWConv
+from .google_utils import attempt_download
 
 
 class CrossConv(nn.Module):
@@ -229,9 +229,6 @@ class End2End(nn.Module):
         x = self.model(x)
         x = self.end2end(x)
         return x
-
-
-
 
 
 def attempt_load(weights, map_location=None):
