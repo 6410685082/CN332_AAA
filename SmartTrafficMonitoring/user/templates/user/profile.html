@@ -1,0 +1,39 @@
+{% block body %}
+<header>
+    <ul>
+        <li><a href="{% url 'user:profile' %}">Profile</a></li>
+        <li><a href="{% url 'user:logout' %}">Log out</a></li>
+    </ul>
+</header>
+
+<body>
+    <main id="main" class="site-main">
+        <h2>Profile</h2>                
+        <label for="name">Name: {{ user.first_name }}  {{ user.last_name }}</label><br>           
+        <label for="email">E-mail: {{ user.email }}</label><br>
+        <label for="phone">Phone Number: {{ phone_number }}</label><br>
+        <label for="role_id">Role ID: {{ role_id }}</label><br>
+      
+        <!-- <h2>Edit Information</h2>
+            <div class="form-content">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                <label >Username: {{ user_form.username }} </label><br>
+
+                <label >Email: {{ user_form.email }}</label><br>
+                
+                <label >Name: {{ user_form.first_name }}</label><br>
+                 
+                <label >Surname: {{ user_form.last_name }}</label><br>
+
+                <label >Phone Number: {{ user_form.phone_number }}</label><br>
+                
+                <button type="reset" class="btn btn-coral mb-10">Reset</button>
+                <button type="submit" class="btn btn-coral mb-10">Save Changes</button><br>
+               
+            </div> -->
+        </section>
+    </main>
+    
+</body>
+{% endblock %}

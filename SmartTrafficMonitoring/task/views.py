@@ -4,3 +4,9 @@ from django.shortcuts import render
 
 def index(request):
     return render(request, 'index.html')
+
+def report(request):
+    return render(request, 'task/report.html')
+
+def create_task(request):
+    return render(request, 'task/createtask.html')

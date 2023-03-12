@@ -22,4 +22,6 @@ urlpatterns = [
     path("", include("task.urls")),
     path('task_progress/<int:task_id>/', task_progress, name='task_progress'),
     path("", include("scheduler.urls")),
+    path("user/", include('user.urls', namespace='user')),
+    path("task/", include('task.urls')),
 ]
