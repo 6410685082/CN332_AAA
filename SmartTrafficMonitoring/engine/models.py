@@ -26,3 +26,10 @@ class LoopInfo(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+    
+class BoxInfo():
+    id = models.IntegerField()
+    loopinfo = models.ForeignKey(LoopInfo, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.id
