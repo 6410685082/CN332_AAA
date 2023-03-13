@@ -124,8 +124,6 @@ CSRF_TRUSTED_ORIGINS = [
 
 STATIC_URL = "static/"
 
-JSON_FILES_DIR = os.path.join(BASE_DIR, 'json_files')
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
