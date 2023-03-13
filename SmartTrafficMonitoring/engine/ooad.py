@@ -83,12 +83,11 @@ class Box:
 
 class Loop:
     def __init__(self, data):
-        self.name = data.name
-        self.id = data.loop_id
-        self.points = [{"x": data.x1, "y": data.y1 }, {"x": data.x2, "y": data.y2 },
-                       {"x": data.x3, "y": data.y3 }, {"x": data.x3, "y": data.y3 }]
-        self.orientation = data.orientation
-        self.summary_location = {"x": data.x, "y": data.y }
+        self.name = data['name']
+        self.id = data['id']
+        self.points = data['points']
+        self.orientation = data['orientation']
+        self.summary_location = data['summary_location']
 
         # check if item entering or exit loop
     def check_enter_exit_loop(self, track):
