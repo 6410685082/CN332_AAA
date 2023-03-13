@@ -12,10 +12,10 @@ from torchvision.ops import DeformConv2d
 from PIL import Image
 from torch.cuda import amp
 
-from .datasets import letterbox
-from .general import non_max_suppression, make_divisible, scale_coords, increment_path, xyxy2xywh
-from .plots import color_list, plot_one_box
-from torch_utils import time_synchronized
+from engine.utils.datasets import letterbox
+from engine.utils.general import non_max_suppression, make_divisible, scale_coords, increment_path, xyxy2xywh
+from engine.utils.plots import color_list, plot_one_box
+from engine.utils.torch_utils import time_synchronized
 
 
 ##### basic ####
@@ -35,6 +35,7 @@ class MP(nn.Module):
     def forward(self, x):
         return self.m(x)
 
+
 class SP(nn.Module):
     def __init__(self, k=3, s=1):
         super(SP, self).__init__()
@@ -43,12 +44,14 @@ class SP(nn.Module):
     def forward(self, x):
         return self.m(x)
     
+    
 class ReOrg(nn.Module):
     def __init__(self):
         super(ReOrg, self).__init__()
 
     def forward(self, x):  # x(b,c,w,h) -> y(b,4c,w/2,h/2)
         return torch.cat([x[..., ::2, ::2], x[..., 1::2, ::2], x[..., ::2, 1::2], x[..., 1::2, 1::2]], 1)
+
 
 class Concat(nn.Module):
     def __init__(self, dimension=1):
@@ -57,6 +60,7 @@ class Concat(nn.Module):
 
     def forward(self, x):
         return torch.cat(x, self.d)
+
 
 class Chuncat(nn.Module):
     def __init__(self, dimension=1):
@@ -72,6 +76,7 @@ class Chuncat(nn.Module):
             x2.append(xi2)
         return torch.cat(x1+x2, self.d)
 
+
 class Shortcut(nn.Module):
     def __init__(self, dimension=0):
         super(Shortcut, self).__init__()
@@ -79,6 +84,7 @@ class Shortcut(nn.Module):
 
     def forward(self, x):
         return x[0]+x[1]
+
 
 class Foldcut(nn.Module):
     def __init__(self, dimension=0):
@@ -88,6 +94,7 @@ class Foldcut(nn.Module):
     def forward(self, x):
         x1, x2 = x.chunk(2, self.d)
         return x1+x2
+
 
 class Conv(nn.Module):
     # Standard convolution
@@ -103,6 +110,7 @@ class Conv(nn.Module):
     def fuseforward(self, x):
         return self.act(self.conv(x))
     
+
 class RobustConv(nn.Module):
     # Robust convolution (use high kernel size 7-11 for: downsampling and other layers). Train for 300 - 450 epochs.
     def __init__(self, c1, c2, k=7, s=1, p=None, g=1, act=True, layer_scale_init_value=1e-6):  # ch_in, ch_out, kernel, stride, padding, groups
@@ -117,6 +125,7 @@ class RobustConv(nn.Module):
         if self.gamma is not None:
             x = x.mul(self.gamma.reshape(1, -1, 1, 1)) 
         return x
+
 
 class RobustConv2(nn.Module):
     # Robust convolution 2 (use [32, 5, 2] or [32, 7, 4] or [32, 11, 8] for one of the paths in CSP).
@@ -134,9 +143,11 @@ class RobustConv2(nn.Module):
             x = x.mul(self.gamma.reshape(1, -1, 1, 1)) 
         return x
     
+
 def DWConv(c1, c2, k=1, s=1, act=True):
     # Depthwise convolution
     return Conv(c1, c2, k, s, g=math.gcd(c1, c2), act=act)
+
 
 class GhostConv(nn.Module):
     # Ghost Convolution https://github.com/huawei-noah/ghostnet
@@ -149,6 +160,7 @@ class GhostConv(nn.Module):
     def forward(self, x):
         y = self.cv1(x)
         return torch.cat([y, self.cv2(y)], 1)
+
 
 class Stem(nn.Module):
     # Stem
@@ -165,6 +177,7 @@ class Stem(nn.Module):
         x = self.cv1(x)
         return self.cv4(torch.cat((self.cv3(self.cv2(x)), self.pool(x)), dim=1))
 
+
 class DownC(nn.Module):
     # Spatial pyramid pooling layer used in YOLOv3-SPP
     def __init__(self, c1, c2, n=1, k=2):
@@ -177,6 +190,7 @@ class DownC(nn.Module):
 
     def forward(self, x):
         return torch.cat((self.cv2(self.cv1(x)), self.cv3(self.mp(x))), dim=1)
+
 
 class SPP(nn.Module):
     # Spatial pyramid pooling layer used in YOLOv3-SPP
@@ -191,6 +205,7 @@ class SPP(nn.Module):
         x = self.cv1(x)
         return self.cv2(torch.cat([x] + [m(x) for m in self.m], 1))
     
+
 class Bottleneck(nn.Module):
     # Darknet bottleneck
     def __init__(self, c1, c2, shortcut=True, g=1, e=0.5):  # ch_in, ch_out, shortcut, groups, expansion
@@ -202,6 +217,7 @@ class Bottleneck(nn.Module):
 
     def forward(self, x):
         return x + self.cv2(self.cv1(x)) if self.add else self.cv2(self.cv1(x))
+
 
 class Res(nn.Module):
     # ResNet bottleneck
@@ -216,11 +232,13 @@ class Res(nn.Module):
     def forward(self, x):
         return x + self.cv3(self.cv2(self.cv1(x))) if self.add else self.cv3(self.cv2(self.cv1(x)))
 
+
 class ResX(Res):
     # ResNet bottleneck
     def __init__(self, c1, c2, shortcut=True, g=32, e=0.5):  # ch_in, ch_out, shortcut, groups, expansion
         super().__init__(c1, c2, shortcut, g, e)
         c_ = int(c2 * e)  # hidden channels
+
 
 class Ghost(nn.Module):
     # Ghost Bottleneck https://github.com/huawei-noah/ghostnet

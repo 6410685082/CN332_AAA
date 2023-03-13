@@ -3,8 +3,8 @@ import random
 import torch
 import torch.nn as nn
 
-from .common import Conv, DWConv
-from .google_utils import attempt_download
+from engine.models.common import Conv, DWConv
+from engine.utils.google_utils import attempt_download
 
 
 class CrossConv(nn.Module):
@@ -231,13 +231,15 @@ class End2End(nn.Module):
         return x
 
 
+
+
+
 def attempt_load(weights, map_location=None):
     # Loads an ensemble of models weights=[a,b,c] or a single model weights=[a] or weights=a
     model = Ensemble()
-    for w in weights if isinstance(weights, list) else [weights]:
-        # attempt_download(w)
-        ckpt = torch.load(w, map_location=map_location)  # load
-        model.append(ckpt['ema' if ckpt.get('ema') else 'model'].float().fuse().eval())  # FP32 model
+
+    ckpt = torch.load(weights)  # load
+    model.append(ckpt['ema' if ckpt.get('ema') else 'model'].float().fuse().eval())  # FP32 model
     
     # Compatibility updates
     for m in model.modules():

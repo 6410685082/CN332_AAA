@@ -1,4 +1,5 @@
 import os
+from django.conf import settings
 import cv2
 import time
 import torch
@@ -8,25 +9,22 @@ from numpy import random
 from random import randint
 import torch.backends.cudnn as cudnn
 
-#from experload import attempt_load
-from datasets import LoadStreams, LoadImages
-from general import check_img_size, check_requirements, \
-    check_imshow, non_max_suppression, apply_classifier, \
-    scale_coords, xyxy2xywh, strip_optimizer, set_logging, \
-    increment_path
-from plots import plot_one_box
-from torch_utils import select_device, load_classifier, \
-    time_synchronized, TracedModel
-from download_weights import download
+from engine.models.experimental import attempt_load
+from engine.utils.datasets import LoadStreams, LoadImages
+from engine.utils.general import check_img_size, check_requirements, \
+                check_imshow, non_max_suppression, apply_classifier, \
+                scale_coords, xyxy2xywh, strip_optimizer, set_logging, \
+                increment_path
+from engine.utils.plots import plot_one_box
+from engine.utils.torch_utils import select_device, load_classifier, \
+                time_synchronized, TracedModel
+from engine.utils.download_weights import download
 
-# For SORT tracking
 import skimage
-from sort import *
-from line_intersect import isIntersect
+from engine.sort import *
+from engine.line_intersect import isIntersect
 import json
-import count_table
-from models import LoopInfo
-
+from engine import count_table
 
 def check_clock_wise(p1, p2, p3):
     vec1 = (p2[0]-p1[0], p2[1]-p1[1])
@@ -167,14 +165,50 @@ class Loop:
 
 
 class Vehicle:
+    
     def detect(save_img=False):
+        file_path = "engine/video2.mp4"
+        absolute_file_path = os.path.join(settings.BASE_DIR, file_path)
+        opt_weights = 'yolov7.pt'
+        opt_download = True
+        opt_source = absolute_file_path
+        opt_img_size = 640
+        opt_conf_thres = 0.6
+        opt_iou_thres = 0.5
+        opt_device = ''
+        opt_view_img = True
+        opt_save_txt = True
+        opt_save_conf = True
+        opt_nosave = True
+        opt_classes =int
+        opt_agnostic_nms = True
+        opt_augment = True
+        opt_update = True
+        opt_project = 'runs/detect'
+        opt_name = 'object_tracking'
+        opt_exist_ok = True
+        opt_no_trace = True
+        opt_colored_trk = True
+        opt_loop  = "loop.json"
+        opt_loop_txt = True
+        opt_summary_txt = True
+
+        f = open(opt_loop)
+        count_boxes = json.load(f)
+        f.close()
+
+        loops = [Loop(data) for data in count_boxes["loops"]]
+        # check_requirements(exclude=('pycocotools', 'thop'))
+        if opt_download and not os.path.exists(str(opt_weights)):
+            print('Model weights not found. Attempting to download now...')
+            download('./')
 
         global save_dir
         global time_stamp
         global names
         global loop_boxes
-        source, weights, view_img, save_txt, imgsz, trace, colored_trk = opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size, not opt.no_trace, opt.colored_trk
-        save_img = not opt.nosave and not source.endswith(
+        source, weights, view_img, save_txt, imgsz, trace, colored_trk = opt_source, opt_weights, opt_view_img, opt_save_txt, opt_img_size, not opt_no_trace, opt_colored_trk
+        save_img = not opt_nosave and not source.endswith(
             '.txt')  # save inference images
         webcam = source.isnumeric() or source.endswith('.txt') or source.lower().startswith(
             ('rtsp://', 'rtmp://', 'http://', 'https://'))
@@ -189,14 +223,14 @@ class Vehicle:
                             iou_threshold=sort_iou_thresh)
         # .........................
         # Directories
-        save_dir = Path(increment_path(Path(opt.project) /
-                        opt.name, exist_ok=opt.exist_ok))  # increment run
+        save_dir = Path(increment_path(Path(opt_project) /
+                        opt_name, exist_ok=opt_exist_ok))  # increment run
         (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True,
                                                               exist_ok=True)  # make dir
 
         # Initialize
         set_logging()
-        device = select_device(opt.device)
+        device = select_device(opt_device)
         half = device.type != 'cpu'  # half precision only supported on CUDA
 
         # Load model
@@ -205,7 +239,7 @@ class Vehicle:
         imgsz = check_img_size(imgsz, s=stride)  # check img_size
 
         if trace:
-            model = TracedModel(model, device, opt.img_size)
+            model = TracedModel(model, device, opt_img_size)
 
         if half:
             model.half()  # to FP16
@@ -274,16 +308,16 @@ class Vehicle:
                 old_img_h = img.shape[2]
                 old_img_w = img.shape[3]
                 for i in range(3):
-                    model(img, augment=opt.augment)[0]
+                    model(img, augment=opt_augment)[0]
 
             # Inference
             t1 = time_synchronized()
-            pred = model(img, augment=opt.augment)[0]
+            pred = model(img, augment=opt_augment)[0]
             t2 = time_synchronized()
 
             # Apply NMS
             pred = non_max_suppression(
-                pred, opt.conf_thres, opt.iou_thres, classes=opt.classes, agnostic=opt.agnostic_nms)
+                pred, opt_conf_thres, opt_iou_thres, classes=opt_classes, agnostic=opt_agnostic_nms)
             t3 = time_synchronized()
 
             # Apply Classifier
@@ -328,7 +362,9 @@ class Vehicle:
                     tracked_dets = sort_tracker.update(dets_to_sort)
                     tracks = sort_tracker.getTrackers()
 
+                    # loop over tracks
                     for track in tracks:
+                        #l = Loop()
                         # tracking object passing line check and update
                         for loop in loops:
                             loop.check_enter_exit_loop(track)
@@ -426,311 +462,3 @@ class Vehicle:
             # print(f"Results saved to {save_dir}{s}")
 
         print(f'Done. ({time.time() - t0:.3f}s)')
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--weights', nargs='+', type=str, default='yolov7.pt', help='model.pt path(s)')
-    parser.add_argument('--download', action='store_true', help='download model weights automatically')
-    parser.add_argument('--no-download', dest='download', action='store_false')
-    parser.add_argument('--source', type=str, default='inference/images', help='source')
-    parser.add_argument('--img-size', type=int, default=640, help='inference size (pixels)')
-    parser.add_argument('--conf-thres', type=float, default=0.6, help='object confidence threshold')
-    parser.add_argument('--iou-thres', type=float, default=0.5, help='IOU threshold for NMS')
-    parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
-    parser.add_argument('--view-img', action='store_true', help='display results')
-    parser.add_argument('--save-txt', action='store_true', help='save results to *.txt')
-    parser.add_argument('--save-conf', action='store_true',help='save confidences in --save-txt labels')
-    parser.add_argument('--nosave', action='store_true',help='do not save images/videos')
-    parser.add_argument('--classes', nargs='+', type=int,help='filter by class: --class 0, or --class 0 2 3')
-    parser.add_argument('--agnostic-nms', action='store_true',help='class-agnostic NMS')
-    parser.add_argument('--augment', action='store_true',help='augmented inference')
-    parser.add_argument('--update', action='store_true',help='update all models')
-    parser.add_argument('--project', default='runs/detect',help='save results to project/name')
-    parser.add_argument('--name', default='object_tracking',help='save results to project/name')
-    parser.add_argument('--exist-ok', action='store_true',help='existing project/name ok, do not increment')
-    parser.add_argument('--no-trace', action='store_true',help='don`t trace model')
-    parser.add_argument('--colored-trk', action='store_true', help='assign different color to every track')
-    parser.add_argument('--loop', default="loop.json",type=str, help='loop setting file')
-    parser.add_argument('--loop-txt', action='store_true',  help='save history for each loop')
-    parser.add_argument('--summary-txt', action='store_true', help='save summary for each loop')  # todo later
-
-    parser.set_defaults(download=True)
-    opt = parser.parse_args()
-    print(opt)
-
-    count_boxes = LoopInfo
-
-    loops = [Loop(data) for data in count_boxes["loops"]]
-
-    # check_requirements(exclude=('pycocotools', 'thop'))
-    if opt.download and not os.path.exists(str(opt.weights)):
-        print('Model weights not found. Attempting to download now...')
-        download('./')
-
-    with torch.no_grad():
-        if opt.update:  # update all models (to fix SourceChangeWarning)
-            for opt.weights in ['yolov7.pt']:
-                Vehicle.detect()
-                strip_optimizer(opt.weights)
-        else:
-            Vehicle.detect()
-
-import numpy as np
-import random
-import torch
-import torch.nn as nn
-
-from common import Conv, DWConv
-from google_utils import attempt_download
-
-
-class CrossConv(nn.Module):
-    # Cross Convolution Downsample
-    def __init__(self, c1, c2, k=3, s=1, g=1, e=1.0, shortcut=False):
-        # ch_in, ch_out, kernel, stride, groups, expansion, shortcut
-        super(CrossConv, self).__init__()
-        c_ = int(c2 * e)  # hidden channels
-        self.cv1 = Conv(c1, c_, (1, k), (1, s))
-        self.cv2 = Conv(c_, c2, (k, 1), (s, 1), g=g)
-        self.add = shortcut and c1 == c2
-
-    def forward(self, x):
-        return x + self.cv2(self.cv1(x)) if self.add else self.cv2(self.cv1(x))
-
-
-class Sum(nn.Module):
-    # Weighted sum of 2 or more layers https://arxiv.org/abs/1911.09070
-    def __init__(self, n, weight=False):  # n: number of inputs
-        super(Sum, self).__init__()
-        self.weight = weight  # apply weights boolean
-        self.iter = range(n - 1)  # iter object
-        if weight:
-            self.w = nn.Parameter(-torch.arange(1., n) / 2, requires_grad=True)  # layer weights
-
-    def forward(self, x):
-        y = x[0]  # no weight
-        if self.weight:
-            w = torch.sigmoid(self.w) * 2
-            for i in self.iter:
-                y = y + x[i + 1] * w[i]
-        else:
-            for i in self.iter:
-                y = y + x[i + 1]
-        return y
-
-
-class MixConv2d(nn.Module):
-    # Mixed Depthwise Conv https://arxiv.org/abs/1907.09595
-    def __init__(self, c1, c2, k=(1, 3), s=1, equal_ch=True):
-        super(MixConv2d, self).__init__()
-        groups = len(k)
-        if equal_ch:  # equal c_ per group
-            i = torch.linspace(0, groups - 1E-6, c2).floor()  # c2 indices
-            c_ = [(i == g).sum() for g in range(groups)]  # intermediate channels
-        else:  # equal weight.numel() per group
-            b = [c2] + [0] * groups
-            a = np.eye(groups + 1, groups, k=-1)
-            a -= np.roll(a, 1, axis=1)
-            a *= np.array(k) ** 2
-            a[0] = 1
-            c_ = np.linalg.lstsq(a, b, rcond=None)[0].round()  # solve for equal weight indices, ax = b
-
-        self.m = nn.ModuleList([nn.Conv2d(c1, int(c_[g]), k[g], s, k[g] // 2, bias=False) for g in range(groups)])
-        self.bn = nn.BatchNorm2d(c2)
-        self.act = nn.LeakyReLU(0.1, inplace=True)
-
-    def forward(self, x):
-        return x + self.act(self.bn(torch.cat([m(x) for m in self.m], 1)))
-
-
-class Ensemble(nn.ModuleList):
-    # Ensemble of models
-    def __init__(self):
-        super(Ensemble, self).__init__()
-
-    def forward(self, x, augment=False):
-        y = []
-        for module in self:
-            y.append(module(x, augment)[0])
-        # y = torch.stack(y).max(0)[0]  # max ensemble
-        # y = torch.stack(y).mean(0)  # mean ensemble
-        y = torch.cat(y, 1)  # nms ensemble
-        return y, None  # inference, train output
-
-
-
-
-
-class ORT_NMS(torch.autograd.Function):
-    '''ONNX-Runtime NMS operation'''
-    @staticmethod
-    def forward(ctx,
-                boxes,
-                scores,
-                max_output_boxes_per_class=torch.tensor([100]),
-                iou_threshold=torch.tensor([0.45]),
-                score_threshold=torch.tensor([0.25])):
-        device = boxes.device
-        batch = scores.shape[0]
-        num_det = random.randint(0, 100)
-        batches = torch.randint(0, batch, (num_det,)).sort()[0].to(device)
-        idxs = torch.arange(100, 100 + num_det).to(device)
-        zeros = torch.zeros((num_det,), dtype=torch.int64).to(device)
-        selected_indices = torch.cat([batches[None], zeros[None], idxs[None]], 0).T.contiguous()
-        selected_indices = selected_indices.to(torch.int64)
-        return selected_indices
-
-    @staticmethod
-    def symbolic(g, boxes, scores, max_output_boxes_per_class, iou_threshold, score_threshold):
-        return g.op("NonMaxSuppression", boxes, scores, max_output_boxes_per_class, iou_threshold, score_threshold)
-
-
-class TRT_NMS(torch.autograd.Function):
-    '''TensorRT NMS operation'''
-    @staticmethod
-    def forward(
-        ctx,
-        boxes,
-        scores,
-        background_class=-1,
-        box_coding=1,
-        iou_threshold=0.45,
-        max_output_boxes=100,
-        plugin_version="1",
-        score_activation=0,
-        score_threshold=0.25,
-    ):
-        batch_size, num_boxes, num_classes = scores.shape
-        num_det = torch.randint(0, max_output_boxes, (batch_size, 1), dtype=torch.int32)
-        det_boxes = torch.randn(batch_size, max_output_boxes, 4)
-        det_scores = torch.randn(batch_size, max_output_boxes)
-        det_classes = torch.randint(0, num_classes, (batch_size, max_output_boxes), dtype=torch.int32)
-        return num_det, det_boxes, det_scores, det_classes
-
-    @staticmethod
-    def symbolic(g,
-                 boxes,
-                 scores,
-                 background_class=-1,
-                 box_coding=1,
-                 iou_threshold=0.45,
-                 max_output_boxes=100,
-                 plugin_version="1",
-                 score_activation=0,
-                 score_threshold=0.25):
-        out = g.op("TRT::EfficientNMS_TRT",
-                   boxes,
-                   scores,
-                   background_class_i=background_class,
-                   box_coding_i=box_coding,
-                   iou_threshold_f=iou_threshold,
-                   max_output_boxes_i=max_output_boxes,
-                   plugin_version_s=plugin_version,
-                   score_activation_i=score_activation,
-                   score_threshold_f=score_threshold,
-                   outputs=4)
-        nums, boxes, scores, classes = out
-        return nums, boxes, scores, classes
-
-
-class ONNX_ORT(nn.Module):
-    '''onnx module with ONNX-Runtime NMS operation.'''
-    def __init__(self, max_obj=100, iou_thres=0.45, score_thres=0.25, max_wh=640, device=None):
-        super().__init__()
-        self.device = device if device else torch.device("cpu")
-        self.max_obj = torch.tensor([max_obj]).to(device)
-        self.iou_threshold = torch.tensor([iou_thres]).to(device)
-        self.score_threshold = torch.tensor([score_thres]).to(device)
-        self.max_wh = max_wh # if max_wh != 0 : non-agnostic else : agnostic
-        self.convert_matrix = torch.tensor([[1, 0, 1, 0], [0, 1, 0, 1], [-0.5, 0, 0.5, 0], [0, -0.5, 0, 0.5]],
-                                           dtype=torch.float32,
-                                           device=self.device)
-
-    def forward(self, x):
-        boxes = x[:, :, :4]
-        conf = x[:, :, 4:5]
-        scores = x[:, :, 5:]
-        scores *= conf
-        boxes @= self.convert_matrix
-        max_score, category_id = scores.max(2, keepdim=True)
-        dis = category_id.float() * self.max_wh
-        nmsbox = boxes + dis
-        max_score_tp = max_score.transpose(1, 2).contiguous()
-        selected_indices = ORT_NMS.apply(nmsbox, max_score_tp, self.max_obj, self.iou_threshold, self.score_threshold)
-        X, Y = selected_indices[:, 0], selected_indices[:, 2]
-        selected_boxes = boxes[X, Y, :]
-        selected_categories = category_id[X, Y, :].float()
-        selected_scores = max_score[X, Y, :]
-        X = X.unsqueeze(1).float()
-        return torch.cat([X, selected_boxes, selected_categories, selected_scores], 1)
-
-class ONNX_TRT(nn.Module):
-    '''onnx module with TensorRT NMS operation.'''
-    def __init__(self, max_obj=100, iou_thres=0.45, score_thres=0.25, max_wh=None ,device=None):
-        super().__init__()
-        assert max_wh is None
-        self.device = device if device else torch.device('cpu')
-        self.background_class = -1,
-        self.box_coding = 1,
-        self.iou_threshold = iou_thres
-        self.max_obj = max_obj
-        self.plugin_version = '1'
-        self.score_activation = 0
-        self.score_threshold = score_thres
-
-    def forward(self, x):
-        boxes = x[:, :, :4]
-        conf = x[:, :, 4:5]
-        scores = x[:, :, 5:]
-        scores *= conf
-        num_det, det_boxes, det_scores, det_classes = TRT_NMS.apply(boxes, scores, self.background_class, self.box_coding,
-                                                                    self.iou_threshold, self.max_obj,
-                                                                    self.plugin_version, self.score_activation,
-                                                                    self.score_threshold)
-        return num_det, det_boxes, det_scores, det_classes
-
-
-class End2End(nn.Module):
-    '''export onnx or tensorrt model with NMS operation.'''
-    def __init__(self, model, max_obj=100, iou_thres=0.45, score_thres=0.25, max_wh=None, device=None):
-        super().__init__()
-        device = device if device else torch.device('cpu')
-        assert isinstance(max_wh,(int)) or max_wh is None
-        self.model = model.to(device)
-        self.model.model[-1].end2end = True
-        self.patch_model = ONNX_TRT if max_wh is None else ONNX_ORT
-        self.end2end = self.patch_model(max_obj, iou_thres, score_thres, max_wh, device)
-        self.end2end.eval()
-
-    def forward(self, x):
-        x = self.model(x)
-        x = self.end2end(x)
-        return x
-
-
-def attempt_load(weights, map_location=None):
-    # Loads an ensemble of models weights=[a,b,c] or a single model weights=[a] or weights=a
-    model = Ensemble()
-    for w in weights if isinstance(weights, list) else [weights]:
-        # attempt_download(w)
-        ckpt = torch.load(w, map_location=map_location)  # load
-        model.append(ckpt['ema' if ckpt.get('ema') else 'model'].float().fuse().eval())  # FP32 model
-    
-    # Compatibility updates
-    for m in model.modules():
-        if type(m) in [nn.Hardswish, nn.LeakyReLU, nn.ReLU, nn.ReLU6, nn.SiLU]:
-            m.inplace = True  # pytorch 1.7.0 compatibility
-        elif type(m) is nn.Upsample:
-            m.recompute_scale_factor = None  # torch 1.11.0 compatibility
-        elif type(m) is Conv:
-            m._non_persistent_buffers_set = set()  # pytorch 1.6.0 compatibility
-    
-    if len(model) == 1:
-        return model[-1]  # return model
-    else:
-        print('Ensemble created with %s\n' % weights)
-        for k in ['names', 'stride']:
-            setattr(model, k, getattr(model[-1], k))
-        return model  # return ensemble
-
-
