@@ -1,0 +1,19 @@
+{% block body %}
+
+Name: {{ task.name }}<br>
+Location: {{ task.location }}<br>
+Note: {{ task.note }}<br>
+
+<video width="640" height="360" controls>
+    <source src="{{ task.input_vdo }}" type="audio/mp4">
+</video><br>
+
+<a href="{% url 'task:update_task' task.id %}">Update task</a></br>
+
+<form action="{% url 'task:delete_task' task.id %}" method="POST">
+    {% csrf_token %}
+    
+    <input type="submit" value="Delete task"/>
+</form>
+
+{% endblock %}

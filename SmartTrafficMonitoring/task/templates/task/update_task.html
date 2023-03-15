@@ -1,0 +1,18 @@
+{% block body %}
+
+<form method="post" enctype="multipart/form-data" action="{% url 'task:update_task' task.id %}">
+    {% csrf_token %}
+
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name" value="{{ task.name }}"><br>
+
+    <label for="location">Location:</label><br>
+    <input type="text" id="location" name="location" value="{{ task.location }}"><br>
+
+    <label for="note">Note:</label><br>
+    <input type="text" id="note" name="note" value="{{ task.note }}"><br>
+
+    <button type="submit">Update</button>
+</form>
+
+{% endblock %}

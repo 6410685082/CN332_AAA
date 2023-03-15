@@ -1,65 +1,70 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.core.files.storage import FileSystemStorage
+from django.utils import dateformat
+from django.http import HttpResponseRedirect
 
 import sys
 sys.path.append("../user")
 
 from user.models import UserInfo
-from django.contrib.auth.models import User
-from .forms import TaskForm
+# from django.contrib.auth.models import User
+# from .forms import TaskForm
 from .models import *
 
 @login_required(login_url='/user/login')
 def index(request):
     user_info = UserInfo.objects.get(user_id=request.user)
 
+    tasks = Task.objects.filter(created_by=request.user)
+
+    for task in tasks:
+        task.created_at = dateformat.format(task.created_at, 'd/m/Y')
+        task.updated_at = dateformat.format(task.updated_at, 'd/m/Y')
+
     return render(request, 'task/index.html', {
         'user': request.user,
-        'user_info': user_info
+        'user_info': user_info,
+        'tasks': tasks
     })
 
 @login_required(login_url='/user/login')
 def create_task(request):
-    # def handle_uploaded_file(f):
-    #     with open(f.name, 'wb+') as destination:
-    #         for chunk in f.chunks():
-    #             destination.write(chunk)
+    if request.method == 'POST':
+        if request.FILES['loop'] and request.FILES['input_vdo']:
+            name = request.POST.get('name', None)
+            location = request.POST.get('location', None)
 
-    if request.method == "POST":
-        # form = TaskForm(request.POST, request.FILES)
-        form = TaskForm(request.POST)
+            fs = FileSystemStorage()
 
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            location = form.cleaned_data['location']
-            # input_vdo = request.FILES['input_vdo']
-            note = form.cleaned_data['note']
+            loop = request.FILES['loop']
+            loop_filename = fs.save(loop.name, loop)
+            uploaded_loop_url = fs.url(loop_filename)
+
+            input_vdo = request.FILES['input_vdo']
+            input_vdo_filename = fs.save(input_vdo.name, input_vdo)
+            uploaded_input_vdo_url = fs.url(input_vdo_filename)
+
+            note = request.POST.get('note', None)
 
             task = Task.objects.create(
                 name = name,
                 location = location,
-                # input_vdo = input_vdo,
+                loop = uploaded_loop_url,
+                input_vdo = uploaded_input_vdo_url,
                 status_id = Status.objects.first(),
                 note = note,
                 created_by = request.user
             )
 
-            return render(request, 'task/index.html', {
-                'user': request.user,
-            })
+            return HttpResponseRedirect(reverse('task:view_task', args=(task.id,)))
         else:
-            return render(request, 'task/index.html', {
-                'user': request.user,
-                'message': 'Data is invalid.'
-            })
+            return redirect(reverse('task:create_task'))
 
     else:
-        form = TaskForm()
-
         return render(request, 'task/create_task.html', {
-            'user': request.user,
-            'form': form
+            'user': request.user
         })
     
 @login_required(login_url='/user/login')
@@ -69,7 +74,7 @@ def view_task(request, task_id):
     if task is None:
         return redirect(reverse('task:index'))
 
-    return render(request, 'task/task.html', {
+    return render(request, 'task/view_task.html', {
                 'user': request.user,
                 'task': task
             })
@@ -78,20 +83,31 @@ def view_task(request, task_id):
 def update_task(request, task_id):
     task = Task.objects.filter(pk=task_id, created_by=request.user).first()
 
-    if request.method == 'POST':
-        pass
+    if task is None:
+        return redirect(reverse('task:index'))
     else:
-        form = TaskForm(request.POST)
+        if request.method == 'POST':
+            name = request.POST.get('name')
+            location = request.POST.get('location')
+            note = request.POST.get('note')
 
-        print(form)
-        return 
+            Task.objects.filter(pk=task_id).update(
+                name=name,
+                location=location,
+                note=note
+            )
+
+            return HttpResponseRedirect(reverse('task:view_task', args=(task.id,)))
+        else:
+            return render(request, 'task/update_task.html', {
+                        'user': request.user,
+                        'task': task
+                    })
 
 
 @login_required(login_url='/user/login')
 def delete_task(request, task_id):
     task = Task.objects.filter(pk=task_id, created_by=request.user).first()
-
-    task.delete()
 
     if task is not None:
         task.delete()

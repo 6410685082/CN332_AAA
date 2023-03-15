@@ -7,22 +7,17 @@ class Status(models.Model):
 
     def __str__(self):
         return f"{self.name}"
-    
-# class Video(models.Model):
-#     name = models.CharField(max_length=255)
-#     path = models.FileField(upload_to='videos/', null=True, verbose_name="")
-
-#     def __str__(self):
-#         return f"{self.name}: {self.path}"
 
 class Task(models.Model):
     name = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
-    input_vdo = models.FileField(upload_to='input')
-    output_vdo = models.FileField(upload_to='output', null=True)
+    loop = models.FileField(upload_to='loop/')
+    input_vdo = models.FileField(upload_to='vdo_input/')
+    output_vdo = models.FileField(upload_to='vdo_output/', null=True)
+    report = models.FileField(upload_to='report_output/', null=True)
     status_id = models.ForeignKey(
         Status, on_delete=models.CASCADE, related_name="status_id")
-    note = models.CharField(max_length=255)
+    note = models.CharField(max_length=255, blank=True)
     created_by = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="created_by")
     created_at = models.DateTimeField(default=timezone.now)

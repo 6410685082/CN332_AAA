@@ -1,11 +1,32 @@
 {% block body %}
 
-<form action="{% url 'task:create_task' %}" method="post">
+<!-- <form action="{% url 'task:create_task' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
     {{ form.as_p }}
     <input type="submit" value="SUBMIT"/>
 
+</form> -->
+
+<form method="post" enctype="multipart/form-data" action="{% url 'task:create_task' %}">
+    {% csrf_token %}
+
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name"><br>
+
+    <label for="location">Location:</label><br>
+    <input type="text" id="location" name="location"><br>
+
+    <label for="input_vdo">Video:</label><br>
+    <input type="file" name="input_vdo" accept="video/mp4,video/x-m4v,video/*"><br>
+
+    <label for="loop">Loop:</label><br>
+    <input type="file" name="loop"><br>
+
+    <label for="note">Note:</label><br>
+    <input type="text" id="note" name="note"><br>
+
+    <button type="submit">Upload</button>
 </form>
 
 {% endblock %}

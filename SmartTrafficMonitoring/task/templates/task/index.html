@@ -7,6 +7,27 @@
 <a href="{% url 'user:profile' %}">Profile</a></br>
 <a href="{% url 'task:create_task' %}">Create Task</a></br>
 
-table of task
+{% if tasks %}
+<table>
+    <tr>
+      <th>Name</th> 
+      <th>Location</th>
+      <th>Status</th>
+      <th>Date Modify</th>
+      <th>Date Upload</th>
+      <th></th>
+    </tr>
+    {% for task in tasks %}
+    <tr>
+      <td>{{ task.name }}</td> 
+      <td>{{ task.location }}</td>
+      <td>{{ task.status_id }}</td>
+      <td>{{ task.created_at }}</td> 
+      <td>{{ task.updated_at }}</td>
+      <td><a href="{% url 'task:view_task' task.id %}">View {{ task.id }}</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endif %}
 
 {% endblock %}
