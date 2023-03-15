@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "scheduler",
     "engine",
+    "car_track",
 ]
 
 MIDDLEWARE = [

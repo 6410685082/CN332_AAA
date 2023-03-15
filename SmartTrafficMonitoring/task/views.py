@@ -1,7 +1,6 @@
 from django.shortcuts import render
-import engine.ooad as ooad
 import torch
-from engine.utils.general import strip_optimizer
+from engine import ooad
 
 # Create your views here.
 
