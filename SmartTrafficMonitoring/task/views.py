@@ -21,7 +21,7 @@ def index(request):
 
     for task in tasks:
         task.created_at = dateformat.format(task.created_at, 'd/m/Y')
-        task.updated_at = dateformat.format(task.updated_at, 'd/m/Y')
+        task.updated_at = dateformat.format(task.updated_at, 'd/m/Y (H:m)')
 
     return render(request, 'task/index.html', {
         'user': request.user,
@@ -115,8 +115,8 @@ def delete_task(request, task_id):
     return redirect(reverse('task:index'))
 
 
-def report(request):
-    return render(request, 'task/report.html')
+# def report(request):
+#     return render(request, 'task/report.html')
 
-def create_task(request):
-    return render(request, 'task/createtask.html')
+# def create_task(request):
+#     return render(request, 'task/createtask.html')

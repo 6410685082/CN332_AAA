@@ -28,7 +28,7 @@
             <div class="col d-flex align-items-center">
                 <!-- logo -->
                 <a href="#" class="navbar-brand" style="color: #ffffff; font-size:25px; font-weight: 500">
-                    New Task
+                    Smart Traffic Monitoring
                 </a>
             </div>
             <!-- menus -->
@@ -81,16 +81,26 @@
         <div class="step-1">
             <div class="d-flex upload-header">
                 <p class="step">Step 1</p>
-                <p class="m-2">Upload File</p>
+                <p class="m-2">Upload Video</p>
             </div>
             <div class="mb-3 upload-file">
                 <label for="" class="form-label">Select a file to upload</label>
-                <input class="form-control" type="file" id="" accept="video/*">
+                <input class="form-control" type="file" name="input_vdo" accept="video/mp4,video/x-m4v,video/*">
+            </div>
+        </div>
+        <div class="step-1">
+            <div class="d-flex upload-header">
+                <p class="step">Step 2</p>
+                <p class="m-2">Upload Loop</p>
+            </div>
+            <div class="mb-3 upload-file">
+                <label for="" class="form-label">Select a file to upload</label>
+                <input class="form-control" type="file" name="loop">
             </div>
         </div>
         <div class="mt-5 step-2">
             <div class="d-flex information-header">
-                <p class="step">Step 2</p>
+                <p class="step">Step 3</p>
                 <p class="m-2">Fill the information</p>
             </div>
             <div class="information">
@@ -141,7 +151,7 @@
         </div>
         <div class="d-flex submit-area">
             <button type="submit" class="submit-btn">Submit</button>
-            <button class="cancel-btn"><a href="{% url 'report' %}" class="cancel-btn">Cancel</a></button>
+            <button class="cancel-btn"><a href="{% url 'task:index' %}" class="cancel-btn">Cancel</a></button>
         </div>
     </form>
 </div>

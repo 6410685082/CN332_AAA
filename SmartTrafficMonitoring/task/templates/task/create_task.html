@@ -1,13 +1,5 @@
 {% block body %}
 
-<!-- <form action="{% url 'task:create_task' %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-
-    {{ form.as_p }}
-    <input type="submit" value="SUBMIT"/>
-
-</form> -->
-
 <form method="post" enctype="multipart/form-data" action="{% url 'task:create_task' %}">
     {% csrf_token %}
 

@@ -12,8 +12,8 @@ urlpatterns = [
     path('update-task/<int:task_id>', views.update_task, name='update_task'),
     path('delete-task/<int:task_id>', views.delete_task, name='delete_task'),
     
-    path('report', views.report, name='report'),
-    path('createtask', views.create_task, name='createtask'),
+    # path('report', views.report, name='report'),
+    # path('createtask', views.create_task, name='createtask'),
 ] 
 
 if settings.DEBUG:
