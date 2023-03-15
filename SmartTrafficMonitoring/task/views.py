@@ -114,9 +114,21 @@ def delete_task(request, task_id):
 
     return redirect(reverse('task:index'))
 
+@login_required(login_url='/user/login')
+def search_task(request):
+    keyword = request.GET.get('keyword', "")
 
-# def report(request):
-#     return render(request, 'task/report.html')
+    if keyword == "":
+        return redirect(reverse('task:index'))
 
-# def create_task(request):
-#     return render(request, 'task/createtask.html')
+    tasks_by_name = Task.objects.filter(name=keyword, created_by=request.user)
+    tasks_by_location = Task.objects.filter(location=keyword, created_by=request.user)
+    tasks = tasks_by_name | tasks_by_location
+
+    for task in tasks:
+        task.created_at = dateformat.format(task.created_at, 'd/m/Y')
+        task.updated_at = dateformat.format(task.updated_at, 'd/m/Y')
+
+    return render(request, 'task/index.html', {
+        'tasks': tasks
+    })

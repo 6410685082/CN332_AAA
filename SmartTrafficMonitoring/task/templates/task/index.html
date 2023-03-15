@@ -1,37 +1,3 @@
-<!-- {% block body %}
-
-{% if message %}
-    <div style="color: red">{{ message }}</div>
-{% endif %}
-
-<a href="{% url 'user:profile' %}">Profile</a></br>
-<a href="{% url 'task:create_task' %}">Create Task</a></br>
-
-{% if tasks %}
-<table>
-    <tr>
-      <th>Name</th> 
-      <th>Location</th>
-      <th>Status</th>
-      <th>Date Modify</th>
-      <th>Date Upload</th>
-      <th></th>
-    </tr>
-    {% for task in tasks %}
-    <tr>
-      <td>{{ task.name }}</td> 
-      <td>{{ task.location }}</td>
-      <td>{{ task.status_id }}</td>
-      <td>{{ task.created_at }}</td> 
-      <td>{{ task.updated_at }}</td>
-      <td><a href="{% url 'task:view_task' task.id %}">View {{ task.id }}</a></td>
-    </tr>
-    {% endfor %}
-  </table>
-{% endif %}
-
-{% endblock %} -->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -106,8 +72,8 @@
     <div class="task-area">
         <div class="d-flex task-menu">
             <div class="recent-task">RECENT TASK</div>
-            <form class="d-flex search-task">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <form class="d-flex search-task" action="{% url 'task:search_task' %}" method="get">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
                 <button class="btn btn-outline-primary" type="submit">Search</button>
             </form>
             <a class="create-task" href="{% url 'task:create_task' %}">CREATE TASK</a>
