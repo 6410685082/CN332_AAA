@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.utils import timezone
 from django.utils import dateformat
+from django.db.models import Q
 
 import sys
 sys.path.append("../user")
@@ -20,7 +21,6 @@ def index(request):
 
     for task in tasks:
         task.created_at = dateformat.format(task.created_at, 'd/m/Y')
-        # task.updated_at = dateformat.format(task.updated_at, 'd/m/Y (H:m)')
         task.updated_at = dateformat.format(task.updated_at, 'd/m/Y')
 
     return render(request, 'task/index.html', {
@@ -116,13 +116,15 @@ def delete_task(request, task_id):
 
 @login_required(login_url='/user/login')
 def search_task(request):
+    tasks = Task.objects.filter(created_by=request.user)
+
     keyword = request.GET.get('keyword', "")
 
     if keyword == "":
         return redirect(reverse('task:index'))
 
-    tasks_by_name = Task.objects.filter(name=keyword, created_by=request.user)
-    tasks_by_location = Task.objects.filter(location=keyword, created_by=request.user)
+    tasks_by_name = Task.objects.filter(name__contains=keyword, created_by=request.user)
+    tasks_by_location = Task.objects.filter(location__contains=keyword, created_by=request.user)
     tasks = tasks_by_name | tasks_by_location
 
     for task in tasks:
