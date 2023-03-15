@@ -113,3 +113,10 @@ def delete_task(request, task_id):
         task.delete()
 
     return redirect(reverse('task:index'))
+
+
+def report(request):
+    return render(request, 'task/report.html')
+
+def create_task(request):
+    return render(request, 'task/createtask.html')
