@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.utils import dateformat
+from engine import tasks
 
 import sys
 sys.path.append("../user")
@@ -65,6 +66,7 @@ def create_task(request):
                 created_by = request.user
             )
 
+            tasks.process(task)
             return HttpResponseRedirect(reverse('task:view_task', args=(task.id,)))
         else:
             return redirect(reverse('task:create_task'))
