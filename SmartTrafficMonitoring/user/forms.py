@@ -29,3 +29,11 @@ class UpdateUserForm(forms.ModelForm):
         user_info.phone_number = self.cleaned_data['phone_number']
         user_info.save()
         return super().save(commit)
+
+class UserCreationForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'password']
+        widgets = {
+            'password': forms.PasswordInput()
+        }

@@ -148,7 +148,8 @@ td {
 
 .submit-area .cancel-btn {
     margin: 1rem;
-    color: #eb5050;
+    background: #eb5050;
+    color: #ffffff;
     font-weight: 500;
     text-decoration: none;
 }
