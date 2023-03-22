@@ -9,6 +9,12 @@
     <label for="location">Location:</label><br>
     <input type="text" id="location" name="location" value="{{ task.location }}"><br>
 
+    <label for="input_vdo">Video:</label><br>
+    <input type="file" name="input_vdo" accept="video/mp4,video/x-m4v,video/*" value="{{ task.input_vdo }}"><br>
+
+    <label for="loop">Loop:</label><br>
+    <input type="file" name="loop" accept="application/JSON" value="{{ task.loop }}"><br>
+
     <label for="note">Note:</label><br>
     <input type="text" id="note" name="note" value="{{ task.note }}"><br>
 

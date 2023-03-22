@@ -89,11 +89,30 @@ def update_task(request, task_id):
     else:
         if request.method == 'POST':
             name = request.POST.get('name')
+
+            fs = FileSystemStorage()
+
+            if request.FILES['loop']:
+                loop = request.FILES['loop']
+                loop_filename = fs.save(loop.name, loop)
+                uploaded_loop_url = fs.url(loop_filename)
+            else:
+                uploaded_loop_url = task.loop
+
+            if request.FILES['input_vdo']:
+                input_vdo = request.FILES['input_vdo']
+                input_vdo_filename = fs.save(input_vdo.name, input_vdo)
+                uploaded_input_vdo_url = fs.url(input_vdo_filename)
+            else:
+                uploaded_input_vdo_url = task.input_vdo
+
             location = request.POST.get('location')
             note = request.POST.get('note')
 
             Task.objects.filter(pk=task_id).update(
                 name=name,
+                loop = uploaded_loop_url,
+                input_vdo = uploaded_input_vdo_url,
                 location=location,
                 note=note,
             )
