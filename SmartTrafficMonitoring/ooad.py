@@ -62,20 +62,18 @@ class Box:
         return img
 
 
-class Loop:
-    def __init__(self, dec_loop, dec_loopbox, data):
+class Loop():
+    def __init__(self, data):
         self.name = data['name']
         self.id = data['id']
         self.points = data['points']
         self.orientation = data['orientation']
         self.summary_location = data['summary_location']
-        self.loops = dec_loop
-        self.loop_boxes = dec_loopbox
 
         # check if item entering or exit loop
-    def check_enter_exit_loop(self, track):
+    def check_enter_exit_loop(self, self_dec,track):
         # loops = count_boxes["loops"]
-        for loop in self.loops:
+        for loop in self_dec.loops:
             # print(loop)
             pt0, pt1, pt2, pt3 = loop.points
             # check entering line
@@ -85,17 +83,17 @@ class Loop:
                 self.line_enter_check_and_set(loop, track, tp1, tp2, pt0, pt1)
 
                 # check exit line left straight and right
-                self.line_exit_check_and_set(
+                self.line_exit_check_and_set(self_dec,
                     loop, track, tp1, tp2, pt1, pt2, "left")
-                self.line_exit_check_and_set(
+                self.line_exit_check_and_set(self_dec,
                     loop, track, tp1, tp2, pt2, pt3, "straight")
-                self.line_exit_check_and_set(
+                self.line_exit_check_and_set(self_dec,
                     loop, track, tp1, tp2, pt3, pt0, "right")
 
     # draw bouncing box to loop
-    def draw_loops(self, img):
+    def draw_loops(self_dec, img):
         # loops = count_boxes["loops"]
-        for loop in self.loops:
+        for loop in self_dec.loops:
             pt0, pt1, pt2, pt3 = loop.points
 
             cv2.line(img, (pt0["x"], pt0["y"]), (pt1["x"],
@@ -124,7 +122,7 @@ class Loop:
 
     # check if the object exit the line, if the first time mark it and prevent the re entry by setting the flag
     # line_side is the left or right border
-    def line_exit_check_and_set(self, loop, track, tp1, tp2, line_start, line_end, line_side):
+    def line_exit_check_and_set(self,self_dec, loop, track, tp1, tp2, line_start, line_end, line_side):
         if isIntersect(tp1, tp2, line_start, line_end):
             if loop.id in track.aoi_entered and loop.id not in track.aoi_exited:
                 track.aoi_exited.append(loop.id)  # means already exit
@@ -132,19 +130,19 @@ class Loop:
                     f'track {track.id} of type {track.detclass} exit loop {loop.id } at time ...{time_stamp}')
                 if (loop.orientation == "clockwise" and line_side == "left" or
                         loop.orientation == "counterclockwise" and line_side == "right"):  # turn left
-                    self.loop_boxes[int(loop.id)].add_left(int(track.detclass))
+                    self_dec.loop_boxes[int(loop.id)].add_left(int(track.detclass))
                     msg = f'{loop.id},{track.id},{names[int(track.detclass)]},{time_stamp}, LEFT'
                     self.append_to_file(str(save_dir)+"\\loop.txt", msg)
 
                 if (loop.orientation == "clockwise" and line_side == "right" or
                         loop.orientation == "counterclockwise" and line_side == "left"):  # turn right
-                    self.loop_boxes[int(loop.id)].add_right(
+                    self_dec.loop_boxes[int(loop.id)].add_right(
                         int(track.detclass))  # turn right
                     msg = f'{loop.id},{track.id},{names[int(track.detclass)]},{time_stamp}, RIGHT'
                     self.append_to_file(str(save_dir)+"\\loop.txt", msg)
 
                 if line_side == "straight":
-                    self.loop_boxes[int(loop.id)].add_straight(int(track.detclass))
+                    self_dec.loop_boxes[int(loop.id)].add_straight(int(track.detclass))
                     msg = f'{loop.id},{track.id},{names[int(track.detclass)]},{time_stamp}, STRAIGHT'
                     self.append_to_file(str(save_dir)+"\\loop.txt", msg)
 
@@ -319,7 +317,7 @@ class Vehicle:
                         #l = Loop()
                         # tracking object passing line check and update
                         for loop in self.loops:
-                            loop.check_enter_exit_loop(track)
+                            loop.check_enter_exit_loop(self, track)
 
                         # color = compute_color_for_labels(id)
                         # draw colored tracks
@@ -379,7 +377,7 @@ class Vehicle:
             # cv2.putText(im0s,f"Pickup   {cnts[2][0]}           {cnts[2][1]}           {cnts[2][2]} ", (500, 510),cv2.FONT_HERSHEY_SIMPLEX,
             #             0.6, [0, 255, 0], 2)
 
-            Loop.draw_loops(self.loops, im0s)
+            Loop.draw_loops(self,im0s)
             # Stream results
             if view_img:
                 cv2.imshow(str(p), im0)
@@ -415,7 +413,7 @@ class Vehicle:
 
         print(f'Done. ({time.time() - t0:.3f}s)')
 
-class detect_engine:
+class Detect:
     def __init__(self, task):
         # straight left right
         # car
@@ -465,7 +463,7 @@ class detect_engine:
         self.count_boxes = json.load(self.f)
         self.f.close()
 
-        self.loops = [Loop(self.loop, self.count_boxes, data) for data in self.count_boxes["loops"]]
+        self.loops = [Loop(data) for data in self.count_boxes["loops"]] 
 
 
     def check_clock_wise(p1, p2, p3):

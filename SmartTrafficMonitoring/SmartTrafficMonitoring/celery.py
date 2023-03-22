@@ -4,7 +4,7 @@ from datetime import timedelta
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'SmartTrafficMonitoring.settings')
 app = Celery('SmartTrafficMonitoring')
-app.conf.broker_url = 'redis://localhost:6379/0'
+app.config_from_object('django.conf:settings', namespace='CELERY')
 
 app.conf.timezone = 'Asia/Bangkok'
 
