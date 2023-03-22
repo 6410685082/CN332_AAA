@@ -1,24 +1,82 @@
+{% extends 'task/layout.html' %}
 {% block body %}
 
-<form method="post" enctype="multipart/form-data" action="{% url 'task:create_task' %}">
-    {% csrf_token %}
-
-    <label for="name">Name:</label><br>
-    <input type="text" id="name" name="name"><br>
-
-    <label for="location">Location:</label><br>
-    <input type="text" id="location" name="location"><br>
-
-    <label for="input_vdo">Video:</label><br>
-    <input type="file" name="input_vdo" accept="video/mp4,video/x-m4v,video/*"><br>
-
-    <label for="loop">Loop:</label><br>
-    <input type="file" name="loop"><br>
-
-    <label for="note">Note:</label><br>
-    <input type="text" id="note" name="note"><br>
-
-    <button type="submit">Upload</button>
-</form>
-
+<div class="container">
+    <form method="post" enctype="multipart/form-data" action="{% url 'task:create_task' %}">
+        {% csrf_token %}
+        
+        <div class="step-1">
+            <div class="d-flex upload-header">
+                <p class="step">Step 1</p>
+                <p class="m-2">Upload Video</p>
+            </div>
+            <div class="mb-3 upload-file">
+                <label for="" class="form-label">Select a file to upload</label>
+                <input class="form-control" type="file" name="input_vdo" accept="video/mp4,video/x-m4v,video/*" required>
+            </div>
+        </div>
+        <div class="step-2">
+            <div class="d-flex upload-header">
+                <p class="step">Step 2</p>
+                <p class="m-2">Upload Loop</p>
+            </div>
+            <div class="mb-3 upload-file">
+                <label for="" class="form-label">Select a file to upload</label>
+                <input class="form-control" type="file" name="loop" accept="application/JSON" required>
+            </div>
+        </div>
+        <div class="mt-5 step-3">
+            <div class="d-flex information-header">
+                <p class="step">Step 3</p>
+                <p class="m-2">Fill the information</p>
+            </div>
+            <div class="information">
+                {% if preset_tasks %}
+                <div class="input-group">
+                    <div class="d-flex preset">
+                        <div class="d-flex preset-check-box">
+                            <input class="form-check-input m-1" type="radio" name="input_type" id="from-preset" value="old">
+                            <label for="from-preset">From Preset</label>
+                        </div>
+                        <div class="preset-select">
+                            <select class="form-select form-select-sm select-location" name="task_id" id="preset" checked>
+                                <option value="" selected disabled hidden>Choose here</option>
+                                {% for task in preset_tasks %}
+                                <option value="{{ task.id }}">{{ task }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="new-info-check-box m-1">
+                    <input class="form-check-input" type="radio" name="input_type" id="newinfo" value="new" checked>
+                    <label for="newinfo">New Information</label>
+                </div>
+                <div class="d-flex name">
+                    <div class="d-flex name-box">
+                        <label for="" class="form-label">Name</label>
+                        <input type="text" class="form-control name-box" id="name" name="name">
+                    </div>
+                    <div class="d-flex save-preset-check">
+                        <input class="form-check-input me-1" type="checkbox" value="True" id="preset" name="preset">
+                        <label for="preset">Save as preset</label>
+                    </div>
+                </div>
+                <div class="d-flex location">
+                    <label for="location">Location</label>
+                    <input type="text" class="form-control name-box" id="location" name="location">
+                </div>
+                <div class="d-flex description">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea  class="form-control description-box" id="description" name="note"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex submit-area">
+            <button type="submit" class="submit-btn">Submit</button>
+            <button class="cancel-btn"><a href="{% url 'task:index' %}" class="cancel-btn">Cancel</a></button>
+        </div>
+    </form>
+</div>
 {% endblock %}

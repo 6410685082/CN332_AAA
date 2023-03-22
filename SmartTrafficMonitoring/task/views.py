@@ -3,7 +3,6 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
-from django.utils import timezone
 from django.utils import dateformat
 
 import sys
@@ -20,7 +19,6 @@ def index(request):
 
     for task in tasks:
         task.created_at = dateformat.format(task.created_at, 'd/m/Y')
-        # task.updated_at = dateformat.format(task.updated_at, 'd/m/Y (H:m)')
         task.updated_at = dateformat.format(task.updated_at, 'd/m/Y')
 
     return render(request, 'task/index.html', {
@@ -33,8 +31,15 @@ def index(request):
 def create_task(request):
     if request.method == 'POST':
         if request.FILES['loop'] and request.FILES['input_vdo']:
-            name = request.POST.get('name', None)
-            location = request.POST.get('location', None)
+            if request.POST.get('input_type', 'new') == 'new':
+                name = request.POST.get('name', None)
+                location = request.POST.get('location', None)
+            else:
+                task_id = request.POST.get('task_id', None)
+                task = Task.objects.get(pk=task_id)
+
+                name = task.name
+                location = task.location
 
             fs = FileSystemStorage()
 
@@ -47,6 +52,7 @@ def create_task(request):
             uploaded_input_vdo_url = fs.url(input_vdo_filename)
 
             note = request.POST.get('note', None)
+            preset = request.POST.get('preset', False)
 
             task = Task.objects.create(
                 name = name,
@@ -55,6 +61,7 @@ def create_task(request):
                 input_vdo = uploaded_input_vdo_url,
                 status_id = Status.objects.first(),
                 note = note,
+                preset = preset,
                 created_by = request.user
             )
 
@@ -63,8 +70,11 @@ def create_task(request):
             return redirect(reverse('task:create_task'))
 
     else:
+        preset_tasks = Task.objects.filter(created_by=request.user, preset=True)
+        
         return render(request, 'task/create_task.html', {
-            'user': request.user
+            'user': request.user,
+            'preset_tasks': preset_tasks
         })
     
 @login_required(login_url='/user/login')
@@ -88,14 +98,36 @@ def update_task(request, task_id):
     else:
         if request.method == 'POST':
             name = request.POST.get('name')
+
+            fs = FileSystemStorage()
+
+            try:
+                loop = request.FILES['loop']
+                loop_filename = fs.save(loop.name, loop)
+                uploaded_loop_url = fs.url(loop_filename)
+            except:
+                uploaded_loop_url = task.loop
+
+            try:
+                input_vdo = request.FILES['input_vdo']
+                input_vdo_filename = fs.save(input_vdo.name, input_vdo)
+                uploaded_input_vdo_url = fs.url(input_vdo_filename)
+            except:
+                uploaded_input_vdo_url = task.input_vdo
+
             location = request.POST.get('location')
             note = request.POST.get('note')
 
             Task.objects.filter(pk=task_id).update(
-                name=name,
-                location=location,
-                note=note
+                name = name,
+                loop = uploaded_loop_url,
+                input_vdo = uploaded_input_vdo_url,
+                location = location,
+                note = note,
             )
+
+            # update timestamp (updated_at)
+            Task.objects.get(pk=task_id).save()
 
             return HttpResponseRedirect(reverse('task:view_task', args=(task.id,)))
         else:
@@ -114,9 +146,23 @@ def delete_task(request, task_id):
 
     return redirect(reverse('task:index'))
 
+@login_required(login_url='/user/login')
+def search_task(request):
+    tasks = Task.objects.filter(created_by=request.user)
 
-# def report(request):
-#     return render(request, 'task/report.html')
+    keyword = request.GET.get('keyword', "")
 
-# def create_task(request):
-#     return render(request, 'task/createtask.html')
+    if keyword == "":
+        return redirect(reverse('task:index'))
+
+    tasks_by_name = Task.objects.filter(name__contains=keyword, created_by=request.user)
+    tasks_by_location = Task.objects.filter(location__contains=keyword, created_by=request.user)
+    tasks = tasks_by_name | tasks_by_location
+
+    for task in tasks:
+        task.created_at = dateformat.format(task.created_at, 'd/m/Y')
+        task.updated_at = dateformat.format(task.updated_at, 'd/m/Y')
+
+    return render(request, 'task/index.html', {
+        'tasks': tasks
+    })
