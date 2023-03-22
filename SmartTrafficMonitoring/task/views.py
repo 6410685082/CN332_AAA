@@ -3,9 +3,7 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
-from django.utils import timezone
 from django.utils import dateformat
-from django.db.models import Q
 
 import sys
 sys.path.append("../user")
@@ -63,8 +61,11 @@ def create_task(request):
             return redirect(reverse('task:create_task'))
 
     else:
+        preset_tasks = Task.objects.filter(created_by=request.user, preset=True)
+        
         return render(request, 'task/create_task.html', {
-            'user': request.user
+            'user': request.user,
+            'preset_tasks': preset_tasks
         })
     
 @login_required(login_url='/user/login')
@@ -94,8 +95,11 @@ def update_task(request, task_id):
             Task.objects.filter(pk=task_id).update(
                 name=name,
                 location=location,
-                note=note
+                note=note,
             )
+
+            # update timestamp (updated_at)
+            Task.objects.get(pk=task_id).save()
 
             return HttpResponseRedirect(reverse('task:view_task', args=(task.id,)))
         else:
