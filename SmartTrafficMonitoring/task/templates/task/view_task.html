@@ -1,7 +1,8 @@
+{% extends 'task/layout.html' %}
 {% block body %}
 
-<a href="{% url 'task:index' %}">Home</a></br>
-
+<br>
+<br>
 Name: {{ task.name }}<br>
 Location: {{ task.location }}<br>
 Note: {{ task.note }}<br>
