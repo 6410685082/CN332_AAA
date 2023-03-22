@@ -31,8 +31,15 @@ def index(request):
 def create_task(request):
     if request.method == 'POST':
         if request.FILES['loop'] and request.FILES['input_vdo']:
-            name = request.POST.get('name', None)
-            location = request.POST.get('location', None)
+            if request.POST.get('input_type', 'new') == 'new':
+                name = request.POST.get('name', None)
+                location = request.POST.get('location', None)
+            else:
+                task_id = request.POST.get('task_id', None)
+                task = Task.objects.get(pk=task_id)
+
+                name = task.name
+                location = task.location
 
             fs = FileSystemStorage()
 
@@ -45,6 +52,7 @@ def create_task(request):
             uploaded_input_vdo_url = fs.url(input_vdo_filename)
 
             note = request.POST.get('note', None)
+            preset = request.POST.get('preset', False)
 
             task = Task.objects.create(
                 name = name,
@@ -53,6 +61,7 @@ def create_task(request):
                 input_vdo = uploaded_input_vdo_url,
                 status_id = Status.objects.first(),
                 note = note,
+                preset = preset,
                 created_by = request.user
             )
 
@@ -92,29 +101,29 @@ def update_task(request, task_id):
 
             fs = FileSystemStorage()
 
-            if request.FILES['loop']:
+            try:
                 loop = request.FILES['loop']
                 loop_filename = fs.save(loop.name, loop)
                 uploaded_loop_url = fs.url(loop_filename)
-            else:
+            except:
                 uploaded_loop_url = task.loop
 
-            if request.FILES['input_vdo']:
+            try:
                 input_vdo = request.FILES['input_vdo']
                 input_vdo_filename = fs.save(input_vdo.name, input_vdo)
                 uploaded_input_vdo_url = fs.url(input_vdo_filename)
-            else:
+            except:
                 uploaded_input_vdo_url = task.input_vdo
 
             location = request.POST.get('location')
             note = request.POST.get('note')
 
             Task.objects.filter(pk=task_id).update(
-                name=name,
+                name = name,
                 loop = uploaded_loop_url,
                 input_vdo = uploaded_input_vdo_url,
-                location=location,
-                note=note,
+                location = location,
+                note = note,
             )
 
             # update timestamp (updated_at)

@@ -12,8 +12,8 @@ class Task(models.Model):
     location = models.CharField(max_length=255)
     loop = models.FileField(upload_to='loop/')
     input_vdo = models.FileField(upload_to='vdo_input/')
-    output_vdo = models.FileField(upload_to='vdo_output/', null=True)
-    report = models.FileField(upload_to='report_output/', null=True)
+    output_vdo = models.FileField(upload_to='vdo_output/', null=True, blank=True)
+    report = models.FileField(upload_to='report_output/', null=True, blank=True)
     status_id = models.ForeignKey(
         Status, on_delete=models.CASCADE, related_name="status_id")
     note = models.CharField(max_length=255, blank=True)
