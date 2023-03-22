@@ -63,17 +63,19 @@ class Box:
 
 
 class Loop:
-    def __init__(self, data):
+    def __init__(self, dec_loop, dec_loopbox, data):
         self.name = data['name']
         self.id = data['id']
         self.points = data['points']
         self.orientation = data['orientation']
         self.summary_location = data['summary_location']
+        self.loops = dec_loop
+        self.loop_boxes = dec_loopbox
 
         # check if item entering or exit loop
     def check_enter_exit_loop(self, track):
         # loops = count_boxes["loops"]
-        for loop in detect_engine.loops:
+        for loop in self.loops:
             # print(loop)
             pt0, pt1, pt2, pt3 = loop.points
             # check entering line
@@ -91,9 +93,9 @@ class Loop:
                     loop, track, tp1, tp2, pt3, pt0, "right")
 
     # draw bouncing box to loop
-    def draw_loops(img):
+    def draw_loops(self, img):
         # loops = count_boxes["loops"]
-        for loop in detect_engine.loops:
+        for loop in self.loops:
             pt0, pt1, pt2, pt3 = loop.points
 
             cv2.line(img, (pt0["x"], pt0["y"]), (pt1["x"],
@@ -130,31 +132,35 @@ class Loop:
                     f'track {track.id} of type {track.detclass} exit loop {loop.id } at time ...{time_stamp}')
                 if (loop.orientation == "clockwise" and line_side == "left" or
                         loop.orientation == "counterclockwise" and line_side == "right"):  # turn left
-                    detect_engine.loop_boxes[int(loop.id)].add_left(int(track.detclass))
+                    self.loop_boxes[int(loop.id)].add_left(int(track.detclass))
                     msg = f'{loop.id},{track.id},{names[int(track.detclass)]},{time_stamp}, LEFT'
                     self.append_to_file(str(save_dir)+"\\loop.txt", msg)
 
                 if (loop.orientation == "clockwise" and line_side == "right" or
                         loop.orientation == "counterclockwise" and line_side == "left"):  # turn right
-                    detect_engine.loop_boxes[int(loop.id)].add_right(
+                    self.loop_boxes[int(loop.id)].add_right(
                         int(track.detclass))  # turn right
                     msg = f'{loop.id},{track.id},{names[int(track.detclass)]},{time_stamp}, RIGHT'
                     self.append_to_file(str(save_dir)+"\\loop.txt", msg)
 
                 if line_side == "straight":
-                    detect_engine.loop_boxes[int(loop.id)].add_straight(int(track.detclass))
+                    self.loop_boxes[int(loop.id)].add_straight(int(track.detclass))
                     msg = f'{loop.id},{track.id},{names[int(track.detclass)]},{time_stamp}, STRAIGHT'
                     self.append_to_file(str(save_dir)+"\\loop.txt", msg)
 
 
 class Vehicle:
-    def detect(save_img=False):
+    def __init__(self, self_de):
+        self = self_de
+
+
+    def detect(self, save_img=False):
 
         global save_dir
         global time_stamp
         global names
-        source, weights, view_img, save_txt, imgsz, trace, colored_trk = detect_engine.source, detect_engine.weights, detect_engine.view_img, detect_engine.save_txt, detect_engine.img_size, not detect_engine.no_trace, detect_engine.colored_trk
-        save_img = not detect_engine.nosave and not source.endswith(
+        source, weights, view_img, save_txt, imgsz, trace, colored_trk = self.source, self.weights, self.view_img, self.save_txt, self.img_size, not self.no_trace, self.colored_trk
+        save_img = not self.nosave and not source.endswith(
             '.txt')  # save inference images
         webcam = source.isnumeric() or source.endswith('.txt') or source.lower().startswith(
             ('rtsp://', 'rtmp://', 'http://', 'https://'))
@@ -169,14 +175,14 @@ class Vehicle:
                             iou_threshold=sort_iou_thresh)
         # .........................
         # Directories
-        save_dir = Path(increment_path(Path(detect_engine.project) /
-                        detect_engine.name, exist_ok=detect_engine.exist_ok))  # increment run
+        save_dir = Path(increment_path(Path(self.project) /
+                        self.name, exist_ok=self.exist_ok))  # increment run
         (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True,
                                                               exist_ok=True)  # make dir
 
         # Initialize
         set_logging()
-        device = select_device(detect_engine.device)
+        device = select_device(self.device)
         half = device.type != 'cpu'  # half precision only supported on CUDA
 
         # Load model
@@ -185,7 +191,7 @@ class Vehicle:
         imgsz = check_img_size(imgsz, s=stride)  # check img_size
 
         if trace:
-            model = TracedModel(model, device, detect_engine.img_size)
+            model = TracedModel(model, device, self.img_size)
 
         if half:
             model.half()  # to FP16
@@ -209,8 +215,8 @@ class Vehicle:
         # Get names and colors
         names = model.module.names if hasattr(model, 'module') else model.names
         colors = [[random.randint(0, 255) for _ in range(3)] for _ in names]
-        for loop in detect_engine.loops:
-            detect_engine.loop_boxes.append(count_table.LoopCount(
+        for loop in self.loops:
+            self.loop_boxes.append(count_table.LoopCount(
                 len(names), loop.summary_location, loop))
     #    for i in range(len(names)):
     #        cnts.append([0,0,0].copy()) #prepare array the same size as class type
@@ -254,16 +260,16 @@ class Vehicle:
                 old_img_h = img.shape[2]
                 old_img_w = img.shape[3]
                 for i in range(3):
-                    model(img, augment=detect_engine.augment)[0]
+                    model(img, augment=self.augment)[0]
 
             # Inference
             t1 = time_synchronized()
-            pred = model(img, augment=detect_engine.augment)[0]
+            pred = model(img, augment=self.augment)[0]
             t2 = time_synchronized()
 
             # Apply NMS
             pred = non_max_suppression(
-                pred, detect_engine.conf_thres, detect_engine.iou_thres, classes=detect_engine.classes, agnostic=detect_engine.agnostic_nms)
+                pred, self.conf_thres, self.iou_thres, classes=self.classes, agnostic=self.agnostic_nms)
             t3 = time_synchronized()
 
             # Apply Classifier
@@ -312,7 +318,7 @@ class Vehicle:
                     for track in tracks:
                         #l = Loop()
                         # tracking object passing line check and update
-                        for loop in detect_engine.loops:
+                        for loop in self.loops:
                             loop.check_enter_exit_loop(track)
 
                         # color = compute_color_for_labels(id)
@@ -361,7 +367,7 @@ class Vehicle:
             # add counting table
             counttable.img = im0s
 
-            for lb in detect_engine.loop_boxes:
+            for lb in self.loop_boxes:
                 lb.draw(counttable)
             # cv2.rectangle(im0s,(500,400),(900,550),(0,0,0),cv2.FILLED)
             # cv2.putText(im0s,"        Straight    Left        Right", (500, 420),cv2.FONT_HERSHEY_SIMPLEX,
@@ -373,7 +379,7 @@ class Vehicle:
             # cv2.putText(im0s,f"Pickup   {cnts[2][0]}           {cnts[2][1]}           {cnts[2][2]} ", (500, 510),cv2.FONT_HERSHEY_SIMPLEX,
             #             0.6, [0, 255, 0], 2)
 
-            Loop.draw_loops(im0s)
+            Loop.draw_loops(self.loops, im0s)
             # Stream results
             if view_img:
                 cv2.imshow(str(p), im0)
@@ -410,52 +416,57 @@ class Vehicle:
         print(f'Done. ({time.time() - t0:.3f}s)')
 
 class detect_engine:
-    # straight left right
-    # car
-    # pickup
-    # motorcycle
-    # cnts = []
-    count_boxes = []
-    loop_boxes = []  # loop statistics
-    time_stamp = 0  # time in second
-    save_dir = ""
-    names = ""
+    def __init__(self, task):
+        # straight left right
+        # car
+        # pickup
+        # motorcycle
+        # cnts = []
+        self.count_boxes = []
+        self.loop_boxes = []  # loop statistics
+        self.time_stamp = 0  # time in second
+        self.save_dir = ""
+        self.names = ""
+        self.input_vdo_path = str(task.input_vdo)
+        self.loop_path = str(task.loop)
 
-    # ............................... Tracker Functions ............................
-    """ Random created palette"""
-    palette = (2 ** 11 - 1, 2 ** 15 - 1, 2 ** 20 - 1)
+        # ............................... Tracker Functions ............................
+        """ Random created palette"""
+        self.palette = (2 ** 11 - 1, 2 ** 15 - 1, 2 ** 20 - 1)
 
-    abs_path = ''
-    weights = abs_path + 'yolov7.pt'
-    download = True
-    source = abs_path + 'video2.mp4'
-    img_size = 640
-    conf_thres = 0.6
-    iou_thres = 0.5
-    view_img = True
-    save_txt = True
-    save_conf = True
-    nosave = True
-    classes = 1, 2, 3, 7
-    agnostic_nms = True
-    augment = True
-    update = True
-    project = abs_path + 'runs/detect'
-    name = 'object_tracking'
-    exist_ok = True
-    no_trace = True
-    colored_trk = True
-    loop  = abs_path + 'loop.json'
-    loop_txt = True
-    summary_txt = True
-    device = 'cpu'
+        self.yolo_path = ''
+        self.abs_path = '.'
+        self.weights = self.yolo_path + 'yolov7.pt'
+        self.download = True
+        self.source = self.abs_path + self.input_vdo_path
+        self.img_size = 640
+        self.conf_thres = 0.6
+        self.iou_thres = 0.5
+        self.view_img = True
+        self.save_txt = True
+        self.save_conf = True
+        self.nosave = True
+        self.classes = 1, 2, 3, 7
+        self.agnostic_nms = True
+        self.augment = True
+        self.update = True
+        self.project = self.yolo_path + 'runs/detect'
+        self.name = 'object_tracking'
+        self.exist_ok = True
+        self.no_trace = True
+        self.colored_trk = True
+        self.loop  = self.abs_path + self.loop_path
+        self.loop_txt = True
+        self.summary_txt = True
+        self.device = 'cpu'
 
-    # load loops settings
-    f = open(loop)
-    count_boxes = json.load(f)
-    f.close()
+        # load loops settings
+        self.f = open(self.loop)
+        self.count_boxes = json.load(self.f)
+        self.f.close()
 
-    loops = [Loop(data) for data in count_boxes["loops"]]
+        self.loops = [Loop(self.loop, self.count_boxes, data) for data in self.count_boxes["loops"]]
+
 
     def check_clock_wise(p1, p2, p3):
         vec1 = (p2[0]-p1[0], p2[1]-p1[1])
@@ -468,14 +479,14 @@ class detect_engine:
     
     def detect_engine(self):
         # check_requirements(exclude=('pycocotools', 'thop'))
-        if detect_engine.download and not os.path.exists(str(detect_engine.weights)):
+        if self.download and not os.path.exists(str(self.weights)):
             print('Model weights not found. Attempting to download now...')
-            download(detect_engine.abs_path)
+            download(self.yolo_path)
 
         with torch.no_grad():
-            if detect_engine.update:  # update all models (to fix SourceChangeWarning)
-                for detect_engine.weights in [detect_engine.abs_path + 'yolov7.pt']:
-                    Vehicle.detect()
-                    strip_optimizer(detect_engine.weights)
+            if self.update:  # update all models (to fix SourceChangeWarning)
+                for weight in [self.weights]:
+                    Vehicle.detect(self)
+                    strip_optimizer(weight)
             else:
-                Vehicle.detect()
+                Vehicle.detect(self)

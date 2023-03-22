@@ -12,9 +12,9 @@ def thirty_second_func():
     return "Done"
 
 @shared_task
-def process():
+def process(task):
     from ooad import detect_engine
-    d = detect_engine()
+    d = detect_engine(task)
     d.detect_engine()
     return "Done"
 
