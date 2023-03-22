@@ -1,81 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE-edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- fontawesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
-          integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
-          crossorigin="anonymous"
-          referrerpolicy="no-referrer"/>
-    <!-- bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-          crossorigin="anonymous">
-    <!-- main css -->
-    <link rel="stylesheet" href="../../static/style.css">
-    <title>Smart Traffic Monitoring</title>
-</head>
-<body>
-<!-- ============ navbar ============ -->
-<div class="d-flex align-items-center fixed-top shadow nav" style="min-height: 56px; z-index: 5;">
-    <div class="container-fluid">
-        <div class="row align-items-center">
-            <!-- search -->
-            <div class="col d-flex align-items-center">
-                <!-- logo -->
-                <a href="{% url 'task:index' %}" class="navbar-brand" style="color: #ffffff; font-size:25px; font-weight: 500">
-                    Smart Traffic Monitoring
-                </a>
-            </div>
-            <!-- menus -->
-            <div class="col d-flex align-items-center justify-content-end" style="color: #3F4682;">
-                <!-- home -->
-                <div class="d-flex align-items-center justify-content-center p-1 mx-2"
-                     style="width: 38px; height: 38px; object-fit: cover">
-                    <a href="#"><i class="fa-solid fa-house"></i></a>
-                </div>
-                <!-- notifications -->
-                <div class="d-flex align-items-center justify-content-center p-1 mx-2"
-                     style="width: 38px; height: 38px; object-fit: cover">
-                    <a href="#"><i class="fa-solid fa-bell"></i></a>
-                </div>
-                <!-- hamburger menu-->
-                <div class="d-flex align-items-center justify-content-center p-1 mx-2"
-                     style="width: 38px; height: 38px; object-fit: cover"
-                     id="hamburger-menu"
-                     data-bs-toggle="dropdown"
-                     aria-expanded="false"
-                     type="button"
-                     data-bs-auto-close="outside">
-                    <i class="fa-solid fa-bars"></i>
-                </div>
-                <!-- hamburger dropdown -->
-                <ul class="dropdown-menu shadow p-3 m-1"
-                    aria-labelledby="hamburger-menu">
-                    <div class="hamburger-dropdown">
-                        <div>
-                            <a href="{% url 'user:profile' %}" class="d-flex text-decoration-none p-1">
-                                <i class="fa-solid fa-user m-1"></i>
-                                <p class="m-0">View Profile</p>
-                            </a>
-                        </div>
-                        <div>
-                            <a href="{% url 'user:logout' %}" class="d-flex text-decoration-none p-1">
-                                <i class="fa-solid fa-right-from-bracket m-1"></i>
-                                <p class="m-0">Logout</p>
-                            </a>
-                        </div>
-                    </div>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- ============ create task ============ -->
+{% extends 'task/layout.html' %}
+{% block body %}
+
 <div class="container">
     <form method="post" enctype="multipart/form-data" action="{% url 'task:create_task' %}">
         {% csrf_token %}
@@ -90,7 +15,7 @@
                 <input class="form-control" type="file" name="input_vdo" accept="video/mp4,video/x-m4v,video/*" required>
             </div>
         </div>
-        <div class="step-1">
+        <div class="step-2">
             <div class="d-flex upload-header">
                 <p class="step">Step 2</p>
                 <p class="m-2">Upload Loop</p>
@@ -100,7 +25,7 @@
                 <input class="form-control" type="file" name="loop" accept="application/JSON" required>
             </div>
         </div>
-        <div class="mt-5 step-2">
+        <div class="mt-5 step-3">
             <div class="d-flex information-header">
                 <p class="step">Step 3</p>
                 <p class="m-2">Fill the information</p>
@@ -110,11 +35,11 @@
                 <div class="input-group">
                     <div class="d-flex preset">
                         <div class="d-flex preset-check-box">
-                            <input class="form-check-input m-1" type="radio" name="input_type" value="old">
-                            <p>From Preset</p>
+                            <input class="form-check-input m-1" type="radio" name="input_type" id="from-preset" value="old">
+                            <label for="from-preset">From Preset</label>
                         </div>
                         <div class="preset-select">
-                            <select class="form-select form-select-sm select-location" name="task_id" checked>
+                            <select class="form-select form-select-sm select-location" name="task_id" id="preset" checked>
                                 <option value="" selected disabled hidden>Choose here</option>
                                 {% for task in preset_tasks %}
                                 <option value="{{ task.id }}">{{ task }}</option>
@@ -125,8 +50,8 @@
                 </div>
                 {% endif %}
                 <div class="new-info-check-box m-1">
-                    <input class="form-check-input" type="radio" name="input_type" value="new" checked>
-                    New Information
+                    <input class="form-check-input" type="radio" name="input_type" id="newinfo" value="new" checked>
+                    <label for="newinfo">New Information</label>
                 </div>
                 <div class="d-flex name">
                     <div class="d-flex name-box">
@@ -135,16 +60,16 @@
                     </div>
                     <div class="d-flex save-preset-check">
                         <input class="form-check-input me-1" type="checkbox" value="True" id="preset" name="preset">
-                        <p>Save as preset</p>
+                        <label for="preset">Save as preset</label>
                     </div>
                 </div>
                 <div class="d-flex location">
-                    <label for="">Location</label>
+                    <label for="location">Location</label>
                     <input type="text" class="form-control name-box" id="location" name="location">
                 </div>
                 <div class="d-flex description">
-                    <label for="" class="form-label">Description</label>
-                    <textarea  class="form-control description-box" id="note" name="note"></textarea>
+                    <label for="description" class="form-label">Description</label>
+                    <textarea  class="form-control description-box" id="description" name="description"></textarea>
                 </div>
             </div>
         </div>
@@ -154,9 +79,4 @@
         </div>
     </form>
 </div>
-<!-- bootstrap -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
-</body>
-</html>
+{% endblock %}
