@@ -10,7 +10,7 @@ app.conf.timezone = 'Asia/Bangkok'
 
 app.conf.beat_schedule = {
     "every_thirty_seconds": {
-        "task": "engine.tasks.thirty_second_func",
+        "task": "engine.scheduler.thirty_second_func",
         "schedule": timedelta(seconds=30),
     },
 }

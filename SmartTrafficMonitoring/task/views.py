@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.utils import dateformat
-from engine.tasks import process
+from engine.scheduler import process
 
 import sys
 sys.path.append("../user")
