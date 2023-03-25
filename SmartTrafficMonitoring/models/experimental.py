@@ -2,17 +2,9 @@ import numpy as np
 import random
 import torch
 import torch.nn as nn
-<<<<<<< HEAD
-
 from models.common import Conv, DWConv
 from utils.google_utils import attempt_download
 import importlib.util
-=======
-import importlib.util
-
-from models.common import Conv, DWConv
-from utils.google_utils import attempt_download
->>>>>>> origin
 
 
 class CrossConv(nn.Module):
@@ -238,37 +230,21 @@ class End2End(nn.Module):
         x = self.end2end(x)
         return x
 
-
-
-
-
 def attempt_load(weights, map_location=None):
     def find_class(self, mod_name, name):
         spec = importlib.util.find_spec(mod_name)
         if spec is None:
             return None
-<<<<<<< HEAD
         
         # Load the module using importlib
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         
-=======
-
-        # Load the module using importlib
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-
->>>>>>> origin
         # Return the class object from the module
         if hasattr(module, name):
             return getattr(module, name)
         else:
             return None
-<<<<<<< HEAD
-
-=======
->>>>>>> origin
     # Loads an ensemble of models weights=[a,b,c] or a single model weights=[a] or weights=a
     model = Ensemble()
     for w in weights if isinstance(weights, list) else [weights]:
@@ -292,9 +268,3 @@ def attempt_load(weights, map_location=None):
         for k in ['names', 'stride']:
             setattr(model, k, getattr(model[-1], k))
         return model  # return ensemble
-
-
-<<<<<<< HEAD
-=======
-
->>>>>>> origin

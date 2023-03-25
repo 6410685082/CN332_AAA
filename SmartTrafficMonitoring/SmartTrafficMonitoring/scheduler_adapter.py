@@ -28,10 +28,20 @@ class CeleryAdapter(Scheduler):
 
         @shared_task(bind=True)
         def adapt_process(self,task_id):
-            from task.models import Task
+            from task.models import Task, Status
             from ooad import Detect
+
             d = Detect(Task.objects.get(id=task_id))
+
             d.detect_engine()
+
+            Task.objects.filter(pk=task_id).update(
+                status_id = Status.objects.last(),
+            )
+
+            # update timestamp (updated_at)
+            Task.objects.get(pk=task_id).save()
+
             return "Done"
 
         @shared_task

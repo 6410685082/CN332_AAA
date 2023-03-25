@@ -477,7 +477,7 @@ class Detect:
             return False
     
     def detect_engine(self):
-        Detect.adapter_engine()
+        Detect.adapter_engine(self)
 
         # check_requirements(exclude=('pycocotools', 'thop'))
         if self.download and not os.path.exists(str(self.weights)):
