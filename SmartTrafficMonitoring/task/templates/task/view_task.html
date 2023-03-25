@@ -1,22 +1,35 @@
 {% extends 'task/layout.html' %}
 {% block body %}
 
-<br>
-<br>
-Name: {{ task.name }}<br>
-Location: {{ task.location }}<br>
-Note: {{ task.note }}<br>
+<div class="container">
+    <div class="d-flex name">
+        <div class="d-flex name-box">
+            <label for="name" class="form-label">Name:</label>
+            <input class="form-control name-box" type="text" id="name" name="name" value="{{ task.name }}">
+        </div>
+    </div>
 
-<video width="640" height="360" controls>
-    <source src="{{ task.input_vdo }}" type="audio/mp4">
-</video><br>
+    <div class="d-flex location">
+        <label for="location">Location:</label>
+        <input class="form-control name-box" type="text" id="location" name="location" value="{{ task.location }}">
+    </div>
 
-<a href="{% url 'task:update_task' task.id %}">Update task</a></br>
+    <div class="step-1 m-3 mt-5">
+        <video width="640" height="360" controls>
+            <source src="{{ task.input_vdo }}" type="audio/mp4">
+        </video><br>
+    </div>
 
-<form action="{% url 'task:delete_task' task.id %}" method="POST">
-    {% csrf_token %}
-    
-    <input type="submit" value="Delete task"/>
-</form>
+    <div class="d-flex description mt-5">
+        <label for="note" class="form-label">Note:</label><br>
+        <input type="text" class="form-control description-box" id="note" name="note" value="{{ task.note }}"><br>
+    </div>  
+</div>
+
+<div class="d-flex submit-area">
+    <button type="submit" class="submit-btn"><a href="{% url 'task:update_task' task.id%}"class="submit-btn">Update Task</a></button>
+    <button type="button" class="cancel-btn"><a href="{% url 'task:delete_task' task.id %}" class="cancel-btn">Delete</a></button>
+</div>
+
 
 {% endblock %}
