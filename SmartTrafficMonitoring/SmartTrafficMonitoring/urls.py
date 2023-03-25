@@ -18,11 +18,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-<<<<<<< HEAD
-    path("", include("task.urls")),
-=======
     path("homepage/", include('homepage.urls', namespace='homepage')),
     path("", include('task.urls', namespace='task')),
->>>>>>> origin
     path("user/", include('user.urls', namespace='user')),
 ]

@@ -7,12 +7,6 @@ app_name = 'task'
 
 urlpatterns = [
     path('', views.index, name='index'),
-<<<<<<< HEAD
-    path('report', views.report, name='report'),
-    path('createtask', views.create_task, name='createtask'),
-    path('showtask', views.showtask, name='showtask')
-]
-=======
     path('create-task/', views.create_task, name='create_task'),
     path('view-task/<int:task_id>', views.view_task, name='view_task'),
     path('update-task/<int:task_id>', views.update_task, name='update_task'),
@@ -22,4 +16,3 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
->>>>>>> origin

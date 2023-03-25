@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-from django.shortcuts import render
-import torch
-import ooad
-from celery import shared_task
-=======
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -11,21 +5,12 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.utils import dateformat
 from engine.scheduler import process
->>>>>>> origin
 
 import sys
 sys.path.append("../user")
 
-<<<<<<< HEAD
-def index(request):
-    return render(request, 'index.html')
-
-def report(request):
-    return render(request, 'task/report.html')
-=======
 from user.models import UserInfo
 from .models import *
->>>>>>> origin
 
 @login_required(login_url='/user/login')
 def index(request):
@@ -45,31 +30,6 @@ def index(request):
 
 @login_required(login_url='/user/login')
 def create_task(request):
-<<<<<<< HEAD
-    return render(request, 'task/createtask.html')
-
-def showtask(request):
-    opt_weights = 'yolov7.pt'
-    if request.method == 'POST':
-        input_text = request.POST.get('input')
-        # process input_text and generate output
-        output_text = "Output generated from input: " + input_text
-        with torch.no_grad():
-            for opt_weights in ['yolov7.pt']:
-                ooad.Vehicle.detect()
-                strip_optimizer(opt_weights)
-        # send output_text to template
-        return render(request, 'showtask.html', {'output': output_text})
-    return render(request, 'showtask.html')
-
-@shared_task
-def detect():
-    opt_weights = 'yolov7.pt'
-    with torch.no_grad():
-            for opt_weights in ['yolov7.pt']:
-                ooad.Vehicle.detect()
-                #strip_optimizer(opt_weights)
-=======
     if request.method == 'POST':
         if request.FILES['loop'] and request.FILES['input_vdo']:
             if request.POST.get('input_type', 'new') == 'new':
@@ -100,7 +60,7 @@ def detect():
                 location = location,
                 loop = uploaded_loop_url,
                 input_vdo = uploaded_input_vdo_url,
-                status_id = Status.objects.first(),
+                status_id = Status.objects.create(),
                 note = note,
                 preset = preset,
                 created_by = request.user
@@ -208,4 +168,3 @@ def search_task(request):
     return render(request, 'task/index.html', {
         'tasks': tasks
     })
->>>>>>> origin
