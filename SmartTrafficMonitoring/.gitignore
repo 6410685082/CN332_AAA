@@ -1,12 +1,3 @@
-.vnv
-__pycache__/
-runs
-*.pyc
-*.pt
-
-*.pyc
-*.mp4
-
 # Django #
 *.log
 *.pot
@@ -107,7 +98,7 @@ celerybeat-schedule.*
 
 # Environments 
 .env 
-.venv 
+# .venv 
 env/ 
 venv/ 
 ENV/ 
