@@ -1,21 +1,27 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# Create your models here.
-
-class Video(models.Model):
-    name = models.CharField(max_length = 200)
-    time = models.FloatField()
-    dir = models.CharField(max_length = 100)
+class Status(models.Model):
+    name = models.CharField(max_length=10)
 
     def __str__(self):
-        return f"{self.name} {self.time} {self.dir}"
+        return f"{self.name}"
 
-    def creat_video(self):
-        pass
-    def view_video(self):
-        pass
-    def update_video(self):
-        pass
-    def delete_video(self):
-        pass
+class Task(models.Model):
+    name = models.CharField(max_length=255)
+    location = models.CharField(max_length=255)
+    loop = models.FileField(upload_to='loop/')
+    input_vdo = models.FileField(upload_to='vdo_input/')
+    output_vdo = models.FileField(upload_to='vdo_output/', null=True, blank=True)
+    report = models.FileField(upload_to='report_output/', null=True, blank=True)
+    status_id = models.ForeignKey(
+        Status, on_delete=models.CASCADE, related_name="status_id")
+    note = models.CharField(max_length=255, blank=True)
+    preset = models.BooleanField(default=False)
+    created_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="created_by")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f"{self.name} {self.location}"

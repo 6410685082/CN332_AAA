@@ -1,5 +1,4 @@
 import os
-from django.conf import settings
 import cv2
 import time
 import torch
@@ -12,40 +11,22 @@ import torch.backends.cudnn as cudnn
 from models.experimental import attempt_load
 from utils.datasets import LoadStreams, LoadImages
 from utils.general import check_img_size, check_requirements, \
-                check_imshow, non_max_suppression, apply_classifier, \
-                scale_coords, xyxy2xywh, strip_optimizer, set_logging, \
-                increment_path
+    check_imshow, non_max_suppression, apply_classifier, \
+    scale_coords, xyxy2xywh, strip_optimizer, set_logging, \
+    increment_path
 from utils.plots import plot_one_box
 from utils.torch_utils import select_device, load_classifier, \
-                time_synchronized, TracedModel
+    time_synchronized, TracedModel
 from utils.download_weights import download
 
+# For SORT tracking
 import skimage
-from sort import *
-from line_intersect import isIntersect
 from sort import *
 from line_intersect import isIntersect
 import json
 import count_table
 
-def check_clock_wise(p1, p2, p3):
-    vec1 = (p2[0]-p1[0], p2[1]-p1[1])
-    vec2 = (p3[0]-p2[0], p3[1]-p2[1])
-    cross = vec2[0] * vec1[1] - vec2[1] * vec1[0]
-    if cross >= 0:
-        return True
-    else:
-        return False
-
-count_boxes = []
-loop_boxes = []  # loop statistics
-time_stamp = 0  # time in second
-save_dir = ""
-names = ""
-
-# ............................... Tracker Functions ............................
-""" Random created palette"""
-palette = (2 ** 11 - 1, 2 ** 15 - 1, 2 ** 20 - 1)
+# 3 point consecutive vect
 
 class Box:
     """" Calculates the relative bounding box from absolute pixel values. """
@@ -81,7 +62,7 @@ class Box:
         return img
 
 
-class Loop:
+class Loop():
     def __init__(self, data):
         self.name = data['name']
         self.id = data['id']
@@ -90,9 +71,9 @@ class Loop:
         self.summary_location = data['summary_location']
 
         # check if item entering or exit loop
-    def check_enter_exit_loop(self, track, loops):
+    def check_enter_exit_loop(self, self_dec,track):
         # loops = count_boxes["loops"]
-        for loop in loops:
+        for loop in self_dec.loops:
             # print(loop)
             pt0, pt1, pt2, pt3 = loop.points
             # check entering line
@@ -102,27 +83,27 @@ class Loop:
                 self.line_enter_check_and_set(loop, track, tp1, tp2, pt0, pt1)
 
                 # check exit line left straight and right
-                self.line_exit_check_and_set(
+                self.line_exit_check_and_set(self_dec,
                     loop, track, tp1, tp2, pt1, pt2, "left")
-                self.line_exit_check_and_set(
+                self.line_exit_check_and_set(self_dec,
                     loop, track, tp1, tp2, pt2, pt3, "straight")
-                self.line_exit_check_and_set(
+                self.line_exit_check_and_set(self_dec,
                     loop, track, tp1, tp2, pt3, pt0, "right")
 
     # draw bouncing box to loop
-    def draw_loops(img, loops):
+    def draw_loops(self_dec, img):
         # loops = count_boxes["loops"]
-        for loop in loops:
+        for loop in self_dec.loops:
             pt0, pt1, pt2, pt3 = loop.points
 
             cv2.line(img, (pt0["x"], pt0["y"]), (pt1["x"],
-                        pt1["y"]), (255, 0, 0), 2)  # entering line
+                     pt1["y"]), (255, 0, 0), 2)  # entering line
             cv2.line(img, (pt1["x"], pt1["y"]), (pt2["x"],
-                        pt2["y"]), (255, 255, 0), 2)  # left line
+                     pt2["y"]), (255, 255, 0), 2)  # left line
             cv2.line(img, (pt2["x"], pt2["y"]), (pt3["x"],
-                        pt3["y"]), (255, 255, 0), 2)  # straight
+                     pt3["y"]), (255, 255, 0), 2)  # straight
             cv2.line(img, (pt3["x"], pt3["y"]), (pt0["x"],
-                        pt0["y"]), (255, 255, 0), 2)  # right
+                     pt0["y"]), (255, 255, 0), 2)  # right
             cv2.putText(img, loop.name, (pt0["x"], pt0["y"]), cv2.FONT_HERSHEY_SIMPLEX, 0.6, [
                         0, 255, 0], 2)
 
@@ -141,7 +122,7 @@ class Loop:
 
     # check if the object exit the line, if the first time mark it and prevent the re entry by setting the flag
     # line_side is the left or right border
-    def line_exit_check_and_set(self, loop, track, tp1, tp2, line_start, line_end, line_side):
+    def line_exit_check_and_set(self,self_dec, loop, track, tp1, tp2, line_start, line_end, line_side):
         if isIntersect(tp1, tp2, line_start, line_end):
             if loop.id in track.aoi_entered and loop.id not in track.aoi_exited:
                 track.aoi_exited.append(loop.id)  # means already exit
@@ -149,68 +130,35 @@ class Loop:
                     f'track {track.id} of type {track.detclass} exit loop {loop.id } at time ...{time_stamp}')
                 if (loop.orientation == "clockwise" and line_side == "left" or
                         loop.orientation == "counterclockwise" and line_side == "right"):  # turn left
-                    loop_boxes[int(loop.id)].add_left(int(track.detclass))
+                    self_dec.loop_boxes[int(loop.id)].add_left(int(track.detclass))
                     msg = f'{loop.id},{track.id},{names[int(track.detclass)]},{time_stamp}, LEFT'
                     self.append_to_file(str(save_dir)+"\\loop.txt", msg)
 
                 if (loop.orientation == "clockwise" and line_side == "right" or
                         loop.orientation == "counterclockwise" and line_side == "left"):  # turn right
-                    loop_boxes[int(loop.id)].add_right(
+                    self_dec.loop_boxes[int(loop.id)].add_right(
                         int(track.detclass))  # turn right
                     msg = f'{loop.id},{track.id},{names[int(track.detclass)]},{time_stamp}, RIGHT'
                     self.append_to_file(str(save_dir)+"\\loop.txt", msg)
 
                 if line_side == "straight":
-                    loop_boxes[int(loop.id)].add_straight(int(track.detclass))
+                    self_dec.loop_boxes[int(loop.id)].add_straight(int(track.detclass))
                     msg = f'{loop.id},{track.id},{names[int(track.detclass)]},{time_stamp}, STRAIGHT'
                     self.append_to_file(str(save_dir)+"\\loop.txt", msg)
 
 
 class Vehicle:
-    
-    def detect(save_img=False):
-        file_path = "engine/video2.mp4"
-        absolute_file_path = os.path.join(settings.BASE_DIR, file_path)
-        opt_weights = 'yolov7.pt'
-        opt_download = True
-        opt_source = absolute_file_path
-        opt_img_size = 640
-        opt_conf_thres = 0.6
-        opt_iou_thres = 0.5
-        opt_device = ''
-        opt_view_img = True
-        opt_save_txt = True
-        opt_save_conf = True
-        opt_nosave = True
-        opt_classes =None
-        opt_agnostic_nms = True
-        opt_augment = True
-        opt_update = True
-        opt_project = 'runs/detect'
-        opt_name = 'object_tracking'
-        opt_exist_ok = True
-        opt_no_trace = True
-        opt_colored_trk = True
-        opt_loop  = "loop.json"
-        opt_loop_txt = True
-        opt_summary_txt = True
+    def __init__(self, self_de):
+        self = self_de
 
-        f = open(opt_loop)
-        count_boxes = json.load(f)
-        f.close()
 
-        loops = [Loop(data) for data in count_boxes["loops"]]
-        # check_requirements(exclude=('pycocotools', 'thop'))
-        if opt_download and not os.path.exists(str(opt_weights)):
-            print('Model weights not found. Attempting to download now...')
-            download('./')
+    def detect(self, save_img=False):
 
         global save_dir
         global time_stamp
         global names
-        global loop_boxes
-        source, weights, view_img, save_txt, imgsz, trace, colored_trk = opt_source, opt_weights, opt_view_img, opt_save_txt, opt_img_size, not opt_no_trace, opt_colored_trk
-        save_img = not opt_nosave and not source.endswith(
+        source, weights, view_img, save_txt, imgsz, trace, colored_trk = self.source, self.weights, self.view_img, self.save_txt, self.img_size, not self.no_trace, self.colored_trk
+        save_img = not self.nosave and not source.endswith(
             '.txt')  # save inference images
         webcam = source.isnumeric() or source.endswith('.txt') or source.lower().startswith(
             ('rtsp://', 'rtmp://', 'http://', 'https://'))
@@ -225,14 +173,14 @@ class Vehicle:
                             iou_threshold=sort_iou_thresh)
         # .........................
         # Directories
-        save_dir = Path(increment_path(Path(opt_project) /
-                        opt_name, exist_ok=opt_exist_ok))  # increment run
+        save_dir = Path(increment_path(Path(self.project) /
+                        self.name, exist_ok=self.exist_ok))  # increment run
         (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True,
                                                               exist_ok=True)  # make dir
 
         # Initialize
         set_logging()
-        device = select_device(opt_device)
+        device = select_device(self.device)
         half = device.type != 'cpu'  # half precision only supported on CUDA
 
         # Load model
@@ -241,7 +189,7 @@ class Vehicle:
         imgsz = check_img_size(imgsz, s=stride)  # check img_size
 
         if trace:
-            model = TracedModel(model, device, opt_img_size)
+            model = TracedModel(model, device, self.img_size)
 
         if half:
             model.half()  # to FP16
@@ -265,8 +213,8 @@ class Vehicle:
         # Get names and colors
         names = model.module.names if hasattr(model, 'module') else model.names
         colors = [[random.randint(0, 255) for _ in range(3)] for _ in names]
-        for loop in loops:
-            loop_boxes.append(count_table.LoopCount(
+        for loop in self.loops:
+            self.loop_boxes.append(count_table.LoopCount(
                 len(names), loop.summary_location, loop))
     #    for i in range(len(names)):
     #        cnts.append([0,0,0].copy()) #prepare array the same size as class type
@@ -310,16 +258,16 @@ class Vehicle:
                 old_img_h = img.shape[2]
                 old_img_w = img.shape[3]
                 for i in range(3):
-                    model(img, augment=opt_augment)[0]
+                    model(img, augment=self.augment)[0]
 
             # Inference
             t1 = time_synchronized()
-            pred = model(img, augment=opt_augment)[0]
+            pred = model(img, augment=self.augment)[0]
             t2 = time_synchronized()
 
             # Apply NMS
             pred = non_max_suppression(
-                pred, opt_conf_thres, opt_iou_thres, classes=opt_classes, agnostic=opt_agnostic_nms)
+                pred, self.conf_thres, self.iou_thres, classes=self.classes, agnostic=self.agnostic_nms)
             t3 = time_synchronized()
 
             # Apply Classifier
@@ -368,8 +316,8 @@ class Vehicle:
                     for track in tracks:
                         #l = Loop()
                         # tracking object passing line check and update
-                        for loop in loops:
-                            loop.check_enter_exit_loop(track, loops)
+                        for loop in self.loops:
+                            loop.check_enter_exit_loop(self, track)
 
                         # color = compute_color_for_labels(id)
                         # draw colored tracks
@@ -417,7 +365,7 @@ class Vehicle:
             # add counting table
             counttable.img = im0s
 
-            for lb in loop_boxes:
+            for lb in self.loop_boxes:
                 lb.draw(counttable)
             # cv2.rectangle(im0s,(500,400),(900,550),(0,0,0),cv2.FILLED)
             # cv2.putText(im0s,"        Straight    Left        Right", (500, 420),cv2.FONT_HERSHEY_SIMPLEX,
@@ -429,7 +377,7 @@ class Vehicle:
             # cv2.putText(im0s,f"Pickup   {cnts[2][0]}           {cnts[2][1]}           {cnts[2][2]} ", (500, 510),cv2.FONT_HERSHEY_SIMPLEX,
             #             0.6, [0, 255, 0], 2)
 
-            Loop.draw_loops(im0s, loops)
+            Loop.draw_loops(self,im0s)
             # Stream results
             if view_img:
                 cv2.imshow(str(p), im0)
@@ -464,3 +412,79 @@ class Vehicle:
             # print(f"Results saved to {save_dir}{s}")
 
         print(f'Done. ({time.time() - t0:.3f}s)')
+
+class Detect:
+    def __init__(self, task):
+        # straight left right
+        # car
+        # pickup
+        # motorcycle
+        # cnts = []
+        self.count_boxes = []
+        self.loop_boxes = []  # loop statistics
+        self.time_stamp = 0  # time in second
+        self.save_dir = ""
+        self.names = ""
+        self.input_vdo_path = str(task.input_vdo)
+        self.loop_path = str(task.loop)
+
+        # ............................... Tracker Functions ............................
+        """ Random created palette"""
+        self.palette = (2 ** 11 - 1, 2 ** 15 - 1, 2 ** 20 - 1)
+
+        self.yolo_path = ''
+        self.abs_path = '.'
+        self.weights = self.yolo_path + 'yolov7.pt'
+        self.download = True
+        self.source = self.abs_path + self.input_vdo_path
+        self.img_size = 640
+        self.conf_thres = 0.6
+        self.iou_thres = 0.5
+        self.view_img = True
+        self.save_txt = True
+        self.save_conf = True
+        self.nosave = True
+        self.classes = 1, 2, 3, 7
+        self.agnostic_nms = True
+        self.augment = True
+        self.update = True
+        self.project = self.yolo_path + 'runs/detect'
+        self.name = 'object_tracking'
+        self.exist_ok = True
+        self.no_trace = True
+        self.colored_trk = True
+        self.loop  = self.abs_path + self.loop_path
+        self.loop_txt = True
+        self.summary_txt = True
+        self.device = 'cpu'
+
+        # load loops settings
+        self.f = open(self.loop)
+        self.count_boxes = json.load(self.f)
+        self.f.close()
+
+        self.loops = [Loop(data) for data in self.count_boxes["loops"]] 
+
+
+    def check_clock_wise(p1, p2, p3):
+        vec1 = (p2[0]-p1[0], p2[1]-p1[1])
+        vec2 = (p3[0]-p2[0], p3[1]-p2[1])
+        cross = vec2[0] * vec1[1] - vec2[1] * vec1[0]
+        if cross >= 0:
+            return True
+        else:
+            return False
+    
+    def detect_engine(self):
+        # check_requirements(exclude=('pycocotools', 'thop'))
+        if self.download and not os.path.exists(str(self.weights)):
+            print('Model weights not found. Attempting to download now...')
+            download(self.yolo_path)
+
+        with torch.no_grad():
+            if self.update:  # update all models (to fix SourceChangeWarning)
+                for weight in [self.weights]:
+                    Vehicle.detect(self)
+                    strip_optimizer(weight)
+            else:
+                Vehicle.detect(self)

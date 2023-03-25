@@ -1,0 +1,42 @@
+{% extends 'task/layout.html' %}  
+{% block body %}
+
+    <!-- ============ task ============ -->
+    <div class="task-area">
+        <div class="d-flex task-menu">
+            <div class="recent-task">RECENT TASK</div>
+            <form class="d-flex search-task" action="{% url 'task:search_task' %}" method="get">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
+                <button class="btn btn-outline-primary" type="submit">Search</button>
+            </form>
+            <a class="create-task" href="{% url 'task:create_task' %}">CREATE TASK</a>
+        </div>
+    </div>
+    <!-- ============= table ============= -->
+    <div class="report-table">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">DATE</th>
+                    <th scope="col">NAME</th>
+                    <th scope="col">LOCATION</th>
+                    <th scope="col">STATUS</th>
+                    <th scope="col">DATE MODIFY</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                  <td>{{ task.created_at }}</td>
+                  <td>{{ task.name }}</td>
+                  <td>{{ task.location }}</td>
+                  <td>{{ task.status_id }}</td>
+                  <td>{{ task.updated_at }}</td>
+                  <td><a href="{% url 'task:view_task' task.id %}">VIEW</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
