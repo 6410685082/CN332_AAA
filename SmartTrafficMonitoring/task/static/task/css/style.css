@@ -194,8 +194,92 @@ td {
     background: #4044ed;
     border-radius: 5px;
     border: none;
+    margin: auto;
     padding: 5px;
     width: 100%;
     font-size: 18px;
     cursor: pointer;
+}
+
+/*----- view profile style -----*/
+.view-profile-container{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    margin-top: 10rem;
+}
+.view-profile-container h1{
+    font-weight: 500;
+    font-size: 50px;
+}
+.profile, .edit-information{
+    font-size: 20px;
+}
+.options-btn{
+    margin-top: 100%;
+}
+.options-btn a{
+    text-decoration: none;
+    color: #ffffff;
+    background: #4044ed;
+    padding: .7rem 1rem;
+    border-radius: 20px;
+}
+.options-btn .change-pw-btn{
+    margin-left: 2rem;
+}
+
+/*----- create user style -----*/
+.create-user-container{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    margin-top: 10rem;
+}
+.create-user-container h1{
+    font-size: 50px;
+    font-weight: 500;
+}
+.create-user-detail{
+    margin-top: 2rem;
+}
+.create-user-btn{
+    color: #ffffff;
+    background: #4044ed;
+    border: none;
+    border-radius: 20px;
+    padding: .5rem 1rem;
+    margin-top: 4rem;
+}
+
+/*----- edit profile style -----*/
+.edit-profile-container{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    margin-top: 10rem;
+}
+.edit-profile-container h1{
+    font-size: 50px;
+    font-weight: 500;
+}
+.edit-profile-detail{
+    margin-top: 2rem;
+    font-size: 20px;
+}
+.edit-options-btn{
+    margin-top: 2rem;
+}
+.reset-btn, .save-btn{
+    background: #4044ed;
+    border: none;
+    color: #ffffff;
+    padding: .7rem 1.2rem;
+    border-radius: 30px;
+}
+.save-btn{
+    margin-left: 2rem;
 }
