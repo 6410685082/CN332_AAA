@@ -61,13 +61,15 @@ def create_task(request):
                 location = location,
                 loop = uploaded_loop_url,
                 input_vdo = uploaded_input_vdo_url,
-                status_id = Status.objects.create(),
+                status_id = Status.objects.first(),
                 note = note,
                 preset = preset,
                 created_by = request.user
             )
-            scheduler = CeleryAdapter()
-            scheduler.process(task.id)
+            
+            # scheduler = CeleryAdapter()
+            # scheduler.process(task.id)
+
             return HttpResponseRedirect(reverse('task:view_task', args=(task.id,)))
         else:
             return redirect(reverse('task:create_task'))
