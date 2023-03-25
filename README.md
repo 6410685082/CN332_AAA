@@ -9,7 +9,7 @@
 * 6310682726 - ณัฐนนท์ บุญเขตต์ - 6310682726@student.tu.ac.th
 
 ## About Project
-SmartTrafficMonitoring is a project that apply AI for traffic monitoring
+SmartTrafficMonitoring is a project that apply AI for traffic monitoring.
 
 ### Built With
 <!-- 
@@ -19,7 +19,6 @@ SmartTrafficMonitoring is a project that apply AI for traffic monitoring
 * [Django][Django-url]
 * [Bootstrap][Bootstrap-url]
 * [User Figma](https://www.figma.com/file/cAhjyeLYtVFkWdzGIe6PkM/CN332?node-id=0%3A1&t=YmoKge7GTPm9BFE9-1)
-* [Admin Figma](https://www.figma.com/file/5R9fVudKvJqmA3SHo2mcH2/CN332-(Admin)?node-id=0%3A1&t=lfRcQMmVKT3t6JuA-0)
 
 ## Getting Started
 ### Prerequisites
@@ -27,6 +26,7 @@ You have to install software before using the project.
 
 1. Download [Python](https://www.python.org/downloads/)
 2. Install [Visual Studio Code](https://code.visualstudio.com/download)
+3. Install [Redis](https://redis.io/docs/getting-started/installation/install-redis-on-mac-os/)
 
 ### Installation
 1. Clone the repo
@@ -35,7 +35,7 @@ You have to install software before using the project.
     ```
 2. Change directory to the project
     ```sh
-    cd SmartTrafficMonitoring
+    cd SmartTrafficMonitoring/SmartTrafficMonitoring
     ```
 3. Open the dirctory with Visual Studio Code
     ```sh
@@ -50,13 +50,25 @@ You have to install software before using the project.
     ```
 3. Install requirements for the project
     ```sh
-    python -m pip install -r requirements.txt
+    pip install -r requirements.txt
     ```
-4. Run server
+4. Run Django server in the 1st terminal
     ```sh
     python manage.py runserver
     ```
-5. Open link [click](http://127.0.0.1:8000/)
+5. Run Redis server in the 2nd terminal
+    ```sh
+    redis-server
+    ```
+6. Run Celery worker in the 3rd terminal
+    ```sh
+    celery -A SmartTrafficMonitoring worker --pool=solo -l info
+    ```
+7. Run Celery beat in the 4nd terminal
+    ```sh
+    celery -A SmartTrafficMonitoring beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    ```
+8.  Open link [click](http://127.0.0.1:8000/)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 [djangoproject.com]: https://img.shields.io/badge/Djang0-35495E?style=for-the-badge&logo=django&logoColor=4FC08D
