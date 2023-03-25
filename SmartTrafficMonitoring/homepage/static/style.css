@@ -111,3 +111,16 @@ i {
     text-decoration: none;
 }
 
+.copy-right {
+    color: #c8c8c8;
+    text-align: right;
+}
+
+img {
+    max-width: 260%
+}
+
+.image {
+    flex-basis: 40%
+}
+

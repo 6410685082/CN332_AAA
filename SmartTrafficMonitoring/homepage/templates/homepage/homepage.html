@@ -1,0 +1,85 @@
+{% extends 'homepage/layout.html' %}
+{% load static %}
+{% block body %}
+
+
+<body>
+
+    <div id="hero" class="hero overlay">
+        <div class="hero-content">
+            <div class="hero-text">
+                <br>
+                <br>
+                <br>
+                <br>                
+                <br>
+                <br>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-7 d-flex">
+                            <div>
+                                <h1>Get Information</h1>
+                                <body>
+                                    <p>Use drone to detect your interest area!</p>
+                                    <p>Create Task , Create Loop</p>
+                                    <p>Wait for Result!</p>
+                                    <div class="d-flex submit-area">
+                                        <button type="submit" class="submit-btn"><a href="{% url 'task:index' %}" class="submit-btn">Report</a></button>
+                                        <button type="submit" class="submit-btn"><a href="{% url 'task:create_task' %}" class="submit-btn">Create task</a></button>
+                                    </div>                                    
+                                </body>
+                            </div>
+                            <div class='image'>
+                                <img src="../../static/img/drones2.png" alt="drones" style="padding: 40px" >
+                            </div>    
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.hero-text -->
+        </div><!-- /.hero-content -->
+    </div><!-- /.hero -->
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <main id="main" class="site-main">
+
+        <section class="site-section subpage-site-section section-contact-us">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-7">
+                        <div id="member">
+                            <h2>Team Members</h2>
+                            <body>
+                                <ul >
+                                    <li>ชนาธินาถ      พิศประเทือง        6310610941</li>
+                                    <li>ชวันรัตน์       ทรัพย์เบญจภาคิน    6310611014</li>
+                                    <li>ภัทรกร        แก้วชูกุล           6310611030</li>
+                                    <li>นิษฐา         แก้วสมบัติ          6310611089</li>
+                                    <li>ณัฐณิชา       ฟักสังข์            6310682635</li>
+                                    <li>ณัฐนนท์       บุญเขตต์           6310682726</li>
+                                </ul>
+                            </body>
+                            <br>
+                            <br>
+                            <h3>Link</h3>
+                            <body>
+                                <ul>
+                                <li><a href="https://github.com/asnnat/SmartTrafficMonitoring.git/">Visit github</a></li>
+                                </ul>
+                            </body>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </section><!-- /.section-contact-us -->
+
+
+    </main><!-- /#main -->
+{% endblock %}
