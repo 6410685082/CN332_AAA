@@ -61,7 +61,7 @@ def create_task(request):
                 location = location,
                 loop = uploaded_loop_url,
                 input_vdo = uploaded_input_vdo_url,
-                status_id = Status.objects.first(),
+                status_id = Status.objects.create(),
                 note = note,
                 preset = preset,
                 created_by = request.user
