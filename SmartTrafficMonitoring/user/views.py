@@ -9,10 +9,11 @@ from .models import UserInfo
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.messages.views import SuccessMessageMixin
 
+import sys
+sys.path.append("..")
+from task.models import *
 
-# Create your views here.
 log_in = 'user/login.html'
-
 
 def login_view(request):
     if request.method == "POST":
@@ -43,9 +44,10 @@ def profile(request):
         if creat_form.is_valid():
             user = creat_form.save()
             return redirect(to='/user/profile', pk=user.pk)
+        
     user_info = UserInfo.objects.get(user_id=request.user)
     phone_number = user_info.phone_number
-    role_id = user_info.role_id_id
+    role_id = user_info.role_id.name
     
     if request.method == 'POST':
         user_form = UpdateUserForm(request.POST, instance=request.user)

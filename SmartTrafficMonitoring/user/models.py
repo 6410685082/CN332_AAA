@@ -21,7 +21,7 @@ class RoleID(models.Model):
 
 class UserInfo(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_id")
-    role_id = models.ForeignKey(RoleID, on_delete=models.CASCADE, related_name="role", to_field="id")
+    role_id = models.ForeignKey(RoleID, on_delete=models.CASCADE, related_name="role_id")
     phone_number = models.CharField(max_length=10)
     
 
