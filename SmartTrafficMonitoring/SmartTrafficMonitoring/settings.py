@@ -9,9 +9,8 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
-from pathlib import Path
 import os
+from pathlib import Path
 from .scheduler_adapter import CeleryAdapter
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -72,7 +71,7 @@ ROOT_URLCONF = "SmartTrafficMonitoring.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, 'task/templates', 'scheduler/templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -124,12 +123,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "Asia/Bangkok"
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
 USE_TZ = True
 
+CSRF_TRUSTED_ORIGINS = [
+        'http://127.0.0.1:8000/',
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/

@@ -431,10 +431,11 @@ class Detect:
         # ............................... Tracker Functions ............................
         """ Random created palette"""
         self.palette = (2 ** 11 - 1, 2 ** 15 - 1, 2 ** 20 - 1)
+        self.url = 'https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7.pt'
 
         self.yolo_path = ''
         self.abs_path = '.'
-        self.weights = self.yolo_path + 'yolov7.pt'
+        self.weights = self.yolo_path
         self.download = True
         self.source = self.abs_path + self.input_vdo_path
         self.img_size = 640
@@ -476,10 +477,12 @@ class Detect:
             return False
     
     def detect_engine(self):
+        Detect.adapter_engine()
+
         # check_requirements(exclude=('pycocotools', 'thop'))
         if self.download and not os.path.exists(str(self.weights)):
             print('Model weights not found. Attempting to download now...')
-            download(self.yolo_path)
+            download(self.yolo_path , self.url)
 
         with torch.no_grad():
             if self.update:  # update all models (to fix SourceChangeWarning)
@@ -488,3 +491,8 @@ class Detect:
                     strip_optimizer(weight)
             else:
                 Vehicle.detect(self)
+    
+    def adapter_engine(self, weights = 'yolov7.pt', url = "https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7.pt"):
+        self.weights = weights
+        self.url = url
+        
