@@ -64,7 +64,7 @@ def edit_profile(request):
             return redirect('user:profile')
     else:
         user_form = UserCreationForm()
-    return render(request, 'user/create_user.html', {'user_form': user_form})
+    return render(request, 'user/edit_profile.html', {'user_form': user_form})
 
 class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
     template_name = 'user/change_pw.html'

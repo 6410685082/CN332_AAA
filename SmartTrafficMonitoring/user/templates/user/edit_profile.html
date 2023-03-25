@@ -6,11 +6,21 @@
     <div class="edit-profile-detail">
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <label>Username: {{ user_form.username }} </label><br>
-            <label>Email: {{ user_form.email }}</label><br>
-            <label>Name: {{ user_form.first_name }}</label><br>
-            <label>Surname: {{ user_form.last_name }}</label><br>
-            <label>Phone Number: {{ user_form.phone_number }}</label><br>
+            <label>Username: {{ user_form.username }} </label>
+            <br>
+            <br>
+            <label>Email: {{ user_form.email }}</label>
+            <br>
+            <br>
+            <label>Name: {{ user_form.first_name }}</label>
+            <br>
+            <br>
+            <label>Surname: {{ user_form.last_name }}</label>
+            <br>
+            <br>
+            <label>Phone Number: {{ user_form.phone_number }}</label>
+            <br>
+            <br>
             <div class="edit-options-btn">
                 <button type="reset" class="reset-btn">Reset</button>
                 <button type="submit" class="save-btn">Save Changes</button>
