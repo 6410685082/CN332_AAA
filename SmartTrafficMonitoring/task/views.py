@@ -4,11 +4,12 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.utils import dateformat
-from engine import tasks
 
 import sys
 sys.path.append("../user")
+sys.path.append("../SmartTrafficMonitoring")
 
+from SmartTrafficMonitoring.scheduler_adapter import CeleryAdapter
 from user.models import UserInfo
 from .models import *
 
@@ -60,13 +61,13 @@ def create_task(request):
                 location = location,
                 loop = uploaded_loop_url,
                 input_vdo = uploaded_input_vdo_url,
-                status_id = Status.objects.first(),
+                status_id = Status.objects.create(),
                 note = note,
                 preset = preset,
                 created_by = request.user
             )
-
-            tasks.process(task)
+            scheduler = CeleryAdapter()
+            scheduler.process(task.id)
             return HttpResponseRedirect(reverse('task:view_task', args=(task.id,)))
         else:
             return redirect(reverse('task:create_task'))

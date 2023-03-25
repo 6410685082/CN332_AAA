@@ -9,9 +9,9 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
-from pathlib import Path
 import os
+from pathlib import Path
+from .scheduler_adapter import CeleryAdapter
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,17 +39,17 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles",
-    'django_celery_beat',
-    'django_celery_results',
-    'engine'
+    "django.contrib.staticfiles",  
+    'engine',
 ]
 
-#Celery, Celery Beat and Redis settings
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379")
-CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND", "redis://redis:6379")
-if CELERY_RESULT_BACKEND == 'django-db':
-    INSTALLED_APPS += ['django_celery_results',]
+USING_SCHEDULER = CeleryAdapter()
+ADD_INSTALL_APP = USING_SCHEDULER.add_install_app()
+INSTALLED_APPS += ADD_INSTALL_APP
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
@@ -71,7 +71,7 @@ ROOT_URLCONF = "SmartTrafficMonitoring.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, 'task/templates', 'scheduler/templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -123,12 +123,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "Asia/Bangkok"
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
 USE_TZ = True
 
+CSRF_TRUSTED_ORIGINS = [
+        'http://127.0.0.1:8000/',
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/

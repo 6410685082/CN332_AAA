@@ -1,3 +1,3 @@
-from .celery import app as celery_app
-
-__all__ = ['celery_app']
+from .scheduler_adapter import CeleryAdapter
+app = CeleryAdapter.app
+__all__ = ['app']

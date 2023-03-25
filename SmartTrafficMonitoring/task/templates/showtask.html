@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>show task</title>
+</head>
+<body>
+	<form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="file">
+        <button type="submit">Upload</button>
+    </form>
+
+    <h1>Run Page</h1>
+    <form method="POST" action="{% url 'showtask' %}">
+        {% csrf_token %}
+        <label for="input">Input:</label>
+        <input type="text" id="input" name="input" required>
+        <button type="submit">Run</button>
+    </form>
+
+    {% if output %}
+        <h2>Output:</h2>
+        <pre>{{ output }}</pre>
+    {% endif %}
+</body>
+</html>

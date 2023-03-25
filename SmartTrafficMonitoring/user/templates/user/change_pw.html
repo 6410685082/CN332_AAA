@@ -1,57 +1,43 @@
-<div >
-    <h1>Change Your Password</h1>
-    {% if form.errors %}
-    <div class="alert alert-danger alert-dismissible" role="alert">
-      <div id="form_errors">
-        {% for key, value in form.errors.items %}
-        <strong>{{ value }}</strong>
-        {% endfor %}
+{% extends 'task/layout.html' %}
+{% block body %}
+<div class="change-pw">
+  <div class="container">
+    <div class="change-pw-head">
+      <h1 class="head mb-4">Change Your Password</h1>
+      {% if form.errors %}
+      <div class="alert alert-danger alert-dismissible" role="alert">
+        <div id="form_errors">
+          {% for key, value in form.errors.items %}
+          <strong>{{ value }}</strong>
+          {% endfor %}
+        </div>
+        <!-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button> -->
       </div>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      {% endif %}
     </div>
-    {% endif %}
-  
+
     <form method="POST">
       {% csrf_token %}
       <label class="un" for="id_old_password">Old Password</label>
-    
-      <input 
-        type="password"
-        name="old_password"
-        autocomplete="new-password"
-        class="pass"
-        required
-        id="id_old_password"
-        placeholder="Enter Old Password"
-      /><br>
-  
+      <input type="password" name="old_password" autocomplete="new-password" class="pass" required id="id_old_password"
+        placeholder="Enter Old Password" />
+
       <label class="un" for="id_new_password1">New Password</label>
-      <input
-        type="password"
-        name="new_password1"
-        autocomplete="new-password"
-        class="pass"
-        required
-        id="id_new_password1"
-        placeholder="Enter New Password"
-      />
-      <br>
-  
+      <input type="password" name="new_password1" autocomplete="new-password" class="pass" required
+        id="id_new_password1" placeholder="Enter New Password" />
+
       <label class="un" for="id_new_password2">New Password Confirmation</label>
-      <input
-        type="password"
-        name="new_password2"
-        autocomplete="new-password"
-        required
-        id="id_new_password2"
-        class="pass"
-        placeholder="Confirm New Password"
-      />
-      <br>
-      <button type="submit" class="submit" id="reset">
-        Update Password
-      </button>
+      <input type="password" name="new_password2" autocomplete="new-password" required id="id_new_password2"
+        class="pass" placeholder="Confirm New Password" />
+
+      <div class="submit-area mt-2">
+        <button type="submit" class="submit submit-btn" id="reset">
+          Update Password
+        </button>
+      </div>
     </form>
   </div>
+</div>
+{% endblock %}

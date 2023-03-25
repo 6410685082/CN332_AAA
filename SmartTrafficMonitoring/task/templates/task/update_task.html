@@ -1,28 +1,52 @@
 {% extends 'task/layout.html' %}
 {% block body %}
 
-<br>
-<br>
+<div class="container">
+    <form method="post" enctype="multipart/form-data" action="{% url 'task:update_task' task.id %}">
+        {% csrf_token %}
 
-<form method="post" enctype="multipart/form-data" action="{% url 'task:update_task' task.id %}">
-    {% csrf_token %}
+        <div class="d-flex name">
+            <div class="d-flex name-box">
+                <label for="name" class="form-label">Name:</label>
+                <input class="form-control name-box" type="text" id="name" name="name" value="{{ task.name }}">
+            </div>
+        </div>
 
-    <label for="name">Name:</label><br>
-    <input type="text" id="name" name="name" value="{{ task.name }}"><br>
+        <div class="d-flex location">
+            <label for="location">Location:</label>
+            <input class="form-control name-box" type="text" id="location" name="location" value="{{ task.location }}">
+        </div>
 
-    <label for="location">Location:</label><br>
-    <input type="text" id="location" name="location" value="{{ task.location }}"><br>
+        <div class="step-1 m-3 mt-5">
+            <div class="d-flex upload-header">
+                <p class="step">Update Video</p>
+            </div>
+            <div class="mb-3 upload-file">
+                <label for="input_vdo" class="form-label">Select a file to upload</label>
+                <input type="file" class="form-control" name="input_vdo" id="input_vdo" accept="video/mp4,video/x-m4v,video/*" value="{{ task.input_vdo }}">
+            </div>
+        </div>
 
-    <label for="input_vdo">Video:</label><br>
-    <input type="file" name="input_vdo" accept="video/mp4,video/x-m4v,video/*" value="{{ task.input_vdo }}"><br>
+        <div class="step-2 m-3 mt-5">
+            <div class="d-flex upload-header">
+                <p class="step">Update Loop</p>
+            </div>
+            <div class="mb-3 upload-file">
+                <label for="loop" class="form-label">Select a file to upload</label><br>
+                <input type="file" class="form-control" name="loop" id="loop" accept="application/JSON" value="{{ task.loop }}">
+            </div>
+        </div>
 
-    <label for="loop">Loop:</label><br>
-    <input type="file" name="loop" accept="application/JSON" value="{{ task.loop }}"><br>
+        <div class="d-flex description mt-5">
+            <label for="note" class="form-label">Note:</label><br>
+            <input type="text" class="form-control description-box" id="note" name="note" value="{{ task.note }}"><br>
+        </div>  
 
-    <label for="note">Note:</label><br>
-    <input type="text" id="note" name="note" value="{{ task.note }}"><br>
-
-    <button type="submit">Update</button>
-</form>
+        <div class="d-flex submit-area">
+            <button type="submit" class="submit-btn">Update</button>
+            <button type="button" class="cancel-btn"><a href="#" class="cancel-btn">Cancel</a></button>
+        </div>
+    </form>
+</div>
 
 {% endblock %}

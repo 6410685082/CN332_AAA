@@ -6,7 +6,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
+<<<<<<< HEAD
+from . import general
+=======
 import utils.general
+>>>>>>> origin
 
 
 def fitness(x):

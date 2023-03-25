@@ -35,6 +35,48 @@ i {
     color: #ffffff;
 }
 
+.task-area {
+    margin-top: 7rem;
+}
+
+.recent-task {
+    font-size: 18px;
+    font-weight: bold;
+    margin: auto;
+}
+
+.search-task {
+    margin: auto;
+    width: 50%;
+}
+
+.create-task {
+    background: #4044ed;
+    margin: auto;
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    font-size: 18px;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.create-task:hover {
+    color: #ffffff;
+}
+
+.report-table {
+    margin: 1rem;
+}
+
+tr {
+    text-align: center;
+}
+
+td {
+    cursor: pointer;
+}
+
 .container {
     padding: 0;
     margin: 6rem;
@@ -106,21 +148,54 @@ i {
 
 .submit-area .cancel-btn {
     margin: 1rem;
-    color: #eb5050;
+    background: #eb5050;
+    color: #ffffff;
     font-weight: 500;
     text-decoration: none;
 }
 
-.copy-right {
-    color: #c8c8c8;
-    text-align: right;
+
+/*----- change password style -----*/
+
+.change-pw {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-weight: 600;
+    font-size: 20px;
 }
 
-img {
-    max-width: 260%
+.change-pw-head .head{
+    font-weight: 700;
 }
 
-.image {
-    flex-basis: 40%
+.change-pw form input {
+    height: 40px;
+    width: 100%;
+    border: none;
+    outline: none;
+    margin-bottom: 3rem;
+    border-bottom: 2px solid black;
+    font-size: 18px;
 }
 
+.change-pw .alert button{
+    color: #ffffff;
+    background: #eb5050;
+    border-radius: 5px;
+    border: none;
+    padding: 5px 10px 5px 10px;
+    cursor: pointer;
+}
+
+.change-pw .submit-area button {
+    color: #ffffff;
+    background: #4044ed;
+    border-radius: 5px;
+    border: none;
+    padding: 5px;
+    width: 100%;
+    font-size: 18px;
+    cursor: pointer;
+}

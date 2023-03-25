@@ -1,6 +1,7 @@
 {% extends 'homepage/layout.html' %}
 {% load static %}
 {% block body %}
+<<<<<<< HEAD
     {% if  user.is_authenticated %}
     <header id="masthead" class="site-header site-header-white">
         <nav id="primary-navigation" class="site-navigation">
@@ -72,18 +73,51 @@
     </header><!-- /#mastheaed -->
     {% endif %}
 </head>
+=======
+
+>>>>>>> 0325fb79677f7cd8d04a21f9e7077793591baa61
 
 <body>
 
     <div id="hero" class="hero overlay">
         <div class="hero-content">
             <div class="hero-text">
+<<<<<<< HEAD
                 <h1>Get Information</h1>
                 <p>Use drone to detect your interest area!</p>
                 <p>Create Task , Create Loop</p>
                 <p>Wait for Result!</p>
                 <a href="{% url 'task:index' %}" class="btn btn-border">Report</a>
                 <a href="{% url 'task:create_task' %}" class="btn btn-border">Create Task</a>
+=======
+                <br>
+                <br>
+                <br>
+                <br>                
+                <br>
+                <br>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-7 d-flex">
+                            <div>
+                                <h1>Get Information</h1>
+                                <body>
+                                    <p>Use drone to detect your interest area!</p>
+                                    <p>Create Task , Create Loop</p>
+                                    <p>Wait for Result!</p>
+                                    <div class="d-flex submit-area">
+                                        <button type="submit" class="submit-btn"><a href="{% url 'task:index' %}" class="submit-btn">Report</a></button>
+                                        <button type="submit" class="submit-btn"><a href="{% url 'task:create_task' %}" class="submit-btn">Create task</a></button>
+                                    </div>                                    
+                                </body>
+                            </div>
+                            <div class='image'>
+                                <img src="../../static/img/drones2.png" alt="drones" style="padding: 40px" >
+                            </div>    
+                        </div>
+                    </div>
+                </div>
+>>>>>>> 0325fb79677f7cd8d04a21f9e7077793591baa61
             </div><!-- /.hero-text -->
         </div><!-- /.hero-content -->
     </div><!-- /.hero -->
