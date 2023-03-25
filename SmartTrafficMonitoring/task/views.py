@@ -23,10 +23,16 @@ def index(request):
         task.created_at = dateformat.format(task.created_at, 'd/m/Y')
         task.updated_at = dateformat.format(task.updated_at, 'd/m/Y')
 
+    if len(tasks) == 0:
+        message = "You need to create task."
+    else:
+        message = None
+
     return render(request, 'task/index.html', {
         'user': request.user,
         'user_info': user_info,
-        'tasks': tasks
+        'tasks': tasks,
+        'message': message
     })
 
 @login_required(login_url='/user/login')
@@ -67,8 +73,8 @@ def create_task(request):
                 created_by = request.user
             )
             
-            # scheduler = CeleryAdapter()
-            # scheduler.process(task.id)
+            scheduler = CeleryAdapter()
+            scheduler.process(task.id)
 
             return HttpResponseRedirect(reverse('task:view_task', args=(task.id,)))
         else:
@@ -168,6 +174,12 @@ def search_task(request):
         task.created_at = dateformat.format(task.created_at, 'd/m/Y')
         task.updated_at = dateformat.format(task.updated_at, 'd/m/Y')
 
+    if len(tasks) == 0:
+        message = "Sorry, we couldn't find any results"
+    else:
+        message = None
+
     return render(request, 'task/index.html', {
-        'tasks': tasks
+        'tasks': tasks,
+        'message': message
     })

@@ -41,8 +41,8 @@
         </table>
     </div>
     {% else %}
-    <div class="report-table alert alert-info">
-        <strong>Info!</strong> You need to create task.
+    <div class="report-table alert alert-danger">
+        <strong>Info!</strong> {{ message }}
     </div>
     {% endif %}
 {% endblock %}
