@@ -13,6 +13,7 @@
         </div>
     </div>
     <!-- ============= table ============= -->
+    {% if tasks %}
     <div class="report-table">
         <table class="table table-hover">
             <thead>
@@ -39,4 +40,9 @@
             </tbody>
         </table>
     </div>
+    {% else %}
+    <div class="report-table alert alert-info">
+        <strong>Info!</strong> You need to create task.
+    </div>
+    {% endif %}
 {% endblock %}
