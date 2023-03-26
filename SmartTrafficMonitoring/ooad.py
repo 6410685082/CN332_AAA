@@ -214,7 +214,7 @@ class Vehicle:
         names = model.module.names if hasattr(model, 'module') else model.names
         colors = [[random.randint(0, 255) for _ in range(3)] for _ in names]
         for loop in self.loops:
-            self.loop_boxes.append(count_table.LoopCount(
+            (self.loop_boxes).append(count_table.LoopCount(
                 len(names), loop.summary_location, loop))
     #    for i in range(len(names)):
     #        cnts.append([0,0,0].copy()) #prepare array the same size as class type
@@ -285,8 +285,7 @@ class Vehicle:
 
                 p = Path(p)  # to Path
                 save_path = str(save_dir / p.name)  # img.jpg
-                txt_path = str(save_dir / 'labels' / p.stem) + \
-                    ('' if dataset.mode == 'image' else f'_{frame}')  # img.txt
+                txt_path = str(save_dir / 'labels' / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # img.txt
                 # normalization gain whwh
                 gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]
                 if len(det):
@@ -324,20 +323,20 @@ class Vehicle:
                         if colored_trk:
                             [cv2.line(im0, (int(track.centroidarr[i][0]),
                                             int(track.centroidarr[i][1])),
-                                      (int(track.centroidarr[i+1][0]),
-                                       int(track.centroidarr[i+1][1])),
-                                      rand_color_list[track.id], thickness=1)
-                             for i, _ in enumerate(track.centroidarr)
-                             if i < len(track.centroidarr)-1]
+                                            (int(track.centroidarr[i+1][0]),
+                                        int(track.centroidarr[i+1][1])),
+                                        rand_color_list[track.id], thickness=1)
+                                        for i, _ in enumerate(track.centroidarr)
+                                            if i < len(track.centroidarr)-1]
                         # draw same color tracks
                         else:
                             [cv2.line(im0, (int(track.centroidarr[i][0]),
                                             int(track.centroidarr[i][1])),
-                                      (int(track.centroidarr[i+1][0]),
-                                       int(track.centroidarr[i+1][1])),
-                                      (255, 0, 0), thickness=1)
-                             for i, _ in enumerate(track.centroidarr)
-                             if i < len(track.centroidarr)-1]
+                                            (int(track.centroidarr[i+1][0]),
+                                            int(track.centroidarr[i+1][1])),
+                                            (255, 0, 0), thickness=1)
+                                            for i, _ in enumerate(track.centroidarr)
+                                                if i < len(track.centroidarr)-1]
 
                     # draw boxes for visualization
                     if len(tracked_dets) > 0:
@@ -441,23 +440,23 @@ class Detect:
         self.img_size = 640
         self.conf_thres = 0.6
         self.iou_thres = 0.5
-        self.view_img = True
+        self.view_img = False
         self.save_txt = True
-        self.save_conf = True
+        self.save_conf = False
         self.nosave = True
-        self.classes = 1, 2, 3, 7
-        self.agnostic_nms = True
+        self.classes = None
+        self.agnostic_nms = False
         self.augment = True
-        self.update = True
+        self.update = False
         self.project = self.yolo_path + 'runs/detect'
         self.name = 'object_tracking'
-        self.exist_ok = True
-        self.no_trace = True
-        self.colored_trk = True
+        self.exist_ok = False
+        self.no_trace = False
+        self.colored_trk = False
         self.loop  = self.abs_path + self.loop_path
-        self.loop_txt = True
-        self.summary_txt = True
-        self.device = 'cpu'
+        self.loop_txt = False
+        self.summary_txt = False
+        self.device = ''
 
         # load loops settings
         self.f = open(self.loop)
