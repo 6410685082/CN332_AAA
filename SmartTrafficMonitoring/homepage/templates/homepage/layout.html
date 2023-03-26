@@ -59,6 +59,18 @@
                                 </a>
                             </div>
                             <div>
+                                <a href="{% url 'homepage:index' %}" class="d-flex text-decoration-none p-1">
+                                    <i class="fa-solid fa-address-card m-1"></i>
+                                    <p class="m-0">About Us</p>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{% url 'user:change_pw' %}" class="d-flex text-decoration-none p-1">
+                                    <i class="fa-solid fa-lock m-1"></i>
+                                    <p class="m-0">Change Password</p>
+                                </a>
+                            </div>
+                            <div>
                                 <a href="{% url 'user:logout' %}" class="d-flex text-decoration-none p-1">
                                     <i class="fa-solid fa-right-from-bracket m-1"></i>
                                     <p class="m-0">Logout</p>
