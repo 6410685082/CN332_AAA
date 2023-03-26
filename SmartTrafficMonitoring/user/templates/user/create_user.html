@@ -1,0 +1,16 @@
+{% extends 'task/layout.html' %}
+{% block body %}
+
+<div class="create-user-container">
+    <h1>Create User</h1>
+    <section class="create-user-detail">
+        <form method="post" action="{% url 'user:create_user' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <br>
+            <button type="submit" class="create-user-btn">Create</button>
+        </form>
+    </section>
+</div>
+
+{% endblock %}

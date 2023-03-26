@@ -54,3 +54,8 @@ button {
     font-size: 18px;
     cursor: pointer;
 }
+
+a{
+    text-decoration: none;
+    margin-top: 1rem;
+}
