@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import UserInfo
+from .models import UserInfo, RoleID
 
 
 class UpdateUserForm(forms.ModelForm):
@@ -31,9 +31,22 @@ class UpdateUserForm(forms.ModelForm):
         return super().save(commit)
 
 class UserCreationForm(forms.ModelForm):
+    phone_number = forms.CharField(max_length=10)
+
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'password']
         widgets = {
-            'password': forms.PasswordInput()
+            'password': forms.PasswordInput(),
+            'role_id': forms.HiddenInput(attrs={'value': 3}),
+            'role_id_id': forms.HiddenInput(),
+            'role_id__name': forms.TextInput(attrs={'disabled': True}),
         }
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password'])
+        if commit:
+            user.save()
+            UserInfo.objects.create(user_id=user, role_id_id=3, phone_number=self.cleaned_data['phone_number'])
+        return user
