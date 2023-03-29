@@ -385,34 +385,38 @@ class Vehicle:
                     raise StopIteration
 
                 # Save results (image with detections)
-            if save_img:
-                if dataset.mode == 'image':
-                    cv2.imwrite(save_dir, im0)
-                    print(
-                        f" The image with the result is saved in: {save_path}")
-                else:  # 'video' or 'stream'
-                    if vid_path != save_path:  # new video
-                        vid_path = save_path
-                        if isinstance(vid_writer, cv2.VideoWriter):
-                            vid_writer.release()  # release previous video writer
-                        if vid_cap:  # video
-                            fps = vid_cap.get(cv2.CAP_PROP_FPS)
-                            w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-                            h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-                        else:  # stream
-                            fps, w, h = 30, im0.shape[1], im0.shape[0]
-                            save_path += '.mp4'
-                        vid_writer = cv2.VideoWriter(
-                            save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
-                    vid_writer.write(im0)
+            # if save_img:
+            #     if dataset.mode == 'image':
+            #         cv2.imwrite(save_dir, im0)
+            #         print(
+            #             f" The image with the result is saved in: {save_path}")
+            #     else:  # 'video' or 'stream'
+            if vid_path != save_path:  # new video
+                vid_path = save_path
+                if isinstance(vid_writer, cv2.VideoWriter):
+                    vid_writer.release()  # release previous video writer
+                if vid_cap:  # video
+                    fps = vid_cap.get(cv2.CAP_PROP_FPS)
+                    w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                    h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                else:  # stream
+                    fps, w, h = 30, im0.shape[1], im0.shape[0]
+                    save_path += '.mp4'
+                vid_writer = cv2.VideoWriter(
+                    save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
+            vid_writer.write(im0)
 
         # if save_txt or save_img:
             # s = f"\n{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
             # print(f"Results saved to {save_dir}{s}")
 
         print(f'Done. ({time.time() - t0:.3f}s)')
+        return save_path, save_dir
+
 
 class Detect:
+    save_direc = ""
+    save_path = ""
     def __init__(self, task):
         # straight left right
         # car
@@ -486,10 +490,13 @@ class Detect:
         with torch.no_grad():
             if self.update:  # update all models (to fix SourceChangeWarning)
                 for weight in [self.weights]:
-                    Vehicle.detect(self)
+                    save_path, save_direc = Vehicle.detect(self)
                     strip_optimizer(weight)
             else:
-                Vehicle.detect(self)
+                save_path, save_direc = Vehicle.detect(self)
+
+        return save_path, save_direc
+
     
     def adapter_engine(self, weights = 'yolov7.pt', url = "https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7.pt"):
         self.weights = weights
