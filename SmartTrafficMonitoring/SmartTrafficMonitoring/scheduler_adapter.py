@@ -5,6 +5,8 @@ from datetime import timedelta
 from celery import shared_task
 from engine.scheduler import Scheduler
 from celery.utils.log import get_task_logger
+from django.core.files.base import ContentFile
+import io
 
 class CeleryAdapter(Scheduler):
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'SmartTrafficMonitoring.settings')
@@ -28,12 +30,15 @@ class CeleryAdapter(Scheduler):
 
         @shared_task(bind=True)
         def adapt_process(self,task_id):
-            from task.models import Task, Status
-            from ooad import Detect
+            from task.models import Task, Status, UploadFile
+            from ooad import Detect, Vehicle
+            BASE_DIR = Path(__file__).resolve().parent.parent
+            
 
             d = Detect(Task.objects.get(id=task_id))
 
-            d.detect_engine()
+            save_path, save_direc = d.detect_engine()
+
 
             Task.objects.filter(pk=task_id).update(
                 status_id = Status.objects.last(),
@@ -41,6 +46,24 @@ class CeleryAdapter(Scheduler):
 
             # update timestamp (updated_at)
             Task.objects.get(pk=task_id).save()
+            
+            
+            video_file_path = os.path.join(BASE_DIR, save_path)
+            text_file_path = os.path.join(BASE_DIR, save_direc,'loop.txt')
+
+            # Open the files and read their contents
+            with open(video_file_path, 'rb') as video_file:
+                video_content = io.BytesIO(video_file.read())
+            with open(text_file_path, 'r') as text_file:
+                text_content = text_file.read()
+
+            # Save the files to your model instances
+            upload_file = UploadFile.objects.create()
+            upload_file.loop_txt_file.save('text.txt', ContentFile(text_content))
+            upload_file.video_file.save('video.mp4', ContentFile(video_content.getvalue()))
+            
+            video_file.close()
+            text_file.close()
 
             return "Done"
 
