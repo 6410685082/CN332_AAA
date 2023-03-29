@@ -63,7 +63,7 @@ def edit_profile(request):
             messages.success(request, 'User created successfully!')
             return redirect('user:profile')
     else:
-        user_form = UserCreationForm()
+        user_form = UpdateUserForm()
     return render(request, 'user/edit_profile.html', {'user_form': user_form})
 
 class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
