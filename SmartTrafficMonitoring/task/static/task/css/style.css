@@ -7,6 +7,10 @@
     font-family: 'poppins', sans-serif;
 }
 
+a{
+    text-decoration: none;
+}
+
 .fs-0 {
     font-size: 4rem;
 }
@@ -25,6 +29,19 @@
 
 .dropdown-menu {
     background: #4044ed;
+}
+
+.notification-dropdown{
+    color: #ffffff;
+}
+
+.unread strong:first-of-type::after{
+    content: "";
+    background-color: #eb5050;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border-radius: 50%;
 }
 
 .col a {
