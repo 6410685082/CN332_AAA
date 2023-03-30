@@ -11,6 +11,18 @@ a{
     text-decoration: none;
 }
 
+a:hover{
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.view-task-btn, .update-task-btn{
+    color: #ffffff;
+    background-color: #4044ed;
+    padding: .4rem .7rem .6rem .7rem;
+    border-radius: 5px;
+}
+
 .fs-0 {
     font-size: 4rem;
 }
