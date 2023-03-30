@@ -11,7 +11,10 @@ urlpatterns = [
     path('view-task/<int:task_id>', views.view_task, name='view_task'),
     path('update-task/<int:task_id>', views.update_task, name='update_task'),
     path('delete-task/<int:task_id>', views.delete_task, name='delete_task'),
-    path('search-task', views.search_task, name='search_task')
+    path('search-task', views.search_task, name='search_task'),
+    path('custom-loop/<int:task_id>', views.custom_loop, name='custom_loop'),
+    path('clear-loop/<int:task_id>', views.clear_loop, name='clear_loop'),
+    path('schedule/<int:task_id>', views.schedule, name='schedule'),
 ] 
 
 if settings.DEBUG:
