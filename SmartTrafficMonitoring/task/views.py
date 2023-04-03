@@ -97,7 +97,8 @@ def view_task(request, task_id):
 
     return render(request, 'task/view_task.html', {
                 'user': request.user,
-                'task': task
+                'task': task,
+                'output_vdo': task.output_vdo.url if task.output_vdo else ''
             })
 
 @login_required(login_url='/user/login')
