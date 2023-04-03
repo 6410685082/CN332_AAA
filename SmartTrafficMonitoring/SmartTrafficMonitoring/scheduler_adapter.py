@@ -30,7 +30,7 @@ class CeleryAdapter(Scheduler):
 
         @shared_task(bind=True)
         def adapt_process(self,task_id):
-            from task.models import Task, Status, UploadFile
+            from task.models import Task, Status
             from ooad import Detect, Vehicle
             BASE_DIR = Path(__file__).resolve().parent.parent
             task = Task.objects.get(id=task_id)
