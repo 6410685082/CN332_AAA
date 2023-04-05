@@ -36,6 +36,7 @@
                   <td>{{ task.updated_at }}</td>
                   <td class="actions-btn">
                     <a class="view-task-btn m-1" href="{% url 'task:view_task' task.id %}">VIEW</a>
+                    {% if task.created_by == user %}
                     <a class="update-task-btn m-1" href="{% url 'task:update_task' task.id %}">UPDATE</a>
                     <!-- DELETE TASK -->
                     <button type="button" class="btn btn-danger delete-btn m-1" data-toggle="modal" data-target="#exampleModalCenter">
@@ -61,6 +62,7 @@
                         </div>
                       </div>
                     </div>
+                    {% endif %}
                   </td>
                 </tr>
                 {% endfor %}
