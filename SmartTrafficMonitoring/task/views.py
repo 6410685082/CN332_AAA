@@ -19,7 +19,8 @@ from .models import *
 def index(request):
     user_info = UserInfo.objects.get(user_id=request.user)
 
-    tasks = Task.objects.filter(created_by=request.user)
+    # tasks = Task.objects.filter(created_by=request.user)
+    tasks = Task.objects.all()
 
     for task in tasks:
         task.created_at = dateformat.format(task.created_at, 'd/m/Y')
@@ -98,7 +99,6 @@ def view_task(request, task_id):
     rows = []
     if my_task.report:
         file_path = my_task.report.path
-
         
         with open(file_path, 'r') as f:
             for line in f:
