@@ -39,18 +39,30 @@
                 <!-- menus -->
                 <div class="col d-flex align-items-center justify-content-end" style="color: #3F4682;">
                     <!-- notifications -->
-                    <div class="d-flex align-items-center justify-content-center p-1 mx-2"
+                    <!--div class="d-flex align-items-center justify-content-center p-1 mx-2"
                         style="width: 38px; height: 38px; object-fit: cover">
                         <a href="#"><i class="fa-solid fa-bell"></i></a>
+                    </div-->
+                    <div class="d-flex align-items-center justify-content-center p-1 mx-2">
+                        <a href="{% url 'user:login' %}" class="d-flex text-decoration-none p-1">
+                            <i class='fas fa-sign-in-alt m-1'></i>
+                            <p class="m-0">Log in</p>
+                        </a>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center p-1 mx-2">
+                        <a href="{% url 'user:create_user' %}" class="d-flex text-decoration-none p-1">
+                            <i class='fas fa-sign-in-alt m-1'></i>
+                            <p class="m-0">Sign up</p>
+                        </a>
                     </div>
                     <!-- hamburger menu-->
-                    <div class="d-flex align-items-center justify-content-center p-1 mx-2"
+                    <!--div class="d-flex align-items-center justify-content-center p-1 mx-2"
                         style="width: 38px; height: 38px; object-fit: cover" id="hamburger-menu"
                         data-bs-toggle="dropdown" aria-expanded="false" type="button" data-bs-auto-close="outside">
                         <i class="fa-solid fa-bars"></i>
-                    </div>
+                    </div-->
                     <!-- hamburger dropdown -->
-                    <ul class="dropdown-menu shadow p-3 m-1" aria-labelledby="hamburger-menu">
+                    <!--ul class="dropdown-menu shadow p-3 m-1" aria-labelledby="hamburger-menu">
                         <div class="hamburger-dropdown">
                             <div>
                                 <a href="{% url 'user:profile' %}" class="d-flex text-decoration-none p-1">
@@ -77,7 +89,7 @@
                                 </a>
                             </div>
                         </div>
-                    </ul>
+                    </ul-->
                 </div>
             </div>
         </div>

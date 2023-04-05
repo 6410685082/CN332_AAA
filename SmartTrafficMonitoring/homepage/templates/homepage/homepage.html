@@ -1,97 +1,12 @@
 {% extends 'homepage/layout.html' %}
 {% load static %}
 {% block body %}
-<<<<<<< HEAD
-    {% if  user.is_authenticated %}
-    <header id="masthead" class="site-header site-header-white">
-        <nav id="primary-navigation" class="site-navigation">
-            <div class="container">
-
-                <div class="navbar-header">
-               
-                    
-
-                </div><!-- /.navbar-header -->
-
-                <!-- ============ navbar ============ -->
-                <div class="d-flex align-items-center fixed-top shadow nav" style="min-height: 56px; z-index: 5;">
-                    <div class="container-fluid">
-                        <div class="row align-items-center">
-                            <!-- search -->
-                            <div class="col d-flex align-items-center">
-                                <!-- logo -->
-                                <a href="#" class="navbar-brand" style="color: #ffffff; font-size:25px; font-weight: 500">
-                                    SMTM
-                                </a>
-                            </div>
-                            <!-- menus -->
-                            <div class="col d-flex align-items-center justify-content-end" style="color: #3F4682;">
-                                <!-- home -->
-                                <div class="d-flex align-items-center justify-content-center p-1 mx-2"
-                                    style="width: 38px; height: 38px; object-fit: cover">
-                                    <a href="{% url 'homepage:index' %}"><i class="fa-solid fa-house"></i></a>
-                                </div>
-                                <!-- notifications -->
-                                <div class="d-flex align-items-center justify-content-center p-1 mx-2"
-                                    style="width: 38px; height: 38px; object-fit: cover">
-                                    <a href="#"><i class="fa-solid fa-bell"></i></a>
-                                </div>
-                                <!-- hamburger menu-->
-                                <div class="d-flex align-items-center justify-content-center p-1 mx-2"
-                                    style="width: 38px; height: 38px; object-fit: cover"
-                                    id="hamburger-menu"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                    type="button"
-                                    data-bs-auto-close="outside">
-                                    <i class="fa-solid fa-bars"></i>
-                                </div>
-                                <!-- hamburger dropdown -->
-                                <ul class="dropdown-menu shadow p-3 m-1"
-                                    aria-labelledby="hamburger-menu">
-                                    <div class="hamburger-dropdown">
-                                        <div>
-                                            <a href="{% url 'user:profile' %}" class="d-flex text-decoration-none p-1">
-                                                <i class="fa-solid fa-user m-1"></i>
-                                                <p class="m-0">View Profile</p>
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <a href="{% url 'user:logout' %}" class="d-flex text-decoration-none p-1">
-                                                <i class="fa-solid fa-right-from-bracket m-1"></i>
-                                                <p class="m-0">Logout</p>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>   
-        </nav><!-- /.site-navigation -->
-    </header><!-- /#mastheaed -->
-    {% endif %}
-</head>
-=======
-
->>>>>>> 0325fb79677f7cd8d04a21f9e7077793591baa61
 
 <body>
 
     <div id="hero" class="hero overlay">
         <div class="hero-content">
             <div class="hero-text">
-<<<<<<< HEAD
-                <h1>Get Information</h1>
-                <p>Use drone to detect your interest area!</p>
-                <p>Create Task , Create Loop</p>
-                <p>Wait for Result!</p>
-                <a href="{% url 'task:index' %}" class="btn btn-border">Report</a>
-                <a href="{% url 'task:create_task' %}" class="btn btn-border">Create Task</a>
-=======
-                <br>
-                <br>
                 <br>
                 <br>                
                 <br>
@@ -106,8 +21,8 @@
                                     <p>Create Task , Create Loop</p>
                                     <p>Wait for Result!</p>
                                     <div class="d-flex submit-area">
-                                        <button type="submit" class="submit-btn"><a href="{% url 'task:index' %}" class="submit-btn">Report</a></button>
-                                        <button type="submit" class="submit-btn"><a href="{% url 'task:create_task' %}" class="submit-btn">Create task</a></button>
+                                        <!--!button type="submit" class="submit-btn"><a href="{% url 'task:index' %}" class="submit-btn">Report</a></button>
+                                        <button type="submit" class="submit-btn"><a href="{% url 'task:create_task' %}" class="submit-btn">Create task</a></button-->
                                     </div>                                    
                                 </body>
                             </div>
@@ -117,7 +32,6 @@
                         </div>
                     </div>
                 </div>
->>>>>>> 0325fb79677f7cd8d04a21f9e7077793591baa61
             </div><!-- /.hero-text -->
         </div><!-- /.hero-content -->
     </div><!-- /.hero -->
