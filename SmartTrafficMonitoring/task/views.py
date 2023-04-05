@@ -99,7 +99,6 @@ def view_task(request, task_id):
     rows = []
     if my_task.report:
         file_path = my_task.report.path
-
         
         with open(file_path, 'r') as f:
             for line in f:
