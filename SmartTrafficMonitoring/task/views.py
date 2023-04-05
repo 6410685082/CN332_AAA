@@ -4,6 +4,8 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.utils import dateformat
+import os
+from django.conf import settings
 
 import sys
 sys.path.append("../user")
@@ -93,12 +95,36 @@ def create_task(request):
 def view_task(request, task_id):
     task = Task.objects.filter(pk=task_id, created_by=request.user).first()
 
+    my_task = Task.objects.get(id=task_id)
+    rows = []
+    if my_task.report:
+        file_path = my_task.report.path
+
+        
+        with open(file_path, 'r') as f:
+            for line in f:
+                fields = line.strip().split(',')
+                row_dict = {
+                    'loop': fields[0],
+                    'track': fields[1],
+                    'vehicle': fields[2],
+                    'time': fields[3],
+                    'direction': fields[4],
+                }
+                rows.append(row_dict)
+        
+        report_url = my_task.report.url
+    else:
+        report_url = None
     if task is None:
         return redirect(reverse('task:index'))
 
     return render(request, 'task/view_task.html', {
+                'rows': rows,
                 'user': request.user,
-                'task': task
+                'task': task,
+                'output_vdo': task.output_vdo.url if task.output_vdo else '',
+                'report_url': report_url,
             })
 
 @login_required(login_url='/user/login')

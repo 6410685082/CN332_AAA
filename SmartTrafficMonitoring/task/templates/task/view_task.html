@@ -19,6 +19,42 @@
             <source src="{{ task.input_vdo }}" type="audio/mp4">
         </video><br>
     </div>
+    {% if output_vdo %}
+    <div class="step-1 m-3 mt-5">
+        <video width="640" height="360" controls>
+            <source src="{{ output_vdo }}" type="audio/mp4">
+        </video><br>
+    </div>
+    {% endif %}
+
+    {% if rows %}
+    <table>
+        <thead>
+            <tr>
+                <th>Loop</th>
+                <th>Track</th>
+                <th>Vehicle</th>
+                <th>Time</th>
+                <th>Direction</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+                <tr>
+                    <td>{{ row.loop }}</td>
+                    <td>{{ row.track }}</td>
+                    <td>{{ row.vehicle }}</td>
+                    <td>{{ row.time }}</td>
+                    <td>{{ row.direction }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    
+    {% if report_url %}
+        <a href="{{ report_url }}" download>Download report</a>
+    {% endif %}
 
     <div class="d-flex description mt-5">
         <label for="note" class="form-label">Note:</label><br>

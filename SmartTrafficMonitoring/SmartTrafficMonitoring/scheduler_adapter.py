@@ -30,9 +30,10 @@ class CeleryAdapter(Scheduler):
 
         @shared_task(bind=True)
         def adapt_process(self,task_id):
-            from task.models import Task, Status, UploadFile
+            from task.models import Task, Status
             from ooad import Detect, Vehicle
             BASE_DIR = Path(__file__).resolve().parent.parent
+            task = Task.objects.get(id=task_id)
             
 
             d = Detect(Task.objects.get(id=task_id))
@@ -54,14 +55,11 @@ class CeleryAdapter(Scheduler):
             # Open the files and read their contents
             with open(video_file_path, 'rb') as video_file:
                 video_content = io.BytesIO(video_file.read())
+            task.output_vdo.save('video.mp4', ContentFile(video_content.getvalue()))
             with open(text_file_path, 'r') as text_file:
                 text_content = text_file.read()
+            task.report.save('text.txt', ContentFile(text_content))
 
-            # Save the files to your model instances
-            upload_file = UploadFile.objects.create()
-            upload_file.loop_txt_file.save('text.txt', ContentFile(text_content))
-            upload_file.video_file.save('video.mp4', ContentFile(video_content.getvalue()))
-            
             video_file.close()
             text_file.close()
 

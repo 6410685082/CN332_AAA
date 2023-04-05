@@ -25,10 +25,3 @@ class Task(models.Model):
 
     def __str__(self):
         return f"{self.name} {self.location}"
-
-class UploadFile(models.Model):
-    video_file = models.FileField(upload_to='videos/')
-    loop_txt_file = models.FileField(upload_to='texts/')
-
-    def __str__(self):
-        return f"{self.video_file} {self.loop_txt_file}"
