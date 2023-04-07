@@ -7,11 +7,11 @@ from django.utils import timezone
 from django.utils import dateformat
 from django.db.models import Q
 
-import sys
-sys.path.append("../user")
+#import sys
+#sys.path.append("../user")
 
-from user.models import UserInfo
+#from user.models import UserInfo
 
-@login_required(login_url='/user/login')
+#@login_required(login_url='/user/login')
 def index(request):
     return render(request, 'homepage/homepage.html')
