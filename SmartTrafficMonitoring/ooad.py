@@ -360,10 +360,10 @@ class Vehicle:
             # cv2.line(im0s, (600,200),(400,400),(0,255,0),5)
             # line4 right turn line
             # cv2.line(im0s, (400,400),(200,200),(0,255,0),5)
+            # add counting table
+                counttable.img = im0s
 
             if self.summary_txt == True:
-                # add counting table
-                counttable.img = im0s
                 for lb in self.loop_boxes:
                     lb.draw(counttable)
             # cv2.rectangle(im0s,(500,400),(900,550),(0,0,0),cv2.FILLED)
