@@ -36,25 +36,25 @@ class CountTable:
         x_offset,y_offset = int(self.location["x"]),int(self.location["y"])
 
         if self.title != "":
-            cv2.putText(self.img,self.title,(x_offset,y_offset),cv2.FONT_HERSHEY_SIMPLEX,0.3,self.border_color,1)
+            cv2.putText(self.img,self.title,(x_offset,y_offset),cv2.FONT_HERSHEY_SIMPLEX,0.3,self.border_color,1.5)
         # Draw table borders
         if self.border:
-            cv2.rectangle(self.img, (x_offset, y_offset+10), (x_offset + 110*3, y_offset + 32*len(self.row_headers)), self.border_color, 1)
+            cv2.rectangle(self.img, (x_offset, y_offset+10), (x_offset + 200, y_offset + 200), self.border_color, 1.5)
 
         # Draw row headers
         if self.row_headers:
             for i, row_header in enumerate(self.row_headers):
-                cv2.putText(self.img, str(row_header), (x_offset + 10, y_offset + 30 + i*30), cv2.FONT_HERSHEY_SIMPLEX, 0.3, self.text_color, 1)
+                cv2.putText(self.img, str(row_header), (x_offset + 10, y_offset + 30 + i*30), cv2.FONT_HERSHEY_SIMPLEX, 0.3, self.text_color, 1.5)
 
         # Draw column headers
         if self.col_headers:
             for j, col_header in enumerate(self.col_headers):
-                cv2.putText(self.img, str(col_header), (x_offset + 50 + j*100, y_offset ), cv2.FONT_HERSHEY_SIMPLEX, 0.3, self.text_color, 1)
+                cv2.putText(self.img, str(col_header), (x_offset + 50 + j*100, y_offset ), cv2.FONT_HERSHEY_SIMPLEX, 0.3, self.text_color, 1.5)
 
         # Draw 2D list on the image
         for i, row in enumerate(self.data):
             for j, val in enumerate(row):
-                cv2.putText(self.img, str(val), (x_offset + 200 + j*50, y_offset + 30 + i*30), cv2.FONT_HERSHEY_SIMPLEX, 0.3, self.text_color, 1)
+                cv2.putText(self.img, str(val), (x_offset + 200 + j*50, y_offset + 30 + i*30), cv2.FONT_HERSHEY_SIMPLEX, 0.3, self.text_color, 1.5)
 
 
 

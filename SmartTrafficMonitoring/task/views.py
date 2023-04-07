@@ -228,22 +228,27 @@ def custom_loop(request,task_id):
         name = request.POST.get("name")
         loop_id = request.POST.get("id")
 
-        x1 = float(request.POST.get("x1"))
-        y1 = float(request.POST.get("y1"))
+        x1 = int(request.POST.get("x1"))
+        y1 = int(request.POST.get("y1"))
 
-        x2 = float(request.POST.get("x2"))
-        y2 = float(request.POST.get("y2"))
+        x2 = int(request.POST.get("x2"))
+        y2 = int(request.POST.get("y2"))
 
-        x3 = float(request.POST.get("x3"))
-        y3 = float(request.POST.get("y3"))
+        x3 = int(request.POST.get("x3"))
+        y3 = int(request.POST.get("y3"))
 
-        x4 = float(request.POST.get("x4"))
-        y4 = float(request.POST.get("y4"))
+        x4 = int(request.POST.get("x4"))
+        y4 = int(request.POST.get("y4"))
+
+        if request.POST.get("clock-choice") == "clockwise":
+            clock = True
+        else:
+            clock = False
 
         x = [x1,x2,x3,x4]
         y = [y1,y2,y3,y4]
 
-        loop.write_json(loop_path,name,loop_id,x,y)
+        loop.write_json(loop_path,name,loop_id,x,y,clock)
 
     frame = os.path.join("capture",loop.draw_loop(loop_path,video,frame_path))
     return render(request, 'task/custom_loop.html', {

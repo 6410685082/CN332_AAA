@@ -68,9 +68,13 @@ def draw_loop(filename,vdo, path):
 
     return name
 
-def write_json(filename, name, id, x, y):
+def write_json(filename, name, id, x, y, clock):
     id_f = int(id)
     y_sum = 20*((id_f+1)**2)
+    if clock == True:
+        clock_direc = "clockwise" 
+    else:
+        clock_direc = "counterclockwise" 
     data = {
         "name": name,
         "id": id,
@@ -80,7 +84,7 @@ def write_json(filename, name, id, x, y):
             {"x": x[2], "y": y[2]},
             {"x": x[3], "y": y[3]}
         ],
-        "orientation": "clockwise",
+        "orientation": clock_direc,
         "summary_location":{"x":20,"y":f'{y_sum}'}
     }
     

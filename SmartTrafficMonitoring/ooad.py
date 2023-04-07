@@ -361,11 +361,11 @@ class Vehicle:
             # line4 right turn line
             # cv2.line(im0s, (400,400),(200,200),(0,255,0),5)
 
-            # add counting table
-            counttable.img = im0s
-
-            for lb in self.loop_boxes:
-                lb.draw(counttable)
+            if self.summary_txt == True:
+                # add counting table
+                counttable.img = im0s
+                for lb in self.loop_boxes:
+                    lb.draw(counttable)
             # cv2.rectangle(im0s,(500,400),(900,550),(0,0,0),cv2.FILLED)
             # cv2.putText(im0s,"        Straight    Left        Right", (500, 420),cv2.FONT_HERSHEY_SIMPLEX,
             #             0.6, [0, 255, 0], 2)

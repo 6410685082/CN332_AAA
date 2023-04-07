@@ -12,9 +12,4 @@ class UploadFileAdmin(admin.ModelAdmin):
 
 admin.site.register(Status, StatusAdmin)
 admin.site.register(Task, TaskAdmin)
-<<<<<<< HEAD
-admin.site.register(UploadFile, UploadFileAdmin)
-=======
-
->>>>>>> 39ddef72f03b298e1a8972abff123331fe7de258
 
