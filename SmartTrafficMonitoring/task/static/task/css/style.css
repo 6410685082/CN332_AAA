@@ -312,3 +312,62 @@ td {
 .save-btn{
     margin-left: 2rem;
 }
+
+/*--------- custom loop ---------*/
+.clear-loop-btn{
+    margin: 1rem;
+    padding: .5rem .7rem;
+    border-radius: 20px;
+    background: #4044ed;
+    color: #ffffff;
+    font-weight: 500;
+    border: none;
+}
+.name input, .id input{
+    width: 50%;
+}
+.point input{
+    width: 30%;
+}
+.plot-direction label{
+    margin-left: 1.5rem;
+}
+.custom-loop .submit-btn{
+    margin-top: 1rem;
+    padding: .5rem .7rem;
+    border-radius: 20px;
+    background: #4044ed;
+    color: #ffffff;
+    font-weight: 500;
+    border: none;
+}
+.download-btn, .all-done-btn{
+    margin-top: 1rem;
+    padding: .5rem .7rem;
+    border-radius: 20px;
+    background: #4044ed;
+    color: #ffffff;
+    font-weight: 500;
+    border: none;
+}
+
+/*------ notification style -------*/
+.notification-area{
+    margin-top: 6rem;
+    text-align: center;
+}
+.notification-area h1{
+    font-weight: 600;
+}
+.notification-table {
+    margin: 2rem;
+}
+tbody .unread td{
+    content: "";
+    font-weight: 700;
+}
+.notification .actions-btn a{
+    font-size: 16px;
+    font-weight: 500;
+    padding: 0.3rem 1rem;
+}
