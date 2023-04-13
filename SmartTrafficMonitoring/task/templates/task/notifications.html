@@ -1,0 +1,61 @@
+{% extends 'task/layout.html' %}
+{% block body %}
+
+<div class="notification-area">
+    <h1>NOTIFICATIONS</h1>
+    <div class="notification">
+        <div class="notification-table">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">DATE</th>
+                    <th scope="col">NAME</th>
+                    <th scope="col">LOCATION</th>
+                    <th scope="col">STATUS</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="unread">
+                    <td>01/02/2565</td>
+                    <td>Pakkret</td>
+                    <td>Nonthaburi</td>
+                    <td>SUCCESS</td>
+                    <td class="actions-btn">
+                        <a class="view-task-btn m-1" href="{% url 'task:view_task' task.id %}">VIEW</a>
+                    </td>
+                </tr>
+                <tr class="unread">
+                    <td>01/02/2565</td>
+                    <td>Pakkret</td>
+                    <td>Nonthaburi</td>
+                    <td>SUCCESS</td>
+                    <td class="actions-btn">
+                        <a class="view-task-btn m-1" href="{% url 'task:view_task' task.id %}">VIEW</a>
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td>01/02/2565</td>
+                    <td>Pakkret</td>
+                    <td>Nonthaburi</td>
+                    <td>SUCCESS</td>
+                    <td class="actions-btn">
+                        <a class="view-task-btn m-1" href="{% url 'task:view_task' task.id %}">VIEW</a>
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td>01/02/2565</td>
+                    <td>Pakkret</td>
+                    <td>Nonthaburi</td>
+                    <td>SUCCESS</td>
+                    <td class="actions-btn">
+                        <a class="view-task-btn m-1" href="{% url 'task:view_task' task.id %}">VIEW</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
