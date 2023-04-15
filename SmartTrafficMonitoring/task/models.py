@@ -32,3 +32,15 @@ class UploadFile(models.Model):
 
     def __str__(self):
         return f"{self.video_file} {self.loop_txt_file}"
+    
+class Notification(models.Model):
+    detail = models.CharField(max_length=255)
+    task = models.ForeignKey(
+        Task, on_delete=models.CASCADE, related_name="task_id")
+    already_read = models.BooleanField(default=False)
+    created_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="notification_for")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.created_by} {self.detail}"

@@ -99,6 +99,10 @@ def create_task(request):
 def view_task(request, task_id):
     task = Task.objects.filter(pk=task_id, created_by=request.user).first()
 
+    Notification.objects.filter(task=task).update(
+        already_read = True
+    )
+
     my_task = Task.objects.get(id=task_id)
     rows = []
     if my_task.report:
@@ -276,3 +280,17 @@ def schedule(request, task_id):
     scheduler = CeleryAdapter()
     scheduler.process(task_id)
     return HttpResponseRedirect(reverse('task:view_task', args=(task_id,)))
+
+def view_notification(request):
+    user_info = UserInfo.objects.get(user_id=request.user)
+    notifications = Notification.objects.filter(created_by=request.user)
+
+    for noti in notifications:
+        noti.task.created_at = dateformat.format(noti.task.created_at, 'd/m/Y')
+        noti.already_read = 'read' if noti.already_read else 'unread'
+
+    return render(request, 'task/notifications.html', {
+        'user': request.user,
+        'user_info': user_info,
+        'notifications': notifications
+    })

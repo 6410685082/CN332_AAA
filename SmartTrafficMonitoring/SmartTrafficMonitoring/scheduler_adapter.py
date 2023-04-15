@@ -30,16 +30,14 @@ class CeleryAdapter(Scheduler):
 
         @shared_task(bind=True)
         def adapt_process(self,task_id):
-            from task.models import Task, Status
+            from task.models import Task, Status, Notification
             from ooad import Detect, Vehicle
             BASE_DIR = Path(__file__).resolve().parent.parent
             task = Task.objects.get(id=task_id)
             
-
             d = Detect(Task.objects.get(id=task_id))
 
             save_path, save_direc = d.detect_engine()
-
 
             Task.objects.filter(pk=task_id).update(
                 status_id = Status.objects.last(),
@@ -47,7 +45,17 @@ class CeleryAdapter(Scheduler):
 
             # update timestamp (updated_at)
             Task.objects.get(pk=task_id).save()
-            
+
+            # query updated task
+            task = Task.objects.get(pk=task_id)
+
+            # create notification for the task when process is done
+            Notification.objects.create(
+                detail = 'Task Complete!',
+                task = task,
+                already_read = False,
+                created_by = task.created_by
+            )
             
             video_file_path = os.path.join(BASE_DIR, save_path)
             text_file_path = os.path.join(BASE_DIR, save_direc,'loop.txt')

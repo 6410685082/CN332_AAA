@@ -10,6 +10,9 @@ class TaskAdmin(admin.ModelAdmin):
 class UploadFileAdmin(admin.ModelAdmin):
     list_display = ['id', 'video_file', 'loop_txt_file']
 
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ['detail', 'task', 'already_read', 'created_by', 'created_at']
+
 admin.site.register(Status, StatusAdmin)
 admin.site.register(Task, TaskAdmin)
-
+admin.site.register(Notification, NotificationAdmin)

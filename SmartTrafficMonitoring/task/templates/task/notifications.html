@@ -16,42 +16,17 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="unread">
-                    <td>01/02/2565</td>
-                    <td>Pakkret</td>
-                    <td>Nonthaburi</td>
-                    <td>SUCCESS</td>
+                {% for noti in notifications %}
+                <tr class={{ noti.already_read }}>
+                    <td>{{ noti.task.created_at }}</td>
+                    <td>{{ noti.task.name }}</td>
+                    <td>{{ noti.task.location }}</td>
+                    <td>{{ noti.task.status_id }}</td>
                     <td class="actions-btn">
-                        <a class="view-task-btn m-1" href="{% url 'task:view_task' task.id %}">VIEW</a>
+                        <a class="view-task-btn m-1" href="{% url 'task:view_task' noti.task.id %}">VIEW</a>
                     </td>
                 </tr>
-                <tr class="unread">
-                    <td>01/02/2565</td>
-                    <td>Pakkret</td>
-                    <td>Nonthaburi</td>
-                    <td>SUCCESS</td>
-                    <td class="actions-btn">
-                        <a class="view-task-btn m-1" href="{% url 'task:view_task' task.id %}">VIEW</a>
-                    </td>
-                </tr>
-                <tr class="read">
-                    <td>01/02/2565</td>
-                    <td>Pakkret</td>
-                    <td>Nonthaburi</td>
-                    <td>SUCCESS</td>
-                    <td class="actions-btn">
-                        <a class="view-task-btn m-1" href="{% url 'task:view_task' task.id %}">VIEW</a>
-                    </td>
-                </tr>
-                <tr class="read">
-                    <td>01/02/2565</td>
-                    <td>Pakkret</td>
-                    <td>Nonthaburi</td>
-                    <td>SUCCESS</td>
-                    <td class="actions-btn">
-                        <a class="view-task-btn m-1" href="{% url 'task:view_task' task.id %}">VIEW</a>
-                    </td>
-                </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
