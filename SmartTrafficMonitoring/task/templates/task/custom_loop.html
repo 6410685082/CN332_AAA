@@ -3,83 +3,84 @@
 
 <div class="container">
     {% if frame %}
-    <div class="mt-5">
+    <div class="custom-loop m-5">
         <img src="{{ MEDIA_URL }}/{{ frame }}" alt="car capture frame"><br>
-        <a href="{% url 'task:clear_loop' task_id %}"><button>clear all loop</button></a>
+        <a href="{% url 'task:clear_loop' task_id %}"><button class="clear-loop-btn">Clear all loop</button></a>
 
-        <form method="POST" action="{% url 'task:custom_loop' task_id %}" id="loopForm">
+        <form method="POST" action="{% url 'task:custom_loop' task_id %}" id="loopForm" class="mt-2">
             {% csrf_token %}
-            <div class="d-flex name">
-                <label for="name" class="m-2">Name:</label>
+            <div class="d-flex name m-0">
+                <label for="name" class="mt-2">Name:</label>
                 <input type="text" id="name" name="name" class="form-control name" required>
             </div>
-            
-        <div class="d-flex mt-2 id">
-            <label for="id">ID:</label>
-            <input type="text" id="id" name="id" class="form-control id" required>
-        </div>
 
-        <div class="point mt-5 d-flex">
-            <p>Point:</p><br>
-            <div class="point-left mt-4">
-                <div class="d-flex mt-3 x1">
-                    <label for="x1" class="m-2">x1:</label>
-                    <input type="number" id="x1" name="x1" class="form-control x1" required>
+            <div class="d-flex m-0 id">
+                <label for="id" class="id-label">ID:</label>
+                <input type="text" id="id" name="id" class="form-control id" required>
+            </div>
+
+
+            <div class="point mt-5 d-flex">
+                <b>Point:</b><br>
+                <div class="point-left mt-4">
+                    <div class="d-flex mt-3 x1">
+                        <label for="x1" class="m-2">x1:</label>
+                        <input type="number" id="x1" name="x1" class="form-control x1" required>
+                    </div>
+                    <div class="d-flex mt-3 y1">
+                        <label for="y1" class="m-2">y1:</label>
+                        <input type="number" id="y1" name="y1" class="form-control y1" required>
+                    </div>
+
+                    <div class="d-flex mt-3 x2">
+                        <label for="x2" class="m-2">x2:</label>
+                        <input type="number" id="x2" name="x2" class="form-control x2" required>
+                    </div>
+                    <div class="d-flex mt-3 y2">
+                        <label for="y2" class="m-2">y2:</label>
+                        <input type="number" id="y2" name="y2" class="form-control y2" required>
+                    </div>
                 </div>
 
-                <div class="d-flex mt-3 y1">
-                    <label for="y1" class="m-2">y1:</label>
-                    <input type="number" id="y1" name="y1" class="form-control y1" required>
-                </div>
+                <div class="point-right mt-4">
+                    <div class="d-flex mt-3 x3">
+                        <label for="x3" class="m-2">x3:</label>
+                        <input type="number" id="x3" name="x3" class="form-control x3" required>
+                    </div>
+                    <div class="d-flex mt-3 y3">
+                        <label for="y3" class="m-2">y3:</label>
+                        <input type="number" id="y3" name="y3" class="form-control y3" required>
+                    </div>
 
-                <div class="d-flex mt-3 x2">
-                    <label for="x2" class="m-2">x2:</label>
-                    <input type="number" id="x2" name="x2" class="form-control x2" required>
-                </div> 
-                      
-                <div class="d-flex mt-3 y2">
-                    <label for="y2" class="m-2">y2:</label>
-                    <input type="number" id="y2" name="y2" class="form-control y2" required>
+                    <div class="d-flex mt-3 x4">
+                        <label for="x4" class="m-2">x4:</label>
+                        <input type="number" id="x4" name="x4" class="form-control x4" required>
+                    </div>
+                    <div class="d-flex mt-3 y4">
+                        <label for="y4" class="m-2">y4:</label>
+                        <input type="number" id="y4" name="y4" class="form-control y4" required>
+                    </div>
                 </div>
             </div>
-            <div class="point-right mt-4">
-                <div class="d-flex mt-3 x3">
-                    <label for="x3" class="m-2">x3:</label>
-                    <input type="number" id="x3" name="x3" class="form-control x3" required>
-                </div>
-                <div class="d-flex mt-3 y3">
-                    <label for="y3" class="m-2">y3:</label>
-                    <input type="number" id="y3" name="y3" class="form-control y3" required>
-                </div> 
-                <div class="d-flex mt-3 x4">
-                    <label for="x4" class="m-2">x4:</label>
-                    <input type="number" id="x4" name="x4" class="form-control x4" required>
-                </div>
-                <div class="d-flex mt-3 y4">
-                    <label for="y4" class="m-2">y4:</label>
-                    <input type="number" id="y4" name="y4" class="form-control y4" required>
-                </div>
-            </div>
-        </div>
 
-        <div class="plot-direction mt-4">
-            <p class="mb-2">direction of plotting</p>
-            <label>
-                <input type="radio" name="clock-choice" value="counterclockwise" checked> counterclockwise
-            </label>
-            <br>
-            <label>
-                <input type="radio" name="clock-choice" value="clockwise"> clockwise
-            </label>
-        </div>  
-            
+            <div class="plot-direction mt-4">
+                <p class="mb-2">direction of plotting</p>
+                <label>
+                    <input type="radio" name="clock-choice" value="counterclockwise" checked> counterclockwise
+                </label>
+                <br>
+                <label>
+                    <input type="radio" name="clock-choice" value="clockwise"> clockwise
+                </label>
+            </div>
+
             <button type="submit" class="custom-loop submit-btn">Submit</button>
         </form>
     </div>
 
     <div class="loop-custom-options">
         <a href="{{loop_path}}" download="{{loop_path}}"><button class="download-btn">download</button></a>
-        <a href="{% url 'task:schedule' task_id %}"><button class="all-done-btn m-4">all done</button></a>        
+        <a href="{% url 'task:schedule' task_id %}"><button class="all-done-btn m-4">all done</button></a>
     </div>
 
     {% endif %}
