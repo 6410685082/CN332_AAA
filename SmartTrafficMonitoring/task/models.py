@@ -10,8 +10,10 @@ class Status(models.Model):
 class Task(models.Model):
     name = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
-    loop = models.FileField(upload_to='loop/')
-    input_vdo = models.FileField(upload_to='vdo_input/')
+    latitude = models.FloatField(max_length=64, null=True, blank=True)
+    longitude = models.FloatField(max_length=64, null=True, blank=True)
+    loop = models.FileField(upload_to='loop/', null=True, blank=True)
+    input_vdo = models.FileField(upload_to='vdo_input/', null=True, blank=True)
     output_vdo = models.FileField(upload_to='vdo_output/', null=True, blank=True)
     report = models.FileField(upload_to='report_output/', null=True, blank=True)
     status_id = models.ForeignKey(
@@ -20,8 +22,8 @@ class Task(models.Model):
     preset = models.BooleanField(default=False)
     created_by = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="created_by")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} {self.location}"
