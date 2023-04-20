@@ -371,6 +371,7 @@ td {
 tbody .unread td{
     content: "";
     font-weight: 700;
+    background-color: #d9d9d9;
 }
 .notification .actions-btn a{
     font-size: 16px;
