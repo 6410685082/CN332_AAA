@@ -15,6 +15,8 @@ urlpatterns = [
     path('custom-loop/<int:task_id>', views.custom_loop, name='custom_loop'),
     path('clear-loop/<int:task_id>', views.clear_loop, name='clear_loop'),
     path('schedule/<int:task_id>', views.schedule, name='schedule'),
+    path('notification/', views.view_notification, name='view_notification'),
+    path('map/', views.map, name='map'),
 ] 
 
 if settings.DEBUG:

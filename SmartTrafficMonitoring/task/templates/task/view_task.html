@@ -56,6 +56,21 @@
         <a href="{{ report_url }}" download>Download report</a>
     {% endif %}
 
+    <div>
+        <h3>Map</h3>
+        {% csrf_token %}
+        
+        <iframe src="http://127.0.0.1:8000/map/" width="50%" height="300"></iframe>
+        <h3>Current Weather</h3>
+        <p>The current temperature is {{ weather.location }}<span id="temp"></span></p>
+        {% if weather.temp != 0%}
+        <p>The current weather are {{ weather.weather_report }} <span id="conditions"></span></p>
+        <p>The current windspeed are {{ weather.wind_speed }} <span id="windspeed"></span>meter/sec</p>
+        <p>The current clouds are {{ weather.clouds }}<span id="clouds"></span>%</p>
+        <p>The current humidity are {{ weather.humidity }}<span id="clouds"></span>%</p>
+        {% endif %}
+    </div>
+
     <div class="d-flex description mt-5">
         <label for="note" class="form-label">Note:</label><br>
         <input type="text" class="form-control description-box" id="note" name="note" value="{{ task.note }}"><br>

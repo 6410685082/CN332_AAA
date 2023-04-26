@@ -1,0 +1,36 @@
+{% extends 'task/layout.html' %}
+{% block body %}
+
+<div class="notification-area">
+    <h1>NOTIFICATIONS</h1>
+    <div class="notification">
+        <div class="notification-table">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">DATE</th>
+                    <th scope="col">NAME</th>
+                    <th scope="col">LOCATION</th>
+                    <th scope="col">STATUS</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for noti in notifications %}
+                <tr class={{ noti.already_read }}>
+                    <td>{{ noti.task.created_at }}</td>
+                    <td>{{ noti.task.name }}</td>
+                    <td>{{ noti.task.location }}</td>
+                    <td>{{ noti.task.status_id }}</td>
+                    <td class="actions-btn">
+                        <a class="view-task-btn m-1" href="{% url 'task:view_task' noti.task.id %}">VIEW</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

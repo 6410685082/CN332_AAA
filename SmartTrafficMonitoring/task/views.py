@@ -15,6 +15,8 @@ sys.path.append("../SmartTrafficMonitoring")
 from SmartTrafficMonitoring.scheduler_adapter import CeleryAdapter
 from user.models import UserInfo
 from .models import *
+from drone.views import CheckDrone
+from drone.models import Weather
 
 @login_required(login_url='/user/login')
 def index(request):
@@ -71,6 +73,26 @@ def create_task(request):
 
             note = request.POST.get('note', None)
             preset = request.POST.get('preset', False)
+            latitude = request.POST.get('latitude')
+            flag = True
+            try:
+                float(latitude)
+            except ValueError:
+                    flag = False
+            if flag:
+                latitude = float(latitude)
+            else:
+                latitude = 14.068542
+            longitude = request.POST.get('longitude', None)
+            flag = True
+            try:
+                float(longitude)
+            except ValueError:
+                    flag = False
+            if flag:
+                longitude = float(longitude)
+            else:
+                longitude = 100.605965
 
             task = Task.objects.create(
                 name = name,
@@ -80,8 +102,13 @@ def create_task(request):
                 status_id = Status.objects.first(),
                 note = note,
                 preset = preset,
-                created_by = request.user
+                created_by = request.user,
+                latitude = latitude,
+                longitude = longitude
             )
+            weather = Weather.objects.create(task = task, location="Loading. Please refresh to load"
+            , wind_speed=0, latitude=latitude, longitude=longitude, 
+            temp=0, weather_report='', humidity=0, clouds = 0)
             
             return HttpResponseRedirect(reverse('task:custom_loop', args=(task.id,)))
         else:
@@ -97,7 +124,13 @@ def create_task(request):
     
 @login_required(login_url='/user/login')
 def view_task(request, task_id):
+    weather = Weather.objects.get(task=task_id)
     task = Task.objects.filter(pk=task_id, created_by=request.user).first()
+    CheckDrone(request,task_id = task, lat = weather.latitude ,lon = weather.longitude)
+
+    Notification.objects.filter(task=task).update(
+        already_read = True
+    )
 
     my_task = Task.objects.get(id=task_id)
     rows = []
@@ -128,6 +161,7 @@ def view_task(request, task_id):
                 'task': task,
                 'output_vdo': task.output_vdo.url if task.output_vdo else '',
                 'report_url': report_url,
+                'weather' : weather,
             })
 
 @login_required(login_url='/user/login')
@@ -139,6 +173,8 @@ def update_task(request, task_id):
     else:
         if request.method == 'POST':
             name = request.POST.get('name')
+            latitude = request.POST.get('latitude')
+            longitude = request.POST.get('longitude')
 
             fs = FileSystemStorage()
 
@@ -158,13 +194,18 @@ def update_task(request, task_id):
 
             location = request.POST.get('location')
             note = request.POST.get('note')
-
+            weather = Weather.objects.get(task=task_id)
+            weather.latitude = latitude
+            weather.longitude = longitude
+            weather.save()
             Task.objects.filter(pk=task_id).update(
                 name = name,
                 loop = uploaded_loop_url,
                 input_vdo = uploaded_input_vdo_url,
                 location = location,
                 note = note,
+                latitude = latitude,
+                longitude = longitude
             )
 
             # update timestamp (updated_at)
@@ -276,3 +317,20 @@ def schedule(request, task_id):
     scheduler = CeleryAdapter()
     scheduler.process(task_id)
     return HttpResponseRedirect(reverse('task:view_task', args=(task_id,)))
+
+def view_notification(request):
+    user_info = UserInfo.objects.get(user_id=request.user)
+    notifications = Notification.objects.filter(created_by=request.user)
+
+    for noti in notifications:
+        noti.task.created_at = dateformat.format(noti.task.created_at, 'd/m/Y')
+        noti.already_read = 'read' if noti.already_read else 'unread'
+
+    return render(request, 'task/notifications.html', {
+        'user': request.user,
+        'user_info': user_info,
+        'notifications': notifications
+    })
+
+def map(request):
+    return render(request,'drone/map.html')
