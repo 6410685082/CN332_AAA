@@ -1,10 +1,12 @@
 {% extends 'task/layout.html' %}
+{% load static %}
 {% block body %}
 
 <div class="notification-area">
     <h1>NOTIFICATIONS</h1>
     <div class="notification">
         <div class="notification-table">
+            {% if notifications %}
             <table class="table table-hover">
                 <thead>
                 <tr>
@@ -29,6 +31,10 @@
                 {% endfor %}
                 </tbody>
             </table>
+            {% else %}
+            <hr>
+            <h2 class="text-muted">No Notifications Here...</h2>
+            {% endif %}
         </div>
     </div>
 </div>
