@@ -59,11 +59,11 @@
     <div>
         <h3>Map</h3>
         {% csrf_token %}
-        
         <iframe src="http://127.0.0.1:8000/map/" width="50%" height="300"></iframe>
-        <h3>Current Weather</h3>
-        <p>The current temperature is {{ weather.location }}<span id="temp"></span></p>
+        <p>{{ weather.location }}</p>
         {% if weather.temp != 0%}
+        <h3>Current Weather</h3>
+        <p>The current temperature is {{ weather.temp }}<span id="temp">&#8451;</span></p>
         <p>The current weather are {{ weather.weather_report }} <span id="conditions"></span></p>
         <p>The current windspeed are {{ weather.wind_speed }} <span id="windspeed"></span>meter/sec</p>
         <p>The current clouds are {{ weather.clouds }}<span id="clouds"></span>%</p>
