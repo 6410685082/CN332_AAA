@@ -398,7 +398,7 @@ td {
 .plot-direction label{
     margin-left: 1.5rem;
 }
-.custom-loop .submit-btn{
+.custom-loop .submit-btn, .download-btn{
     margin-top: 1rem;
     padding: .5rem .7rem;
     border-radius: 20px;
@@ -407,13 +407,14 @@ td {
     font-weight: 500;
     border: none;
 }
-.download-btn, .all-done-btn{
+.all-done-btn{
     margin-top: 1rem;
-    padding: .5rem .7rem;
+    padding: .8rem 1.2rem;
     border-radius: 20px;
-    background: #4044ed;
+    background: #198754;
     color: #ffffff;
     font-weight: 500;
+    font-size: large;
     border: none;
 }
 .name, .id {
@@ -421,6 +422,9 @@ td {
 }
 .id-label{
     margin-right: 0.4rem;
+}
+.loop-custom-options{
+    justify-content: center;
 }
 
 /*------ notification style -------*/
