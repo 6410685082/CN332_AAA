@@ -34,6 +34,7 @@ def CheckDrone(request,task_id, lat = 14.068542, lon = 100.605965):
     url = f"https://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&appid={api_key}&units=metric"
     response = requests.get(url)
     data = response.json()
+    print(data)
 
     # Extract weather information
     temp = data["main"]["temp"]

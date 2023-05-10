@@ -125,7 +125,7 @@ def create_task(request):
 @login_required(login_url='/user/login')
 def view_task(request, task_id):
     weather = Weather.objects.get(task=task_id)
-    task = Task.objects.filter(pk=task_id, created_by=request.user).first()
+    task = Task.objects.filter(pk=task_id).first()
     CheckDrone(request,task_id = task, lat = weather.latitude ,lon = weather.longitude)
 
     Notification.objects.filter(task=task).update(
@@ -195,6 +195,24 @@ def update_task(request, task_id):
             location = request.POST.get('location')
             note = request.POST.get('note')
             weather = Weather.objects.get(task=task_id)
+            flag = True
+            try:
+                float(latitude)
+            except ValueError:
+                flag = False
+            if flag:
+                latitude = float(latitude)
+            else:
+                latitude = weather.latitude
+            flag = True
+            try:
+                float(longitude)
+            except ValueError:
+                flag = False
+            if flag:
+                longitude = float(longitude)
+            else:
+                longitude = weather.longitude
             weather.latitude = latitude
             weather.longitude = longitude
             weather.save()

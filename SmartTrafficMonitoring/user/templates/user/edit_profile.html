@@ -1,7 +1,8 @@
 {% extends 'task/layout.html' %}
+{% load static %}
 {% block body %}
 
-<div class="edit-profile-container">
+<div class="edit-profile-container mb-0">
     <h1>Edit Profile</h1>
     <div class="edit-profile-detail">
         <form method="post" enctype="multipart/form-data">
@@ -19,7 +20,6 @@
             <br>
             <br>
             <label>Phone Number: {{ user_form.phone_number }}</label>
-            <br>
             <br>
             <div class="edit-options-btn">
                 <button type="reset" class="reset-btn">Reset</button>
