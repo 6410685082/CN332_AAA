@@ -51,8 +51,7 @@ def create_user(request):
             form.save()
             messages.success(request, 'User created successfully!')
         
-        if request.user.is_authenticated:
-            return redirect('task:index')
+        return redirect('user:login')
     else:
         form = UserCreationForm()
         if request.user.is_authenticated:
