@@ -20,11 +20,11 @@
         </div>
         <div class="d-flex location">
             <label for="latitude">Latitude</label>
-            <input type="number" min="-90.00" max="90.00" class="form-control latitude" id="latitude" name="latitude">
+            <input type="number" min="-90.00" max="90.00" class="form-control latitude" id="latitude" name="latitude" value="{{ task.latitude }}">
         </div>
         <div class="d-flex location">
             <label for="longitude">Longitude</label>
-            <input type="number" min="-180.00" max="180.00" class="form-control longitude" id="longitude" name="longitude">
+            <input type="number" min="-180.00" max="180.00" class="form-control longitude" id="longitude" name="longitude" value="{{ task.longitude }}">
         </div>
         <div class="d-flex description mt-5">
             <label for="note" class="form-label">Note</label><br>
