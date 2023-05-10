@@ -50,9 +50,13 @@ def create_user(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'User created successfully!')
-            return redirect('user:profile')
+        
+        if request.user.is_authenticated:
+            return redirect('task:index')
     else:
         form = UserCreationForm()
+        if request.user.is_authenticated:
+            return redirect('task:index')
     return render(request, 'user/create_user.html', {'form': form})
 
 def edit_profile(request):
