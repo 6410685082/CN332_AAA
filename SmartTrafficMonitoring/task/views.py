@@ -255,8 +255,8 @@ def search_task(request):
     if keyword == "":
         return redirect(reverse('task:index'))
 
-    tasks_by_name = Task.objects.filter(name__contains=keyword, created_by=request.user)
-    tasks_by_location = Task.objects.filter(location__contains=keyword, created_by=request.user)
+    tasks_by_name = Task.objects.filter(name__contains=keyword)
+    tasks_by_location = Task.objects.filter(location__contains=keyword)
     tasks = tasks_by_name | tasks_by_location
 
     for task in tasks:
