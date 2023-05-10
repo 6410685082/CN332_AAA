@@ -60,10 +60,22 @@ def edit_profile(request):
         user_form = UpdateUserForm(request.POST, instance=request.user)
         if user_form.is_valid():
             user_form.save()
-            messages.success(request, 'User created successfully!')
+            messages.success(request, 'User updated successfully!')
             return redirect('user:profile')
     else:
-        user_form = UpdateUserForm()
+        try:
+            user_info = UserInfo.objects.get(user_id=request.user)
+            phone_number = user_info.phone_number
+        except UserInfo.DoesNotExist:
+            phone_number = ''
+        initial_data = {
+            'username': request.user.username,
+            'email': request.user.email,
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name,
+            'phone_number': phone_number,
+        }
+        user_form = UpdateUserForm(initial=initial_data)
     return render(request, 'user/edit_profile.html', {'user_form': user_form})
 
 class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
