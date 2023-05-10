@@ -23,6 +23,13 @@ a:hover{
     border-radius: 5px;
 }
 
+.delete-btn{
+    color: #ffffff;
+    background-color: #eb5050;
+    padding: 0.3rem 0.7rem;
+    border-radius: 10px;
+}
+
 .fs-0 {
     font-size: 4rem;
 }
@@ -78,7 +85,9 @@ i {
     margin: auto;
     width: 50%;
 }
-
+.container{
+    margin-top: 2rem;
+}
 .create-task {
     background: #4044ed;
     margin: auto;
@@ -130,12 +139,26 @@ td {
 .upload-file {
     margin-left: 0.5rem;
 }
-
-.new-info-box, .location, .description {
-    margin-left: 1.3rem;
+.information .name{
+    margin-left: 0.8rem;
 }
-
+.information .location, .information .description{
+    margin-left: 1.8rem;
+}
+.new-info-box, .location, .description {
+    margin-left: 1.4rem;
+}
 .name-box, .select-location {
+    font-weight: normal;
+    max-height: 30px;
+    margin-left: 1rem;
+}
+.location .name-box{
+    width: 150px;
+}
+.latitude, .longitude{
+    width: 90px;
+    font-weight: normal;
     max-height: 30px;
     margin-left: 1rem;
 }
@@ -147,12 +170,19 @@ td {
 
 .save-preset-check {
     padding-left: 1rem;
+    font-weight: normal;
 }
-
+.save-preset-check input[type="checkbox"] {
+    width: 20px; 
+    height: 20px; 
+    margin-right: 10px;
+}
 .name {
     margin: 0.5rem;
 }
-
+.upload-file .form-control{
+    width: 20rem;
+}
 .location, .description {
     margin: 1.5rem;
 }
@@ -235,8 +265,10 @@ td {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 50%;
-    margin-top: 10rem;
+    margin-top: 12rem;
+    width: 60%;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;    padding: 3rem;
+    border-radius: 30px;
 }
 .view-profile-container h1{
     font-weight: 500;
@@ -265,31 +297,58 @@ td {
     margin-left: auto;
     margin-right: auto;
     width: 50%;
-    margin-top: 10rem;
+    margin-top: 8rem;
+    border-radius: 30px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;    padding: 3rem;
+}
+.create-user-detail label{
+    margin-top: 1rem;
 }
 .create-user-container h1{
     font-size: 50px;
     font-weight: 500;
 }
 .create-user-detail{
-    margin-top: 2rem;
+    font-weight: normal;
+    font-size: 20px;
+    display: inline-block;
 }
 .create-user-btn{
     color: #ffffff;
     background: #4044ed;
     border: none;
+    font-weight: 500;
     border-radius: 20px;
     padding: .5rem 1rem;
-    margin-top: 4rem;
+    margin-top: 2rem;
 }
-
+.create-user-detail .username, .create-user-detail .password{
+    display: inline-block;
+    width: 200px; 
+    margin-right: 10px;
+    margin-top: 2rem;
+}
+.create-user-detail .first, .create-user-detail .last {
+    display: inline-block;
+    width: 200px; 
+    margin-right: 10px;
+    margin-top: 2rem;
+}
+.create-user-detail .email, .create-user-detail .phone {
+    display: inline-block;
+    width: 200px; 
+    margin-right: 10px;
+    margin-top: 2rem;
+}
 /*----- edit profile style -----*/
 .edit-profile-container{
     display: block;
     margin-left: auto;
     margin-right: auto;
     width: 50%;
-    margin-top: 10rem;
+    margin-top: 5rem;
+    border-radius: 30px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;    padding: 3rem;
 }
 .edit-profile-container h1{
     font-size: 50px;
@@ -300,13 +359,20 @@ td {
     font-size: 20px;
 }
 .edit-options-btn{
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
-.reset-btn, .save-btn{
+.reset-btn{
+    background: #717171;
+    border: none;
+    color: #ffffff;
+    padding: .5rem 1.2rem;
+    border-radius: 30px;
+}
+.save-btn{
     background: #4044ed;
     border: none;
     color: #ffffff;
-    padding: .7rem 1.2rem;
+    padding: .5rem 1.2rem;
     border-radius: 30px;
 }
 .save-btn{
@@ -332,7 +398,7 @@ td {
 .plot-direction label{
     margin-left: 1.5rem;
 }
-.custom-loop .submit-btn{
+.custom-loop .submit-btn, .download-btn{
     margin-top: 1rem;
     padding: .5rem .7rem;
     border-radius: 20px;
@@ -341,13 +407,14 @@ td {
     font-weight: 500;
     border: none;
 }
-.download-btn, .all-done-btn{
+.all-done-btn{
     margin-top: 1rem;
-    padding: .5rem .7rem;
+    padding: .8rem 1.2rem;
     border-radius: 20px;
-    background: #4044ed;
+    background: #198754;
     color: #ffffff;
     font-weight: 500;
+    font-size: large;
     border: none;
 }
 .name, .id {
@@ -355,6 +422,9 @@ td {
 }
 .id-label{
     margin-right: 0.4rem;
+}
+.loop-custom-options{
+    justify-content: center;
 }
 
 /*------ notification style -------*/

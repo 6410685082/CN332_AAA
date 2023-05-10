@@ -24,6 +24,7 @@
 </head>
 
 <body>
+
     <!-- ============ navbar ============ -->
     <div class="d-flex align-items-center fixed-top shadow nav" style="min-height: 56px; z-index: 5;">
         <div class="container-fluid">
@@ -38,58 +39,62 @@
                 </div>
                 <!-- menus -->
                 <div class="col d-flex align-items-center justify-content-end" style="color: #3F4682;">
-                    <!-- notifications -->
-                    <!--div class="d-flex align-items-center justify-content-center p-1 mx-2"
-                        style="width: 38px; height: 38px; object-fit: cover">
-                        <a href="#"><i class="fa-solid fa-bell"></i></a>
-                    </div-->
-                    <div class="d-flex align-items-center justify-content-center p-1 mx-2">
-                        <a href="{% url 'user:login' %}" class="d-flex text-decoration-none p-1">
-                            <i class='fas fa-sign-in-alt m-1'></i>
-                            <p class="m-0">Log in</p>
+                    <!-- Check if the user is logged in -->
+                    {% if user.is_authenticated %}
+                        <!-- notifications menu -->
+                        <a href="{% url 'task:view_notification' %}" class="notification-dropdown">
+                            <i class="fa-solid fa-bell"></i>
                         </a>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center p-1 mx-2">
-                        <a href="{% url 'user:create_user' %}" class="d-flex text-decoration-none p-1">
-                            <i class='fas fa-sign-in-alt m-1'></i>
-                            <p class="m-0">Sign up</p>
-                        </a>
-                    </div>
-                    <!-- hamburger menu-->
-                    <!--div class="d-flex align-items-center justify-content-center p-1 mx-2"
-                        style="width: 38px; height: 38px; object-fit: cover" id="hamburger-menu"
-                        data-bs-toggle="dropdown" aria-expanded="false" type="button" data-bs-auto-close="outside">
-                        <i class="fa-solid fa-bars"></i>
-                    </div-->
-                    <!-- hamburger dropdown -->
-                    <!--ul class="dropdown-menu shadow p-3 m-1" aria-labelledby="hamburger-menu">
-                        <div class="hamburger-dropdown">
-                            <div>
-                                <a href="{% url 'user:profile' %}" class="d-flex text-decoration-none p-1">
-                                    <i class="fa-solid fa-user m-1"></i>
-                                    <p class="m-0">View Profile</p>
-                                </a>
-                            </div>
-                            <div>
-                                <a href="{% url 'homepage:index' %}" class="d-flex text-decoration-none p-1">
-                                    <i class="fa-solid fa-address-card m-1"></i>
-                                    <p class="m-0">About Us</p>
-                                </a>
-                            </div>
-                            <div>
-                                <a href="{% url 'user:change_pw' %}" class="d-flex text-decoration-none p-1">
-                                    <i class="fa-solid fa-lock m-1"></i>
-                                    <p class="m-0">Change Password</p>
-                                </a>
-                            </div>
-                            <div>
-                                <a href="{% url 'user:logout' %}" class="d-flex text-decoration-none p-1">
-                                    <i class="fa-solid fa-right-from-bracket m-1"></i>
-                                    <p class="m-0">Logout</p>
-                                </a>
-                            </div>
+                        <!-- hamburger menu-->
+                        <div class="d-flex align-items-center justify-content-center p-1 mx-2"
+                            style="width: 38px; height: 38px; object-fit: cover" id="hamburger-menu"
+                            data-bs-toggle="dropdown" aria-expanded="false" type="button" data-bs-auto-close="outside">
+                            <i class="fa-solid fa-bars"></i>
                         </div>
-                    </ul-->
+                        <!-- hamburger dropdown -->
+                        <ul class="dropdown-menu shadow p-3 m-1" aria-labelledby="hamburger-menu">
+                            <div class="hamburger-dropdown">
+                                <div>
+                                    <a href="{% url 'user:profile' %}" class="d-flex text-decoration-none p-1">
+                                        <i class="fa-solid fa-user m-1"></i>
+                                        <p class="m-0">View Profile</p>
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="{% url 'homepage:index' %}" class="d-flex text-decoration-none p-1">
+                                        <i class="fa-solid fa-address-card m-1"></i>
+                                        <p class="m-0">About Us</p>
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="{% url 'user:change_pw' %}" class="d-flex text-decoration-none p-1">
+                                        <i class="fa-solid fa-lock m-1"></i>
+                                        <p class="m-0">Change Password</p>
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="{% url 'user:logout' %}" class="d-flex text-decoration-none p-1">
+                                        <i class="fa-solid fa-right-from-bracket m-1"></i>
+                                        <p class="m-0">Logout</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </ul>
+                    {% else %}
+                        <!-- Show login and sign up options -->
+                        <div class="d-flex align-items-center justify-content-center p-1 mx-2">
+                            <a href="{% url 'user:login' %}" class="d-flex text-decoration-none p-1">
+                                <i class='fas fa-sign-in-alt m-1'></i>
+                                <p class="m-0">Sign in</p>
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center p-1 mx-2">
+                            <a href="{% url 'user:create_user' %}" class="d-flex text-decoration-none p-1">
+                                <i class='fas fa-sign-in-alt m-1'></i>
+                                <p class="m-0">Sign up</p>
+                            </a>
+                        </div>
+                    {% endif%}
                 </div>
             </div>
         </div>
