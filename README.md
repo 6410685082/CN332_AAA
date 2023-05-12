@@ -64,11 +64,7 @@ You have to install software before using the project.
     ```sh
     celery -A SmartTrafficMonitoring worker --pool=solo -l info
     ```
-7. Run Celery beat in the 4nd terminal
-    ```sh
-    celery -A SmartTrafficMonitoring beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
-    ```
-8.  Open link [click](http://127.0.0.1:8000/)
+7.  Open link [click](http://127.0.0.1:8000/)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 [djangoproject.com]: https://img.shields.io/badge/Djang0-35495E?style=for-the-badge&logo=django&logoColor=4FC08D
