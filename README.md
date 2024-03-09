@@ -33,7 +33,7 @@ You have to install software before using the project.
 ### Installation
 1. Clone the repo
     ```sh
-    git clone https://github.com/asnnat/SmartTrafficMonitoring.git
+    git clone https://github.com/6410685082/CN332_AAA.git
     ```
 2. Change directory to the project
     ```sh
