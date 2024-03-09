@@ -21,4 +21,5 @@ urlpatterns = [
     path("", include('homepage.urls', namespace='homepage')),
     path("", include('task.urls', namespace='task')),
     path("user/", include('user.urls', namespace='user')),
+    path("accounts/", include("allauth.urls")),
 ]

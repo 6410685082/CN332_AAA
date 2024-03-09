@@ -30,6 +30,8 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+SITE_ID = 2 
+
 INSTALLED_APPS = [
     "user",
     "homepage",
@@ -42,7 +44,22 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",  
     'engine',
     'drone',
+    "django.contrib.sites",  
+    "allauth",  
+    "allauth.account",  
+    "allauth.socialaccount",  
+    "allauth.socialaccount.providers.google",  
 ]
+
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE":{
+            "profile",
+            "email"
+        },
+        "AUTH_PARAMS": {"access_type": "online"}
+    }
+}
 
 USING_SCHEDULER = CeleryAdapter()
 ADD_INSTALL_APP = USING_SCHEDULER.add_install_app()
@@ -56,6 +73,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "SmartTrafficMonitoring.urls"
@@ -140,3 +158,12 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 X_FRAME_OPTIONS = 'ALLOWALL'
+
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend"
+)
+
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
