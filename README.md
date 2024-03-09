@@ -1,13 +1,14 @@
 # SmartTrafficMonitoring
 Project Present Video:
-[![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://youtu.be/XjNfLP-U7ys)
+[![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)]()
+
 ## Member list
-* 6310610941 - ชนาธินาถ พิศประเทือง - 6310610941@student.tu.ac.th
-* 6310611014 - ชวันรัตน์ ทรัพย์เบญจภาคิน - 6310611014@student.tu.ac.th
-* 6310611030 - ภัทรกร แก้วชูกุล - 6310611030@student.tu.ac.th
-* 6310611089 - นิษฐา แก้วสมบัติ - 6310611089@student.tu.ac.th
-* 6310682635 - ณัฐณิชา ฟักสังข์ - 6310682635@student.tu.ac.th
-* 6310682726 - ณัฐนนท์ บุญเขตต์ - 6310682726@student.tu.ac.th
+* 6410615048 - ณัฐชนน จันทร์รุ่งโรจน์ 
+* 6410615063 - ธนากร ทองย้อย 
+* 6410685082 - กิตติศักดิ์ สุดแดน 
+* 6410685124 - ธนกฤต อิ้ววังโส 
+* 6410685199 - ปริญญ์ ยิ้มรุ่งเรือง 
+* 6410685207 - ปริวรรต สวัสดิ์ชาติ 
 
 ## About Project
 SmartTrafficMonitoring is a project that apply AI for traffic monitoring.
