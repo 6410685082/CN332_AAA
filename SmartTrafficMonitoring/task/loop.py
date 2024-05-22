@@ -68,6 +68,7 @@ def draw_loop(filename,vdo, path):
 
     return name
 
+# add new loop to existed loop.json file?
 def write_json(filename, name, id, x, y, clock):
     id_f = int(id)
     y_sum = 20*((id_f+1)**2)

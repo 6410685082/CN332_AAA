@@ -7,6 +7,7 @@ from django.utils import dateformat
 from . import loop
 import os
 from django.conf import settings
+import cv2
 
 import sys
 sys.path.append("../user")
@@ -56,20 +57,65 @@ def create_task(request):
                 location = task.location
             
             fs = FileSystemStorage()
-            if request.FILES.get('loop'):
-                loop = request.FILES['loop']
-                loop_filename = fs.save(loop.name, loop)
-            else:
-                default_path = os.path.join(settings.BASE_DIR, 'loop.json')
-                media_file_path = os.path.join(settings.MEDIA_ROOT, 'loop.json')
-                with open(default_path, 'rb') as f:
-                    loop_filename = fs.save(media_file_path, f)
 
-            uploaded_loop_url = fs.url(loop_filename)
-
+            # video stuff
             input_vdo = request.FILES['input_vdo']
             input_vdo_filename = fs.save(input_vdo.name, input_vdo)
-            uploaded_input_vdo_url = fs.url(input_vdo_filename)
+            uploaded_input_vdo_url = fs.url(input_vdo_filename) # = task.input_vdo
+
+            # loop stuff
+            file_choice = request.POST.get('file-choice')
+            # if request.FILES.get('loop'):
+            if file_choice == "custom" :
+                # custom loop
+                loop_file = request.FILES['loop']
+                loop_filename = fs.save(loop_file.name, loop_file)
+            # else:
+            elif file_choice == "default" :
+                # default loop
+                default_path = os.path.join(settings.BASE_DIR, 'loop.json')
+                media_file_path = os.path.join(settings.MEDIA_ROOT, 'loop.json')
+                with open(default_path, 'rb') as f: #rb = read & binary
+                    loop_filename = fs.save(media_file_path, f)
+            elif file_choice == "border" :
+                pass
+                # get video
+                video_path = os.path.join(settings.MEDIA_ROOT, str(uploaded_input_vdo_url).split("/")[-1])
+                video = cv2.VideoCapture(video_path)
+                # get video width&length
+                height = video.get(cv2.CAP_PROP_FRAME_HEIGHT)
+                width = video.get(cv2.CAP_PROP_FRAME_WIDTH)
+                #print(height, width) it work!!! woo!!!
+                
+                # make 4 loops, each at video border
+                # check how they did it in custom_loop?
+                # try using loop.write_json(loop_path,name,loop_id,x,y,clock)
+                # need loop_path = os.path.join(settings.MEDIA_ROOT, str(task.loop).split("/")[-1])
+                # need task.loop = uploaded_loop_url = fs.url(loop_filename)
+
+                # try use default, clear its loops, then add new loops?
+                default_path = os.path.join(settings.BASE_DIR, 'loop.json')
+                media_file_path = os.path.join(settings.MEDIA_ROOT, 'loop.json')
+                with open(default_path, 'rb') as f: #rb = read & binary
+                    loop_filename = fs.save(media_file_path, f)
+                
+                loop_path = os.path.join(settings.MEDIA_ROOT, str(fs.url(loop_filename)).split("/")[-1]) #used as filename?
+
+                loop.clear_loop(loop_path)
+
+                h = height
+                w = width
+                l = 10 # loop width?
+                loop.write_json(loop_path,"loop0","0",[0, l, l, 0],[0, l, h-l, h],"clockwise")
+                loop.write_json(loop_path,"loop1","1",[0, l, w-l, w],[0, l, l, 0],"clockwise")
+                loop.write_json(loop_path,"loop2","2",[w, w-l, w-l, w],[0, l, h-l, h],"clockwise")
+                loop.write_json(loop_path,"loop3","3",[0, l, w-l, w],[h, h-l, h-l, h],"clockwise")
+
+
+                #at the end, need to have "loop_filename = fs.save(something)"
+            # maybe make an option to make border loop here?
+
+            uploaded_loop_url = fs.url(loop_filename)
 
             note = request.POST.get('note', None)
             preset = request.POST.get('preset', False)
@@ -276,7 +322,7 @@ def search_task(request):
 @login_required(login_url='/user/login')
 def custom_loop(request,task_id):
     task = Task.objects.get(pk = task_id)
-    video = os.path.join(settings.MEDIA_ROOT, str(task.input_vdo).split("/")[-1])
+    video = os.path.join(settings.MEDIA_ROOT, str(task.input_vdo).split("/")[-1]) # path of video?
     loop_path = os.path.join(settings.MEDIA_ROOT, str(task.loop).split("/")[-1])
     frame_path = os.path.join(settings.MEDIA_ROOT, "capture")
     isExist = os.path.exists(frame_path)
