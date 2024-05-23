@@ -5,9 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.utils import dateformat
 from . import loop
-import os
+import os, cv2, json
 from django.conf import settings
-import cv2
 
 import sys
 sys.path.append("../user")
@@ -78,31 +77,27 @@ def create_task(request):
                 with open(default_path, 'rb') as f: #rb = read & binary
                     loop_filename = fs.save(media_file_path, f)
             elif file_choice == "border" :
-                pass
                 # get video
                 video_path = os.path.join(settings.MEDIA_ROOT, str(uploaded_input_vdo_url).split("/")[-1])
                 video = cv2.VideoCapture(video_path)
                 # get video width&length
                 height = video.get(cv2.CAP_PROP_FRAME_HEIGHT)
                 width = video.get(cv2.CAP_PROP_FRAME_WIDTH)
-                #print(height, width) it work!!! woo!!!
                 
                 # make 4 loops, each at video border
-                # check how they did it in custom_loop?
-                # try using loop.write_json(loop_path,name,loop_id,x,y,clock)
-                # need loop_path = os.path.join(settings.MEDIA_ROOT, str(task.loop).split("/")[-1])
-                # need task.loop = uploaded_loop_url = fs.url(loop_filename)
-
-                # try use default, clear its loops, then add new loops?
+                # copy the default loop file?
                 default_path = os.path.join(settings.BASE_DIR, 'loop.json')
                 media_file_path = os.path.join(settings.MEDIA_ROOT, 'loop.json')
                 with open(default_path, 'rb') as f: #rb = read & binary
                     loop_filename = fs.save(media_file_path, f)
                 
+                # get path to the copied loop file
                 loop_path = os.path.join(settings.MEDIA_ROOT, str(fs.url(loop_filename)).split("/")[-1]) #used as filename?
 
+                # clear all current loop
                 loop.clear_loop(loop_path)
 
+                # add loops at border
                 h = height
                 w = width
                 l = 10 # loop width?
@@ -110,10 +105,6 @@ def create_task(request):
                 loop.write_json(loop_path,"loop1","1",[0, l, w-l, w],[0, l, l, 0],"clockwise")
                 loop.write_json(loop_path,"loop2","2",[w, w-l, w-l, w],[0, l, h-l, h],"clockwise")
                 loop.write_json(loop_path,"loop3","3",[0, l, w-l, w],[h, h-l, h-l, h],"clockwise")
-
-
-                #at the end, need to have "loop_filename = fs.save(something)"
-            # maybe make an option to make border loop here?
 
             uploaded_loop_url = fs.url(loop_filename)
 
@@ -355,11 +346,18 @@ def custom_loop(request,task_id):
 
         loop.write_json(loop_path,name,loop_id,x,y,clock)
 
+    print(task.loop) # path to loop.json
+    file = open(loop_path)
+    data = json.load(file) # the file
+    loops = data['loops']
+    #print(data['loops']) # 
+
     frame = os.path.join("capture",loop.draw_loop(loop_path,video,frame_path))
     return render(request, 'task/custom_loop.html', {
         'frame': frame,
         'task_id': task_id,
-        'loop_path': task.loop
+        'loop_path': task.loop,
+        'loops' : loops
             })
 
 def clear_loop(request,task_id):
