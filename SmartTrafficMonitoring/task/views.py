@@ -346,7 +346,7 @@ def custom_loop(request,task_id):
 
         loop.write_json(loop_path,name,loop_id,x,y,clock)
 
-    print(task.loop) # path to loop.json
+    # print(task.loop) # path to loop.json
     file = open(loop_path)
     data = json.load(file) # the file
     loops = data['loops']
@@ -373,6 +373,27 @@ def clear_loop(request,task_id):
         'frame': frame,
         'task_id': task_id,
         'loop_path': task.loop
+            })
+
+def delete_loop(request, task_id, loop_id):
+    task = Task.objects.get(pk = task_id)
+    video = os.path.join(settings.MEDIA_ROOT, str(task.input_vdo).split("/")[-1])
+    loop_path = os.path.join(settings.MEDIA_ROOT, str(task.loop).split("/")[-1])
+    frame_path = os.path.join(settings.MEDIA_ROOT, "capture")
+
+    loop.delete_loop(loop_path, loop_id)
+
+    file = open(loop_path)
+    data = json.load(file) # the file
+    loops = data['loops']
+    #print(data['loops']) # 
+
+    frame = os.path.join("capture",loop.draw_loop(loop_path,video,frame_path))
+    return render(request, 'task/custom_loop.html', {
+        'frame': frame,
+        'task_id': task_id,
+        'loop_path': task.loop,
+        'loops' : loops
             })
 
 def schedule(request, task_id):

@@ -89,22 +89,27 @@ def write_json(filename, name, id, x, y, clock):
         "summary_location":{"x":20,"y":f'{y_sum}'}
     }
     
+    # get loops file
     try:
         with open(filename, 'r+') as file:
             file_data = json.load(file)
     except (FileNotFoundError, json.JSONDecodeError):
         file_data = {"loops": []}
 
+    # get the loops section
     loops = file_data.get("loops", [])
     for idx, obj in enumerate(loops):
         if obj.get('id') == id:
             loops.pop(idx)
             break
         
+    # append the new loop to the loop section
     loops.append(data)
 
+    # save the file
     try:
         with open(filename, 'w') as file:
+            # replace the old loops section with the new one
             json.dump({"loops": loops}, file, indent=4)
     except json.JSONEncodeError:
         print("Error: could not encode JSON data.")
@@ -113,5 +118,30 @@ def clear_loop(filename):
     try:
         with open(filename, 'w') as file:
             json.dump({"loops": []}, file, indent=4)
+    except json.JSONEncodeError:
+        print("Error: could not encode JSON data.")
+
+def delete_loop(filename, loop_id):
+    # look in the loop file
+    # find the loop with that id
+
+    # get loops file
+    try:
+        with open(filename, 'r+') as file:
+            file_data = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        file_data = {"loops": []}
+    
+    # get the loops section
+    loops = file_data.get("loops", [])
+
+    # remove the chosen loop
+    loops.pop(loop_id)
+
+    # save the file
+    try:
+        with open(filename, 'w') as file:
+            # replace the old loops section with the new one
+            json.dump({"loops": loops}, file, indent=4)
     except json.JSONEncodeError:
         print("Error: could not encode JSON data.")

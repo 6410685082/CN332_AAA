@@ -1,4 +1,10 @@
 {% extends 'task/layout.html' %}
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="/static/task/css/style.css">
+{% endblock %}
+
 {% block body %}
 
 <div class="container">
@@ -33,7 +39,7 @@
                     {% for point in loop.points %}
                         <td>({{point.x}}, {{point.y}})</td>
                     {% endfor %}
-                    <td> <a> Delete </a> </td>
+                    <td> <a href="{% url 'task:delete_loop' task_id loop.id %}"> Delete </a> </td>
                 {% endfor %}
                 </tr>
             </table>
