@@ -426,6 +426,9 @@ td {
 .loop-custom-options{
     justify-content: center;
 }
+a.delete-loop:hover {
+    color: #eb5050;
+}
 
 /*------ notification style -------*/
 .notification-area{

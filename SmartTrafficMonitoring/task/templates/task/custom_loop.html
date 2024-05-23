@@ -22,7 +22,7 @@
         
         <!-- For putting loop list -->
         {% if loops %}
-        <div class="report-table">
+        <div class="report-table" id="loops-table">
             <table class="table table-hover">
                 <tr>
                     <th> Id</th>
@@ -40,7 +40,8 @@
                     {% for point in loop.points %}
                         <td>({{point.x}}, {{point.y}})</td>
                     {% endfor %}
-                    <td> <a href="{% url 'task:delete_loop' task_id loop.id %}"> Delete </a> </td>
+                    <!-- <td> <a href="{% url 'task:delete_loop' task_id loop.id %}" class="delete-loop"> Delete </a> </td> -->
+                    <td> <a href="/delete-loop/{{task_id}}/{{loop.id}}#capframe" class="delete-loop"> Delete </a> </td>
                 {% endfor %}
                 </tr>
             </table>
