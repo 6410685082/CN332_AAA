@@ -133,10 +133,14 @@ def delete_loop(filename, loop_id):
         file_data = {"loops": []}
     
     # get the loops section
-    loops = file_data.get("loops", [])
+    loops = file_data.get("loops", []) #list
 
-    # remove the chosen loop
-    loops.pop(loop_id)
+    # find the loop with the chosen id
+    for loop in loops:
+        if loop['id'] == str(loop_id) :
+            # remove the chosen loop
+            loops.remove(loop)
+            break
 
     # save the file
     try:

@@ -21,6 +21,7 @@
         <img id ="capframe" src="{{ MEDIA_URL }}/{{ frame }}" alt="car capture frame"><br>
         
         <!-- For putting loop list -->
+        {% if loops %}
         <div class="report-table">
             <table class="table table-hover">
                 <tr>
@@ -44,6 +45,7 @@
                 </tr>
             </table>
         </div>
+        {% endif %}
 
         <a href="{% url 'task:clear_loop' task_id %}"><button class="clear-loop-btn">Clear all loop</button></a>
         <a href="{{loop_path}}" download="{{loop_path}}"><button class="download-btn">download loop's data</button></a>

@@ -346,11 +346,9 @@ def custom_loop(request,task_id):
 
         loop.write_json(loop_path,name,loop_id,x,y,clock)
 
-    # print(task.loop) # path to loop.json
     file = open(loop_path)
     data = json.load(file) # the file
     loops = data['loops']
-    #print(data['loops']) # 
 
     frame = os.path.join("capture",loop.draw_loop(loop_path,video,frame_path))
     return render(request, 'task/custom_loop.html', {
@@ -386,7 +384,6 @@ def delete_loop(request, task_id, loop_id):
     file = open(loop_path)
     data = json.load(file) # the file
     loops = data['loops']
-    #print(data['loops']) # 
 
     frame = os.path.join("capture",loop.draw_loop(loop_path,video,frame_path))
     return render(request, 'task/custom_loop.html', {
