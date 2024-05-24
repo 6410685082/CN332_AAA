@@ -31,11 +31,12 @@ class CeleryAdapter(Scheduler):
         @shared_task(bind=True)
         def adapt_process(self,task_id):
             from task.models import Task, Status, Notification
-            from ooad import Detect, Vehicle
+            from facade import Detect_facade
             BASE_DIR = Path(__file__).resolve().parent.parent
             task = Task.objects.get(id=task_id)
             
-            d = Detect(Task.objects.get(id=task_id))
+            # d = Detect(Task.objects.get(id=task_id))
+            d = Detect_facade(Task.objects.get(id=task_id))
 
             save_path, save_direc = d.detect_engine()
 

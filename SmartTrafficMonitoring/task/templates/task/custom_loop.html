@@ -1,4 +1,10 @@
 {% extends 'task/layout.html' %}
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="/static/task/css/style.css">
+{% endblock %}
+
 {% block body %}
 
 <div class="container">
@@ -13,6 +19,35 @@
     </div>
     <div class="custom-loop m-5">
         <img id ="capframe" src="{{ MEDIA_URL }}/{{ frame }}" alt="car capture frame"><br>
+        
+        <!-- For putting loop list -->
+        {% if loops %}
+        <div class="report-table" id="loops-table">
+            <table class="table table-hover">
+                <tr>
+                    <th> Id</th>
+                    <th> Loop Name </th>
+                    <th> Point 1</th>
+                    <th> Point 2</th>
+                    <th>Point 3</th>
+                    <th>Point 4</th>
+                    <th>Delete</th>
+                </tr>
+                {% for loop in loops %}
+                <tr>
+                    <td>{{loop.id}}</td>
+                    <td>{{loop.name}}</td>
+                    {% for point in loop.points %}
+                        <td>({{point.x}}, {{point.y}})</td>
+                    {% endfor %}
+                    <!-- <td> <a href="{% url 'task:delete_loop' task_id loop.id %}" class="delete-loop"> Delete </a> </td> -->
+                    <td> <a href="/delete-loop/{{task_id}}/{{loop.id}}#capframe" class="delete-loop"> Delete </a> </td>
+                {% endfor %}
+                </tr>
+            </table>
+        </div>
+        {% endif %}
+
         <a href="{% url 'task:clear_loop' task_id %}"><button class="clear-loop-btn">Clear all loop</button></a>
         <a href="{{loop_path}}" download="{{loop_path}}"><button class="download-btn">download loop's data</button></a>
 
@@ -28,7 +63,8 @@
                 <label for="id" class="id-label">ID:</label>
                 <input type="text" id="id" name="id" class="form-control id" required>
             </div><br>
-            <p>&emsp;&ensp;Generate new loop's by given an id or Change loop's data by the loop's id.</p>
+            <p>&emsp;&ensp;Generate a new loop by entering a new id.</p>
+            <p>&emsp;&ensp;Edit a loop by entering that loop's id.</p>
 
 
             <div class="point mt-5 d-flex">
@@ -60,15 +96,15 @@
                         <label for="y1" class="m-2">y1:</label>
                         <input type="number" id="y1" name="y1" class="form-control y1" required>
                     </div>
-                    
-                    <div class="d-flex mt-3 y3">
-                        <label for="y3" class="m-2">y3:</label>
-                        <input type="number" id="y3" name="y3" class="form-control y3" required>
-                    </div>
 
                     <div class="d-flex mt-3 y2">
                         <label for="y2" class="m-2">y2:</label>
                         <input type="number" id="y2" name="y2" class="form-control y2" required>
+                    </div>
+
+                    <div class="d-flex mt-3 y3">
+                        <label for="y3" class="m-2">y3:</label>
+                        <input type="number" id="y3" name="y3" class="form-control y3" required>
                     </div>
 
                     <div class="d-flex mt-3 y4">

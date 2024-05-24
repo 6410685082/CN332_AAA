@@ -14,6 +14,7 @@ urlpatterns = [
     path('search-task', views.search_task, name='search_task'),
     path('custom-loop/<int:task_id>', views.custom_loop, name='custom_loop'),
     path('clear-loop/<int:task_id>', views.clear_loop, name='clear_loop'),
+    path('delete-loop/<int:task_id>/<int:loop_id>', views.delete_loop, name='delete_loop'),
     path('schedule/<int:task_id>', views.schedule, name='schedule'),
     path('notification/', views.view_notification, name='view_notification'),
     path('map/', views.map, name='map'),
