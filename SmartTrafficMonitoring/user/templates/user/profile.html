@@ -2,21 +2,29 @@
 {% load static %}
 {% block body %}
 
-<div class="view-profile-container">
-    <div class="profile">
-        <div class="profile-header">
-            <h1>Profile</h1>
+<div class="view-profile-container d-flex justify-content-center align-items-center">
+    <div>
+        <div class="profile-header mb-4">
+            <h1 class="text-center">Profile</h1>
         </div>
-        <div class="profile mt-2">
-            <label for="name">Name: {{ user.first_name }} {{ user.last_name }}</label><br>
-            <label for="email">E-mail: {{ user.email }}</label><br>
-            <label for="phone">Phone Number: {{ phone_number }}</label><br>
-            <label for="role_id">Role: {{ role_id }}</label><br>
+        <div class="profile-info">
+            <div class="mb-3">
+                <strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}
+            </div>
+            <div class="mb-3">
+                <strong>Email:</strong> {{ user.email }}
+            </div>
+            <div class="mb-3">
+                <strong>Phone Number:</strong> {{ phone_number }}
+            </div>
+            <div class="mb-3">
+                <strong>Role:</strong> {{ role_id }}
+            </div>
         </div>
-    </div>
-    <div class="options-btn mt-5">
-        <a href="{% url 'user:edit_profile' %}" class="edit-profile-btn">Edit Profile</a>
-        <a href="{% url 'user:change_pw' %}" class="change-pw-btn">Change Password</a>
+        <div class="options-btn mt-4 d-flex justify-content-center">
+            <a href="{% url 'user:edit_profile' %}" class="btn btn-primary">Edit Profile</a>
+            <a href="{% url 'user:change_pw' %}" class="btn btn-secondary">Change Password</a>
+        </div>
     </div>
 </div>
 

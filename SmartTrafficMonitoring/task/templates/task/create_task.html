@@ -3,100 +3,149 @@
 {% block body %}
 
 <div class="container">
-    <h1>Create New Task</h1>
+    <h1 class="my-4" style="color: black;">Create New Task</h1>
     <form method="post" enctype="multipart/form-data" action="{% url 'task:create_task' %}">
         {% csrf_token %}
-        <div class="step-1 m-4">
-            <div class="d-flex upload-header">
-                <p class="step">Step 1</p>
-                <p class="m-2">Upload Video</p>
+        
+
+        <div class="step m-4 p-3 border rounded">
+            <div class="d-flex align-items-center mb-3">
+                <span class="step-number me-2">Step 1</span>
+                <span class="step-title">Upload Video</span>
             </div>
-            <div class="upload-file">
-                <label for="" class="form-label m-2 mt-0">Select a file to upload</label>
-                <input class="form-control m-2" type="file" name="input_vdo" accept="video/mp4,video/x-m4v,video/*" required>
-            </div>
-        </div>
-        <div class="step-2 m-4">
-            <div class="d-flex upload-header">
-                <p class="step">Step 2</p>
-                <p class="m-2">Choose Loop Option</p>
-            </div>
-            <div class="mb-3 upload-file">
-                <label>
-                    <input type="radio" name="file-choice" value="default" class="m-2" checked> Use default file
-                </label>
-                <br>
-                <label>
-                    <input type="radio" name="file-choice" value="border" class="m-2"> Make loop at border
-                </label>
-                <br>
-                <label>
-                    <input type="radio" name="file-choice" value="custom" class="m-2"> Upload custom file
-                </label>
-                <input class="form-control m-2" type="file" name="loop" accept="application/JSON" id="custom-file" style="display: none;">
+            <div class="mb-3">
+                <label for="input_vdo" class="form-label">Select a file to upload</label>
+                <input class="form-control" type="file" name="input_vdo" accept="video/mp4,video/x-m4v,video/*" required>
             </div>
         </div>
-        <div class="step-3 m-4">
-            <div class="d-flex information-header">
-                <p class="step">Step 3</p>
-                <p class="m-2">Fill the information</p>
+        
+
+        <div class="step m-4 p-3 border rounded">
+            <div class="d-flex align-items-center mb-3">
+                <span class="step-number me-2">Step 2</span>
+                <span class="step-title">Choose Loop Option</span>
             </div>
-            <div class="information m-2">
+            <div class="mb-3">
+                <div class="form-check">
+                    <input type="radio" id="default-loop" name="file-choice" value="default" class="form-check-input" checked>
+                    <label for="default-loop" class="form-check-label">Use default file</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" id="border-loop" name="file-choice" value="border" class="form-check-input">
+                    <label for="border-loop" class="form-check-label">Make loop at border</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" id="custom-loop" name="file-choice" value="custom" class="form-check-input">
+                    <label for="custom-loop" class="form-check-label">Upload custom file</label>
+                </div>
+                <input class="form-control mt-2" type="file" name="loop" accept="application/JSON" id="custom-file" style="display: none;">
+            </div>
+        </div>
+        
+
+        <div class="step m-4 p-3 border rounded">
+            <div class="d-flex align-items-center mb-3">
+                <span class="step-number me-2">Step 3</span>
+                <span class="step-title">Fill the Information</span>
+            </div>
+            <div class="information">
                 {% if preset_tasks %}
-                <div class="input-group">
-                    <div class="d-flex preset">
-                        <div class="d-flex preset-check-box">
-                            <input class="form-check-input m-1" type="radio" name="input_type" id="from-preset" value="old">
-                            <label for="from-preset">From Preset</label>
-                        </div>
-                        <div class="preset-select">
-                            <select class="form-select form-select-sm select-location" name="task_id" id="preset" checked>
-                                <option value="" selected disabled hidden>Choose here</option>
-                                {% for task in preset_tasks %}
-                                <option value="{{ task.id }}">{{ task }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input type="radio" id="from-preset" name="input_type" value="old" class="form-check-input">
+                        <label for="from-preset" class="form-check-label">From Preset</label>
                     </div>
+                    <select class="form-select form-select-sm mt-2" name="task_id" id="preset">
+                        <option value="" selected disabled hidden>Choose here</option>
+                        {% for task in preset_tasks %}
+                        <option value="{{ task.id }}">{{ task }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 {% endif %}
-                <div class="new-info-check-box m-2">
-                    <input class="form-check-input" type="radio" name="input_type" id="newinfo" value="new" checked>
-                    <label for="newinfo">New Information</label>
+                <div class="form-check mb-3">
+                    <input type="radio" id="newinfo" name="input_type" value="new" class="form-check-input" checked>
+                    <label for="newinfo" class="form-check-label">New Information</label>
                 </div>
-                <div class="d-flex name mt-3">
-                    <div class="d-flex name-box">
-                        <label for="" class="form-label">Name</label>
-                        <input type="text" class="form-control name-box" id="name" name="name">
-                    </div>
-                    <div class="d-flex save-preset-check">
-                        <input class="form-check-input" type="checkbox" value="True" id="preset" name="preset">
-                        <label for="preset">Save as preset</label>
-                    </div>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name">
                 </div>
-                <div class="d-flex location mt-4">
-                    <label for="location">Location</label>
-                    <input type="text" class="form-control name-box" id="location" name="location">
+                <div class="form-check mb-3">
+                    <input type="checkbox" id="save-preset" name="preset" class="form-check-input">
+                    <label for="save-preset" class="form-check-label">Save as preset</label>
                 </div>
-                <div class="d-flex location">
-                    <label for="latitude">Latitude</label>
-                    <input type="number" min="-90.00" max="90.00" class="form-control latitude" id="latitude" name="latitude">
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" class="form-control" id="location" name="location">
                 </div>
-                <div class="d-flex location">
-                    <label for="longitude">Longitude</label>
-                    <input type="number" min="-180.00" max="180.00" class="form-control longitude" id="longitude" name="longitude">
+                <div class="mb-3">
+                    <label for="latitude" class="form-label">Latitude</label>
+                    <input type="number" min="-90.00" max="90.00" class="form-control" id="latitude" name="latitude">
                 </div>
-                <div class="d-flex description">
+                <div class="mb-3">
+                    <label for="longitude" class="form-label">Longitude</label>
+                    <input type="number" min="-180.00" max="180.00" class="form-control" id="longitude" name="longitude">
+                </div>
+                <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
-                    <textarea  class="form-control description-box" id="description" name="note"></textarea>
+                    <textarea class="form-control" id="description" name="note" rows="3"></textarea>
                 </div>
             </div>
         </div>
-        <div class="d-flex submit-area">
-            <button type="submit" class="submit-btn">Next Step</button>
-            <button type="button" class="cancel-btn"><a href="{% url 'task:index' %}" class="cancel-btn">Cancel</a></button>
+        
+
+        <div class="d-flex justify-content-center mt-4">
+            <button type="submit" class="btn btn-primary me-2">Next Step</button>
+            <a href="{% url 'task:index' %}" class="btn btn-secondary">Cancel</a>
         </div>
     </form>
 </div>
+
 <script src="{% static 'task/js/checkCustomLoop.js' %}" type="text/javascript"></script>
+
+<style>
+    /* Styling for Step headers */
+    .step-number {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #007bff;
+    }
+    .step-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #007bff;
+    }
+    /* Default font color to black */
+    body, 
+    .form-label, 
+    .form-check-label, 
+    .form-control, 
+    .form-select,  
+    .step,
+    h1,
+    p {
+        color: black !important;
+    }
+    /* Background color for step sections */
+    .step {
+        background-color: #f9f9f9;
+    }
+</style>
+
+<script>
+    // Show custom file input when custom loop is selected
+    document.getElementById('custom-loop').addEventListener('change', function() {
+        document.getElementById('custom-file').style.display = 'block';
+    });
+    // Hide custom file input when other options are selected
+    document.querySelectorAll('input[name="file-choice"]').forEach(function(input) {
+        if (input.id !== 'custom-loop') {
+            input.addEventListener('change', function() {
+                document.getElementById('custom-file').style.display = 'none';
+            });
+        }
+    });
+</script>
+
 {% endblock %}

@@ -8,65 +8,72 @@
         <div class="hero-content">
             <div class="hero-text">
                 <div class="container">
-                    <div class="row">
-                        <div class="col-sm-7 d-flex">
-                            <div>
+                    <div class="row align-items-center">
+                        <div class="col-md-7">
+                            <div class="hero-text-content">
                                 <h1>Get Information</h1>
-                                <body>
-                                    <p>Use drone to detect your interest area!</p>
-                                    <p>Create Task , Create Loop</p>
-                                    <p>Wait for Result!</p>
-                                    <div class="d-flex submit-area">
-                                        <!--!button type="submit" class="submit-btn"><a href="{% url 'task:index' %}" class="submit-btn">Report</a></button>
-                                        <button type="submit" class="submit-btn"><a href="{% url 'task:create_task' %}" class="submit-btn">Create task</a></button-->
-                                    </div>                                    
-                                </body>
+                                <p>Use drones to detect your area of interest!</p>
+                                <p>Create Task, Create Loop</p>
+                                <p>Wait for Result!</p>
+                                <div class="d-flex submit-area">
+                                    <!-- Uncomment and use these buttons if needed -->
+                                    <!--
+                                    <button type="submit" class="submit-btn"><a href="{% url 'task:index' %}" class="submit-btn">Report</a></button>
+                                    <button type="submit" class="submit-btn"><a href="{% url 'task:create_task' %}" class="submit-btn">Create task</a></button>
+                                    -->
+                                </div>
                             </div>
-                            <div class='image'>
-                                <img src="../../static/img/drones2.png" alt="drones" style="padding: 10px; transform: scale(1.5);" >
-                            </div>    
                         </div>
-                    </div>
-                </div>
-            </div><!-- /.hero-text -->
-        </div><!-- /.hero-content -->
-    </div><!-- /.hero -->
-
-
-    <main id="main" class="site-main">
-
-        <section class="site-section subpage-site-section section-contact-us">
-
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-7">
-                        <div id="member">
-                            <h2>Team Members</h2>
-                            <body>
-                                <ul >
-                                    <li>6410615048 - ณัฐชนน จันทร์รุ่งโรจน์</li>
-                                    <li>6410615063 - ธนากร ทองย้อย</li>
-                                    <li>6410685082 - กิตติศักดิ์ สุดแดน</li>
-                                    <li>6410685124 - ธนกฤต อิ้ววังโส</li>
-                                    <li>6410685199 - ปริญญ์ ยิ้มรุ่งเรือง</li>
-                                    <li>6410685207 - ปริวรรต สวัสดิ์ชาติ</li>
-                                </ul>
-                            </body>
-                            <br>
-                            <br>
-                            <h3>Link</h3>
-                            <body>
-                                <ul>
-                                <li><a href="https://github.com/6410685082/CN332_AAA.git">Visit github</a></li>
-                                </ul>
-                            </body>
+                        <div class="col-md-5 text-center">
+                            <img src="{% static 'img/drones2.png' %}" alt="drones" class="img-fluid" style="padding: 10px; transform: scale(1.5);">
                         </div>
                     </div>
                 </div>
             </div>
-            
-        </section><!-- /.section-contact-us -->
+        </div>
+    </div>
 
+    <div class="decorative-hr">
+        <hr>
+    </div>
 
-    </main><!-- /#main -->
+    <main id="main" class="site-main">
+        <section class="site-section subpage-site-section section-contact-us">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-7">
+                        <div id="member" class="team-members">
+                            <h2>Team Members</h2>
+                            <ul>
+                                <li>6410615048 - ณัฐชนน จันทร์รุ่งโรจน์</li>
+                                <li>6410615063 - ธนากร ทองย้อย</li>
+                                <li>6410685082 - กิตติศักดิ์ สุดแดน</li>
+                                <li>6410685124 - ธนกฤต อิ้ววังโส</li>
+                                <li>6410685199 - ปริญญ์ ยิ้มรุ่งเรือง</li>
+                                <li>6410685207 - ปริวรรต สวัสดิ์ชาติ</li>
+                            </ul>
+                            <br>
+                            <h3>Link</h3>
+                            <p>If you want to learn more about our project, visit our <a href="https://github.com/6410685082/CN332_AAA.git" target="_blank">Github repository</a>.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <style>
+        .decorative-hr {
+            text-align: center;
+            margin: 1rem 0;
+        }
+        .decorative-hr hr {
+            border: 0;
+            height: 2px;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+            margin: 0 auto;
+            width: 90%;
+        }
+    </style>
+</body>
 {% endblock %}

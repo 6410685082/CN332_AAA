@@ -1,45 +1,53 @@
 {% extends 'task/layout.html' %}
 {% block body %}
 
-<div class="container">
-    <div class="d-flex name">
-        <div class="d-flex name-box">
-            <label for="name" class="form-label">Name:</label>
-            <input class="form-control name-box" type="text" id="name" name="name" value="{{ task.name }}">
-        </div>
-    </div>
+<div class="container mt-5">
+    <h1 class="mb-4">Task Details</h1>
+    
 
-    <div class="d-flex location">
-        <label for="location">Location:</label>
-        <input class="form-control name-box" type="text" id="location" name="location" value="{{ task.location }}">
+    <div class="mb-3">
+        <label for="name" class="form-label">Name:</label>
+        <input type="text" class="form-control" id="name" name="name" value="{{ task.name }}" readonly>
     </div>
+    
+    <div class="mb-3">
+        <label for="location" class="form-label">Location:</label>
+        <input type="text" class="form-control" id="location" name="location" value="{{ task.location }}" readonly>
+    </div>
+    
 
-    <div class="step-1 m-3 mt-5">
-        <video width="640" height="360" controls>
+    <div class="mb-5">
+        <h3>Input Video</h3>
+        <video width="100%" height="auto" controls>
             <source src="{{ task.input_vdo }}" type="audio/mp4">
-        </video><br>
+        </video>
     </div>
+    
     {% if output_vdo %}
-    <div class="step-1 m-3 mt-5">
-        <video width="640" height="360" controls>
+    <div class="mb-5">
+        <h3>Output Video</h3>
+        <video width="100%" height="auto" controls>
             <source src="{{ output_vdo }}" type="audio/mp4">
-        </video><br>
+        </video>
     </div>
     {% endif %}
+    
 
     {% if rows %}
-    <table>
-        <thead>
-            <tr>
-                <th>Loop</th>
-                <th>Track</th>
-                <th>Vehicle</th>
-                <th>Time</th>
-                <th>Direction</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in rows %}
+    <div class="mb-5">
+        <h3>Data Table</h3>
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Loop</th>
+                    <th>Track</th>
+                    <th>Vehicle</th>
+                    <th>Time</th>
+                    <th>Direction</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
                 <tr>
                     <td>{{ row.loop }}</td>
                     <td>{{ row.track }}</td>
@@ -47,40 +55,49 @@
                     <td>{{ row.time }}</td>
                     <td>{{ row.direction }}</td>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     {% endif %}
     
+
     {% if report_url %}
-        <a href="{{ report_url }}" download>Download report</a>
-    {% endif %}
-
-    <div>
-        <h3>Map</h3>
-        {% csrf_token %}
-        <iframe src="http://127.0.0.1:8000/map/" width="50%" height="300"></iframe>
-        <p>{{ weather.location }}</p>
-        {% if weather.temp != 0%}
-        <h3>Current Weather</h3>
-        <p>The current temperature is {{ weather.temp }}<span id="temp">&#8451;</span></p>
-        <p>The current weather are {{ weather.weather_report }} <span id="conditions"></span></p>
-        <p>The current windspeed are {{ weather.wind_speed }} <span id="windspeed"></span>meter/sec</p>
-        <p>The current clouds are {{ weather.clouds }}<span id="clouds"></span>%</p>
-        <p>The current humidity are {{ weather.humidity }}<span id="clouds"></span>%</p>
-        {% endif %}
+    <div class="mb-5">
+        <a href="{{ report_url }}" class="btn btn-primary" download>Download Report</a>
     </div>
+    {% endif %}
+    
 
-    <div class="d-flex description mt-5">
-        <label for="note" class="form-label">Note:</label><br>
-        <input type="text" class="form-control description-box" id="note" name="note" value="{{ task.note }}"><br>
-    </div>  
+    <div class="mb-5">
+        <h3>Map</h3>
+        <iframe src="http://127.0.0.1:8000/map/" width="100%" height="400"></iframe>
+    </div>
+    
+
+    {% if weather.temp != 0 %}
+    <div class="mb-5">
+        <h3>Current Weather</h3>
+        <p>Location: {{ weather.location }}</p>
+        <p>Temperature: {{ weather.temp }} &#8451;</p>
+        <p>Weather: {{ weather.weather_report }}</p>
+        <p>Wind Speed: {{ weather.wind_speed }} m/s</p>
+        <p>Clouds: {{ weather.clouds }}%</p>
+        <p>Humidity: {{ weather.humidity }}%</p>
+    </div>
+    {% endif %}
+    
+
+    <div class="mb-5">
+        <label for="note" class="form-label">Note:</label>
+        <input type="text" class="form-control" id="note" name="note" value="{{ task.note }}" readonly>
+    </div>
+    
+
+    <div class="d-flex justify-content-end">
+        <a href="{% url 'task:update_task' task.id %}" class="btn btn-success me-2">Update Task</a>
+        <a href="{% url 'task:delete_task' task.id %}" class="btn btn-danger">Delete</a>
+    </div>
 </div>
-
-<div class="d-flex submit-area">
-    <button type="submit" class="submit-btn"><a href="{% url 'task:update_task' task.id%}"class="submit-btn">Update Task</a></button>
-    <button type="button" class="cancel-btn"><a href="{% url 'task:delete_task' task.id %}" class="cancel-btn">Delete</a></button>
-</div>
-
 
 {% endblock %}
